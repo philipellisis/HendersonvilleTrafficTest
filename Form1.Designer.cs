@@ -6,6 +6,7 @@
         ///  Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
+        private Button btnConfiguration;
 
         /// <summary>
         ///  Clean up any resources being used.
@@ -28,10 +29,32 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "Form1";
+            this.btnConfiguration = new Button();
+            this.SuspendLayout();
+            
+            // 
+            // btnConfiguration
+            // 
+            this.btnConfiguration.Font = new Font("Segoe UI", 10F);
+            this.btnConfiguration.Location = new Point(12, 12);
+            this.btnConfiguration.Name = "btnConfiguration";
+            this.btnConfiguration.Size = new Size(120, 35);
+            this.btnConfiguration.TabIndex = 0;
+            this.btnConfiguration.Text = "Configuration";
+            this.btnConfiguration.UseVisualStyleBackColor = true;
+            this.btnConfiguration.Click += new EventHandler(this.btnConfiguration_Click);
+            
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new SizeF(7F, 15F);
+            this.AutoScaleMode = AutoScaleMode.Font;
+            this.ClientSize = new Size(800, 450);
+            this.Controls.Add(this.btnConfiguration);
+            this.Font = new Font("Segoe UI", 9F);
+            this.Name = "Form1";
+            this.Text = "Hendersonville Traffic Test";
+            this.ResumeLayout(false);
         }
 
         #endregion

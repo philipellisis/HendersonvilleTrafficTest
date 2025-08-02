@@ -1,54 +1,43 @@
 using HendersonvilleTrafficTest.Equipment.Interfaces;
 using HendersonvilleTrafficTest.Equipment.Hardware;
 using HendersonvilleTrafficTest.Equipment.Simulation;
+using HendersonvilleTrafficTest.Configuration;
 
 namespace HendersonvilleTrafficTest.Services
 {
     public class EquipmentFactory
     {
-        private readonly bool _useSimulation;
-
-        public EquipmentFactory(ConfigurationService? configService = null)
-        {
-            _useSimulation = configService?.UseSimulation ?? true;
-        }
-
-        public EquipmentFactory(bool useSimulation)
-        {
-            _useSimulation = useSimulation;
-        }
-
         public IAcPowerSupply CreateAcPowerSupply()
         {
-            return _useSimulation 
+            return ConfigurationManager.Current.Equipment.AcPowerSupplyMode == EquipmentMode.Simulation
                 ? new SimulatedAcPowerSupply() 
                 : new ItechIT7321AcPowerSupply();
         }
 
         public IDcPowerSupply CreateDcPowerSupply()
         {
-            return _useSimulation 
+            return ConfigurationManager.Current.Equipment.DcPowerSupplyMode == EquipmentMode.Simulation
                 ? new SimulatedDcPowerSupply() 
                 : new ItechIT6922ADcPowerSupply();
         }
 
         public IPowerAnalyzer CreatePowerAnalyzer()
         {
-            return _useSimulation 
+            return ConfigurationManager.Current.Equipment.PowerAnalyzerMode == EquipmentMode.Simulation
                 ? new SimulatedPowerAnalyzer() 
                 : new Npa101PowerAnalyzer();
         }
 
         public ISpectrometer CreateSpectrometer()
         {
-            return _useSimulation 
+            return ConfigurationManager.Current.Equipment.SpectrometerMode == EquipmentMode.Simulation
                 ? new SimulatedSpectrometer() 
                 : new StellarNetBlueWaveSpectrometer();
         }
 
         public ITemperatureSensor CreateTemperatureSensor()
         {
-            return _useSimulation 
+            return ConfigurationManager.Current.Equipment.TemperatureSensorMode == EquipmentMode.Simulation
                 ? new SimulatedTemperatureSensor() 
                 : new UsbTemperatureSensor();
         }
