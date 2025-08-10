@@ -7,6 +7,7 @@
         /// </summary>
         private System.ComponentModel.IContainer components = null;
         private Button btnConfiguration;
+        private Button btnTestRelayController;
 
         /// <summary>
         ///  Clean up any resources being used.
@@ -30,6 +31,7 @@
         private void InitializeComponent()
         {
             this.btnConfiguration = new Button();
+            this.btnTestRelayController = new Button();
             this.SuspendLayout();
             
             // 
@@ -45,11 +47,24 @@
             this.btnConfiguration.Click += new EventHandler(this.btnConfiguration_Click);
             
             // 
+            // btnTestRelayController
+            // 
+            this.btnTestRelayController.Font = new Font("Segoe UI", 10F);
+            this.btnTestRelayController.Location = new Point(150, 12);
+            this.btnTestRelayController.Name = "btnTestRelayController";
+            this.btnTestRelayController.Size = new Size(150, 35);
+            this.btnTestRelayController.TabIndex = 1;
+            this.btnTestRelayController.Text = "Test Relay Controller";
+            this.btnTestRelayController.UseVisualStyleBackColor = true;
+            this.btnTestRelayController.Click += new EventHandler(this.btnTestRelayController_Click);
+            
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new SizeF(7F, 15F);
             this.AutoScaleMode = AutoScaleMode.Font;
             this.ClientSize = new Size(800, 450);
+            this.Controls.Add(this.btnTestRelayController);
             this.Controls.Add(this.btnConfiguration);
             this.Font = new Font("Segoe UI", 9F);
             this.Name = "Form1";

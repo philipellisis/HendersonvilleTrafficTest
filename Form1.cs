@@ -14,5 +14,11 @@ namespace HendersonvilleTrafficTest
             using var configForm = new ConfigurationForm();
             configForm.ShowDialog(this);
         }
+
+        private void btnTestRelayController_Click(object sender, EventArgs e)
+        {
+            using var testForm = new RelayControllerTestForm();
+            testForm.ShowDialog(this);
+        }
     }
 }
