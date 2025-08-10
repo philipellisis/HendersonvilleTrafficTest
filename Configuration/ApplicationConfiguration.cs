@@ -43,6 +43,10 @@ namespace HendersonvilleTrafficTest.Configuration
         [Description("Temperature Sensor Mode (Simulation or Hardware)")]
         public EquipmentMode TemperatureSensorMode { get; set; } = EquipmentMode.Simulation;
 
+        [XmlElement("RelayControllerMode")]
+        [Description("Relay Controller Mode (Simulation or Hardware)")]
+        public EquipmentMode RelayControllerMode { get; set; } = EquipmentMode.Simulation;
+
         [XmlElement("ConnectionTimeoutMs")]
         [Description("Equipment connection timeout in milliseconds")]
         public int ConnectionTimeoutMs { get; set; } = 5000;

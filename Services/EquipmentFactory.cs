@@ -41,5 +41,12 @@ namespace HendersonvilleTrafficTest.Services
                 ? new SimulatedTemperatureSensor() 
                 : new UsbTemperatureSensor();
         }
+
+        public IRelayController CreateRelayController()
+        {
+            return ConfigurationManager.Current.Equipment.RelayControllerMode == EquipmentMode.Simulation
+                ? new SimulatedRelayController() 
+                : new NcdRelayController();
+        }
     }
 }
