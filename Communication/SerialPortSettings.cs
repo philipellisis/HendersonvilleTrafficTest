@@ -13,6 +13,7 @@ namespace HendersonvilleTrafficTest.Communication
         public int ReadTimeoutMs { get; set; } = 1000;
         public int WriteTimeoutMs { get; set; } = 1000;
         public string NewLine { get; set; } = "\r\n";
+        public bool UseNewLineForBinary { get; set; } = true;
         public bool DtrEnable { get; set; } = false;
         public bool RtsEnable { get; set; } = false;
 
@@ -29,6 +30,7 @@ namespace HendersonvilleTrafficTest.Communication
                 ReadTimeoutMs = ReadTimeoutMs,
                 WriteTimeoutMs = WriteTimeoutMs,
                 NewLine = NewLine,
+                UseNewLineForBinary = UseNewLineForBinary,
                 DtrEnable = DtrEnable,
                 RtsEnable = RtsEnable
             };

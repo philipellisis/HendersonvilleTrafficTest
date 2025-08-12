@@ -49,10 +49,15 @@ namespace HendersonvilleTrafficTest.Communication
                             Handshake = _settings.Handshake,
                             ReadTimeout = _settings.ReadTimeoutMs,
                             WriteTimeout = _settings.WriteTimeoutMs,
-                            NewLine = _settings.NewLine,
                             DtrEnable = _settings.DtrEnable,
                             RtsEnable = _settings.RtsEnable
                         };
+
+                        // Only set NewLine if it's being used for binary protocols
+                        if (_settings.UseNewLineForBinary && !string.IsNullOrEmpty(_settings.NewLine))
+                        {
+                            _serialPort.NewLine = _settings.NewLine;
+                        }
 
                         _serialPort.DataReceived += OnDataReceived;
                         _serialPort.ErrorReceived += OnErrorReceived;
@@ -229,6 +234,7 @@ namespace HendersonvilleTrafficTest.Communication
                                 // Read all available data until timeout
                                 var allData = new List<byte>();
                                 var startTime = DateTime.Now;
+                                
                                 
                                 while ((DateTime.Now - startTime).TotalMilliseconds < timeoutMs)
                                 {
@@ -467,23 +473,23 @@ namespace HendersonvilleTrafficTest.Communication
             {
                 if (_serialPort?.IsOpen == true && _serialPort.BytesToRead > 0)
                 {
-                    // Read as string for text-based protocols
-                    var textData = _serialPort.ReadExisting();
-                    if (!string.IsNullOrEmpty(textData))
+                    // Read raw bytes first
+                    var buffer = new byte[_serialPort.BytesToRead];
+                    var bytesRead = _serialPort.Read(buffer, 0, buffer.Length);
+                    
+                    if (bytesRead > 0)
                     {
-                        DataReceived?.Invoke(this, textData);
-                    }
-
-                    // Also read as bytes for binary protocols
-                    if (_serialPort.BytesToRead > 0)
-                    {
-                        var buffer = new byte[_serialPort.BytesToRead];
-                        var bytesRead = _serialPort.Read(buffer, 0, buffer.Length);
-                        if (bytesRead > 0)
+                        var byteData = new byte[bytesRead];
+                        Array.Copy(buffer, byteData, bytesRead);
+                        
+                        // Fire byte data event
+                        ByteDataReceived?.Invoke(this, byteData);
+                        
+                        // Also convert to string and fire text event (for compatibility)
+                        var textData = System.Text.Encoding.ASCII.GetString(byteData);
+                        if (!string.IsNullOrEmpty(textData))
                         {
-                            var byteData = new byte[bytesRead];
-                            Array.Copy(buffer, byteData, bytesRead);
-                            ByteDataReceived?.Invoke(this, byteData);
+                            DataReceived?.Invoke(this, textData);
                         }
                     }
                 }

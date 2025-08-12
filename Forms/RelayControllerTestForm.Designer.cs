@@ -10,6 +10,7 @@ namespace HendersonvilleTrafficTest.Forms
         private Button btnRefreshAll;
         private Button btnAllOn;
         private Button btnAllOff;
+        private Button btnTestAll;
         private Button btnClose;
 
 
@@ -22,6 +23,7 @@ namespace HendersonvilleTrafficTest.Forms
             this.btnRefreshAll = new Button();
             this.btnAllOn = new Button();
             this.btnAllOff = new Button();
+            this.btnTestAll = new Button();
             this.btnClose = new Button();
             this.SuspendLayout();
 
@@ -115,6 +117,20 @@ namespace HendersonvilleTrafficTest.Forms
             this.btnAllOff.Click += new EventHandler(this.btnAllOff_Click);
 
             // 
+            // btnTestAll
+            // 
+            this.btnTestAll.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            this.btnTestAll.BackColor = Color.LightBlue;
+            this.btnTestAll.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            this.btnTestAll.Location = new Point(270, 420);
+            this.btnTestAll.Name = "btnTestAll";
+            this.btnTestAll.Size = new Size(80, 30);
+            this.btnTestAll.TabIndex = 7;
+            this.btnTestAll.Text = "Test All";
+            this.btnTestAll.UseVisualStyleBackColor = false;
+            this.btnTestAll.Click += new EventHandler(this.btnTestAll_Click);
+
+            // 
             // btnClose
             // 
             this.btnClose.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
@@ -122,7 +138,7 @@ namespace HendersonvilleTrafficTest.Forms
             this.btnClose.Location = new Point(417, 420);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new Size(75, 30);
-            this.btnClose.TabIndex = 7;
+            this.btnClose.TabIndex = 8;
             this.btnClose.Text = "Close";
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new EventHandler((s, e) => this.Close());
@@ -134,6 +150,7 @@ namespace HendersonvilleTrafficTest.Forms
             this.AutoScaleMode = AutoScaleMode.Font;
             this.ClientSize = new Size(504, 462);
             this.Controls.Add(this.btnClose);
+            this.Controls.Add(this.btnTestAll);
             this.Controls.Add(this.btnAllOff);
             this.Controls.Add(this.btnAllOn);
             this.Controls.Add(this.btnRefreshAll);

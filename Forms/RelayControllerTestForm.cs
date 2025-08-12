@@ -294,6 +294,77 @@ namespace HendersonvilleTrafficTest.Forms
             await RefreshAllStates();
         }
 
+        private async void btnTestAll_Click(object sender, EventArgs e)
+        {
+            // Disable the button to prevent multiple simultaneous tests
+            btnTestAll.Enabled = false;
+            btnTestAll.Text = "Testing...";
+            
+            try
+            {
+                // Test each relay individually
+                for (int i = 1; i <= 8; i++)
+                {
+                    try
+                    {
+                        // Turn relay ON
+                        await _relayController.TurnOutputOnAsync(i);
+                        await RefreshRelayState(i);
+                        
+                        // Wait 500ms so user can see it
+                        await Task.Delay(500);
+                        
+                        // Verify it's actually ON
+                        var actualState = await _relayController.GetOutputStateAsync(i);
+                        if (actualState)
+                        {
+                            // Turn relay OFF
+                            await _relayController.TurnOutputOffAsync(i);
+                            await RefreshRelayState(i);
+                            
+                            // Wait 500ms so user can see it
+                            await Task.Delay(500);
+                            
+                            // Verify it's actually OFF
+                            var offState = await _relayController.GetOutputStateAsync(i);
+                            if (!offState)
+                            {
+                                // Test passed
+                                continue;
+                            }
+                            else
+                            {
+                                MessageBox.Show($"Relay {i} test FAILED: Could not turn OFF", "Test Failed", 
+                                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show($"Relay {i} test FAILED: Could not turn ON", "Test Failed", 
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Relay {i} test ERROR: {ex.Message}", "Test Error", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                
+                // Final refresh to show all states
+                await RefreshAllStates();
+                
+                MessageBox.Show("All relay tests completed!", "Test Complete", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            finally
+            {
+                // Re-enable the button
+                btnTestAll.Enabled = true;
+                btnTestAll.Text = "Test All";
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
