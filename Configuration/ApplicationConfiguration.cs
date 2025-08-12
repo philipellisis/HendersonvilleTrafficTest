@@ -47,6 +47,14 @@ namespace HendersonvilleTrafficTest.Configuration
         [Description("Relay Controller Mode (Simulation or Hardware)")]
         public EquipmentMode RelayControllerMode { get; set; } = EquipmentMode.Simulation;
 
+        [XmlElement("RelayControllerComPort")]
+        [Description("COM port for NCD Relay Controller")]
+        public string RelayControllerComPort { get; set; } = "COM1";
+
+        [XmlElement("RelayControllerBaudRate")]
+        [Description("Baud rate for NCD Relay Controller")]
+        public int RelayControllerBaudRate { get; set; } = 115200;
+
         [XmlElement("ConnectionTimeoutMs")]
         [Description("Equipment connection timeout in milliseconds")]
         public int ConnectionTimeoutMs { get; set; } = 5000;

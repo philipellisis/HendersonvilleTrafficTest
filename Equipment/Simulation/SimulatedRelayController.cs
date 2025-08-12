@@ -24,7 +24,7 @@ namespace HendersonvilleTrafficTest.Equipment.Simulation
             }
         }
 
-        public Task InitializeAsync()
+        public Task<bool> InitializeAsync()
         {
             IsConnected = true;
             
@@ -34,7 +34,7 @@ namespace HendersonvilleTrafficTest.Equipment.Simulation
                 _outputStates[i] = false;
             }
             
-            return Task.CompletedTask;
+            return Task.FromResult(IsConnected);
         }
 
         public Task TurnOutputOnAsync(int outputNumber)

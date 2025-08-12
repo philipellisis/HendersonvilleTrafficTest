@@ -2,7 +2,7 @@ namespace HendersonvilleTrafficTest.Equipment.Interfaces
 {
     public interface IRelayController
     {
-        Task InitializeAsync();
+        Task<bool> InitializeAsync();
         Task TurnOutputOnAsync(int outputNumber);
         Task TurnOutputOffAsync(int outputNumber);
         Task<byte> ReadAnalogValueAsync(int inputNumber);
