@@ -102,55 +102,7 @@ namespace HendersonvilleTrafficTest.Communication
             }
         }
 
-        protected async Task<byte[]?> SendBytesWithResponseAsync(byte[] command, int expectedResponseLength, int timeoutMs = 2000)
-        {
-            try
-            {
-                LogDebug($"{_equipmentName} -> {ByteUtilities.BytesToHexString(command)}");
-                var response = await _communication.SendBytesAndReceiveAsync(command, expectedResponseLength, timeoutMs);
-                
-                if (response != null)
-                {
-                    LogDebug($"{_equipmentName} <- {ByteUtilities.BytesToHexString(response)}");
-                }
-                else
-                {
-                    LogWarning($"{_equipmentName} no response to byte command");
-                }
-                
-                return response;
-            }
-            catch (Exception ex)
-            {
-                LogError($"{_equipmentName} byte command error: {ex.Message}");
-                return null;
-            }
-        }
 
-        protected async Task<byte[]?> SendBytesWithVariableResponseAsync(byte[] command, int timeoutMs = 2000)
-        {
-            try
-            {
-                LogDebug($"{_equipmentName} -> {ByteUtilities.BytesToHexString(command)}");
-                var response = await _communication.SendBytesAndReceiveAsync(command, 1024, timeoutMs, true);
-                
-                if (response != null && response.Length > 0)
-                {
-                    LogDebug($"{_equipmentName} <- {ByteUtilities.BytesToHexString(response)} ({response.Length} bytes)");
-                }
-                else
-                {
-                    LogWarning($"{_equipmentName} no response to byte command");
-                }
-                
-                return response;
-            }
-            catch (Exception ex)
-            {
-                LogError($"{_equipmentName} byte command error: {ex.Message}");
-                return null;
-            }
-        }
 
         protected async Task<bool> SendBytesAsync(byte[] command)
         {
@@ -166,65 +118,9 @@ namespace HendersonvilleTrafficTest.Communication
             }
         }
 
-        protected async Task<byte[]?> ReadBytesAsync(int count, int timeoutMs = 2000)
-        {
-            try
-            {
-                var response = await _communication.ReadBytesAsync(count, timeoutMs);
-                
-                if (response != null && response.Length > 0)
-                {
-                    LogDebug($"{_equipmentName} read <- {ByteUtilities.BytesToHexString(response)}");
-                }
-                else
-                {
-                    LogWarning($"{_equipmentName} no bytes read");
-                }
-                
-                return response;
-            }
-            catch (Exception ex)
-            {
-                LogError($"{_equipmentName} read bytes error: {ex.Message}");
-                return null;
-            }
-        }
 
-        protected async Task<byte[]?> ReadAvailableBytesAsync()
-        {
-            try
-            {
-                var response = await _communication.ReadAvailableBytesAsync();
-                
-                if (response != null && response.Length > 0)
-                {
-                    LogDebug($"{_equipmentName} read available <- {ByteUtilities.BytesToHexString(response)} ({response.Length} bytes)");
-                }
-                
-                return response;
-            }
-            catch (Exception ex)
-            {
-                LogError($"{_equipmentName} read available bytes error: {ex.Message}");
-                return null;
-            }
-        }
 
-        protected int BytesAvailable => _communication.BytesAvailable;
 
-        protected async Task<byte[]?> SendHexStringWithResponseAsync(string hexCommand, int expectedResponseLength, int timeoutMs = 2000)
-        {
-            try
-            {
-                var commandBytes = ByteUtilities.HexStringToBytes(hexCommand);
-                return await SendBytesWithResponseAsync(commandBytes, expectedResponseLength, timeoutMs);
-            }
-            catch (Exception ex)
-            {
-                LogError($"{_equipmentName} hex command error '{hexCommand}': {ex.Message}");
-                return null;
-            }
-        }
 
         protected async Task<bool> SendHexStringAsync(string hexCommand)
         {

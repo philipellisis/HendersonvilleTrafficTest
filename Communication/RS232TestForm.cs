@@ -126,20 +126,8 @@ namespace HendersonvilleTrafficTest.Communication
                     
                     if (chkExpectResponse.Checked)
                     {
-                        var timeout = (int)numResponseTimeout.Value;
-                        var response = await _communication.SendBytesAndReceiveAsync(commandBytes, 256, timeout, true);
-                        
-                        AppendToLog($"-> HEX: {ByteUtilities.BytesToHexString(commandBytes)}");
-                        
-                        if (response != null && response.Length > 0)
-                        {
-                            AppendToLog($"<- HEX: {ByteUtilities.BytesToHexString(response)} ({response.Length} bytes)");
-                            AppendToLog($"<- ASCII: {ByteUtilities.AsciiBytesToString(response)}");
-                        }
-                        else
-                        {
-                            AppendToLog("<- [No Response]");
-                        }
+                        AppendToLog($"-> HEX: {ByteUtilities.BytesToHexString(commandBytes)} [Expecting Response]");
+                        await _communication.SendBytesAsync(commandBytes);
                     }
                     else
                     {
