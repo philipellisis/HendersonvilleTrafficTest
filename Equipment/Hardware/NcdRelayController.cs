@@ -197,7 +197,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
 
                 if (response != null && response.Length > 2)
                 {
-                    return response[3];
+                    return response[2];
                 }
                 else
                 {
