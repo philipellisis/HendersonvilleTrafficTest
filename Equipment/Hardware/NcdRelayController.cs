@@ -182,11 +182,34 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
             }
         }
 
-        public Task<byte> ReadAnalogValueAsync(int inputNumber)
+        public async Task<byte> ReadAnalogValueAsync(int inputNumber)
         {
-            ValidateInputNumber(inputNumber);
-            // TODO: Implement ADC reading with specific NCD commands
-            throw new NotImplementedException("Read analog value command not implemented yet");
+            ValidateOutputNumber(inputNumber);
+
+            try
+            {
+                byte commandByte = (byte)(149 + inputNumber);
+                byte checksumByte = (byte)(63 + inputNumber);
+                var command = new byte[] { 170, 2, 254, commandByte, checksumByte };
+
+                await SendBytesAsync(command);
+                var response = await WaitForResponseAsync(2000);
+
+                if (response != null && response.Length > 2)
+                {
+                    return response[3];
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError($"Error querying ADC {inputNumber} value: {ex.Message}");
+                // Return cached state on error
+                return 0;
+            }
         }
 
         public async Task<bool> GetOutputStateAsync(int outputNumber)
