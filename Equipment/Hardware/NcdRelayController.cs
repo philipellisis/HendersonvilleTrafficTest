@@ -158,11 +158,12 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
             try
             {
                 byte commandByte = (byte)(99 + outputNumber);
-                var command = new byte[] { 254, commandByte, 1 };
-                
+                byte checksumByte = (byte)(14 + outputNumber);
+                var command = new byte[] { 170, 3, 254, commandByte, 0, checksumByte };
+
                 await SendBytesAsync(command);
                 var response = await WaitForResponseAsync(2000);
-                
+
                 if (response != null && response.Length >= 3 && response[0] == 0xAA && response[2] == 85)
                 {
                     _outputStates[outputNumber - 1] = false;
