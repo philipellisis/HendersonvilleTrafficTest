@@ -55,6 +55,14 @@ namespace HendersonvilleTrafficTest.Configuration
         [Description("Baud rate for NCD Relay Controller")]
         public int RelayControllerBaudRate { get; set; } = 115200;
 
+        [XmlElement("TemperatureSensorComPort")]
+        [Description("COM port for USB Temperature Sensor")]
+        public string TemperatureSensorComPort { get; set; } = "COM2";
+
+        [XmlElement("TemperatureSensorBaudRate")]
+        [Description("Baud rate for USB Temperature Sensor")]
+        public int TemperatureSensorBaudRate { get; set; } = 9600;
+
         [XmlElement("ConnectionTimeoutMs")]
         [Description("Equipment connection timeout in milliseconds")]
         public int ConnectionTimeoutMs { get; set; } = 5000;

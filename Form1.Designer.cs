@@ -8,6 +8,7 @@
         private System.ComponentModel.IContainer components = null;
         private Button btnConfiguration;
         private Button btnTestRelayController;
+        private Button btnTestTemperatureSensor;
 
         /// <summary>
         ///  Clean up any resources being used.
@@ -32,6 +33,7 @@
         {
             this.btnConfiguration = new Button();
             this.btnTestRelayController = new Button();
+            this.btnTestTemperatureSensor = new Button();
             this.SuspendLayout();
             
             // 
@@ -59,11 +61,24 @@
             this.btnTestRelayController.Click += new EventHandler(this.btnTestRelayController_Click);
             
             // 
+            // btnTestTemperatureSensor
+            // 
+            this.btnTestTemperatureSensor.Font = new Font("Segoe UI", 10F);
+            this.btnTestTemperatureSensor.Location = new Point(320, 12);
+            this.btnTestTemperatureSensor.Name = "btnTestTemperatureSensor";
+            this.btnTestTemperatureSensor.Size = new Size(180, 35);
+            this.btnTestTemperatureSensor.TabIndex = 2;
+            this.btnTestTemperatureSensor.Text = "Test Temperature Sensor";
+            this.btnTestTemperatureSensor.UseVisualStyleBackColor = true;
+            this.btnTestTemperatureSensor.Click += new EventHandler(this.btnTestTemperatureSensor_Click);
+            
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new SizeF(7F, 15F);
             this.AutoScaleMode = AutoScaleMode.Font;
             this.ClientSize = new Size(800, 450);
+            this.Controls.Add(this.btnTestTemperatureSensor);
             this.Controls.Add(this.btnTestRelayController);
             this.Controls.Add(this.btnConfiguration);
             this.Font = new Font("Segoe UI", 9F);
