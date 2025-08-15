@@ -26,5 +26,11 @@ namespace HendersonvilleTrafficTest
             using var testForm = new TemperatureSensorTestForm();
             testForm.ShowDialog(this);
         }
+
+        private void btnTestPowerAnalyzer_Click(object sender, EventArgs e)
+        {
+            using var testForm = new PowerAnalyzerTestForm();
+            testForm.ShowDialog(this);
+        }
     }
 }

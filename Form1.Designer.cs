@@ -9,6 +9,7 @@
         private Button btnConfiguration;
         private Button btnTestRelayController;
         private Button btnTestTemperatureSensor;
+        private Button btnTestPowerAnalyzer;
 
         /// <summary>
         ///  Clean up any resources being used.
@@ -34,6 +35,7 @@
             this.btnConfiguration = new Button();
             this.btnTestRelayController = new Button();
             this.btnTestTemperatureSensor = new Button();
+            this.btnTestPowerAnalyzer = new Button();
             this.SuspendLayout();
             
             // 
@@ -73,11 +75,24 @@
             this.btnTestTemperatureSensor.Click += new EventHandler(this.btnTestTemperatureSensor_Click);
             
             // 
+            // btnTestPowerAnalyzer
+            // 
+            this.btnTestPowerAnalyzer.Font = new Font("Segoe UI", 10F);
+            this.btnTestPowerAnalyzer.Location = new Point(520, 12);
+            this.btnTestPowerAnalyzer.Name = "btnTestPowerAnalyzer";
+            this.btnTestPowerAnalyzer.Size = new Size(160, 35);
+            this.btnTestPowerAnalyzer.TabIndex = 3;
+            this.btnTestPowerAnalyzer.Text = "Test Power Analyzer";
+            this.btnTestPowerAnalyzer.UseVisualStyleBackColor = true;
+            this.btnTestPowerAnalyzer.Click += new EventHandler(this.btnTestPowerAnalyzer_Click);
+            
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new SizeF(7F, 15F);
             this.AutoScaleMode = AutoScaleMode.Font;
             this.ClientSize = new Size(800, 450);
+            this.Controls.Add(this.btnTestPowerAnalyzer);
             this.Controls.Add(this.btnTestTemperatureSensor);
             this.Controls.Add(this.btnTestRelayController);
             this.Controls.Add(this.btnConfiguration);

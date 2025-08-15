@@ -63,6 +63,14 @@ namespace HendersonvilleTrafficTest.Configuration
         [Description("Baud rate for USB Temperature Sensor")]
         public int TemperatureSensorBaudRate { get; set; } = 9600;
 
+        [XmlElement("PowerAnalyzerComPort")]
+        [Description("COM port for NPA101 Power Analyzer")]
+        public string PowerAnalyzerComPort { get; set; } = "COM3";
+
+        [XmlElement("PowerAnalyzerBaudRate")]
+        [Description("Baud rate for NPA101 Power Analyzer")]
+        public int PowerAnalyzerBaudRate { get; set; } = 9600;
+
         [XmlElement("ConnectionTimeoutMs")]
         [Description("Equipment connection timeout in milliseconds")]
         public int ConnectionTimeoutMs { get; set; } = 5000;
