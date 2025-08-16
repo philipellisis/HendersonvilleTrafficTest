@@ -61,6 +61,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
 
                 // Set device to remote mode for SCPI control
                 await _communication.SendCommandAsync("SYST:REM");
+                await SetModeAsync(PowerMode.DC);
 
                 LogInfo("NPA101 Power Analyzer initialized successfully");
                 return true;
@@ -76,8 +77,8 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
         {
             var modeCommand = mode switch
             {
-                PowerMode.AC => "CONF:POW:AC",
-                PowerMode.DC => "CONF:POW:DC",
+                PowerMode.AC => "CHAN:MODE AC",
+                PowerMode.DC => "CONF:MODE DC",
                 _ => throw new ArgumentException($"Unsupported power mode: {mode}")
             };
 
@@ -87,13 +88,25 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
                 throw new InvalidOperationException($"Failed to set power mode to {mode}");
             }
 
+            var success_volt_auto = await _communication.SendCommandAsync("CHAN:VOLT:RANG:AUTO 1");
+            if (!success_volt_auto)
+            {
+                throw new InvalidOperationException($"Failed to set voltage range to auto");
+            }
+
+            var success_cur_auto = await _communication.SendCommandAsync("CHAN:CURR:RANG:AUTO 1");
+            if (!success_cur_auto)
+            {
+                throw new InvalidOperationException($"Failed to set current range to auto");
+            }
+
             // Give the device time to switch modes
             await Task.Delay(500);
         }
 
         public async Task<double> GetVoltsAsync()
         {
-            var response = await _communication.SendCommandAndReceiveAsync("MEAS:VOLT?", 2000);
+            var response = await _communication.SendCommandAndReceiveAsync("CHAN:MEAS:DATA? 1", 4000);
             if (string.IsNullOrEmpty(response))
             {
                 throw new InvalidOperationException("No response received for voltage measurement");
@@ -109,7 +122,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
 
         public async Task<double> GetAmpsAsync()
         {
-            var response = await _communication.SendCommandAndReceiveAsync("MEAS:CURR?", 2000);
+            var response = await _communication.SendCommandAndReceiveAsync("CHAN:MEAS:DATA? 2", 4000);
             if (string.IsNullOrEmpty(response))
             {
                 throw new InvalidOperationException("No response received for current measurement");
@@ -125,7 +138,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
 
         public async Task<double> GetWattsAsync()
         {
-            var response = await _communication.SendCommandAndReceiveAsync("MEAS:POW?", 2000);
+            var response = await _communication.SendCommandAndReceiveAsync("CHAN:MEAS:DATA? 3", 2000);
             if (string.IsNullOrEmpty(response))
             {
                 throw new InvalidOperationException("No response received for power measurement");
@@ -141,7 +154,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
 
         public async Task<double> GetPowerFactorAsync()
         {
-            var response = await _communication.SendCommandAndReceiveAsync("MEAS:POW:PFAC?", 2000);
+            var response = "1";
             if (string.IsNullOrEmpty(response))
             {
                 throw new InvalidOperationException("No response received for power factor measurement");
@@ -157,7 +170,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
 
         public async Task<double> GetFrequencyAsync()
         {
-            var response = await _communication.SendCommandAndReceiveAsync("MEAS:FREQ?", 2000);
+            var response = await _communication.SendCommandAndReceiveAsync("CHAN:MEAS:DATA? 4", 2000);
             if (string.IsNullOrEmpty(response))
             {
                 throw new InvalidOperationException("No response received for frequency measurement");
