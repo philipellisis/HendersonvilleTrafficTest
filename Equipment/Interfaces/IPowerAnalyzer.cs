@@ -10,11 +10,7 @@ namespace HendersonvilleTrafficTest.Equipment.Interfaces
     {
         Task InitializeAsync();
         Task SetModeAsync(PowerMode mode);
-        Task<double> GetVoltsAsync();
-        Task<double> GetAmpsAsync();
-        Task<double> GetWattsAsync();
-        Task<double> GetPowerFactorAsync();
-        Task<double> GetFrequencyAsync();
+        Task<ElectricalMeasurement> GetElectricalsAsync();
         bool IsConnected { get; }
     }
 }

@@ -27,7 +27,7 @@ namespace HendersonvilleTrafficTest.Forms
                 if (_powerAnalyzer.IsConnected)
                 {
                     await GetDeviceInfo();
-                    await ReadAllMeasurements();
+                    await ReadMeasurements();
                 }
             }
             catch (Exception ex)
@@ -64,14 +64,12 @@ namespace HendersonvilleTrafficTest.Forms
             txtVoltage.Text = "-- V";
             txtCurrent.Text = "-- A";
             txtPower.Text = "-- W";
-            txtPowerFactor.Text = "-- PF";
             txtFrequency.Text = "-- Hz";
             
             // Reset text colors
             txtVoltage.ForeColor = Color.Black;
             txtCurrent.ForeColor = Color.Black;
             txtPower.ForeColor = Color.Black;
-            txtPowerFactor.ForeColor = Color.Black;
             txtFrequency.ForeColor = Color.Black;
         }
 
@@ -93,7 +91,7 @@ namespace HendersonvilleTrafficTest.Forms
                 if (_powerAnalyzer.IsConnected)
                 {
                     await GetDeviceInfo();
-                    await ReadAllMeasurements();
+                    await ReadMeasurements();
                 }
                 else
                 {
@@ -131,7 +129,7 @@ namespace HendersonvilleTrafficTest.Forms
                 
                 // Wait a moment for mode to settle, then take a reading
                 await Task.Delay(1000);
-                await ReadAllMeasurements();
+                await ReadMeasurements();
             }
             catch (Exception ex)
             {
@@ -142,10 +140,10 @@ namespace HendersonvilleTrafficTest.Forms
 
         private async void btnReadOnce_Click(object sender, EventArgs e)
         {
-            await ReadAllMeasurements();
+            await ReadMeasurements();
         }
 
-        private async Task ReadAllMeasurements()
+        private async Task ReadMeasurements()
         {
             if (!_powerAnalyzer.IsConnected)
             {
@@ -154,15 +152,11 @@ namespace HendersonvilleTrafficTest.Forms
 
             try
             {
-                // Read all measurements
-                var voltage = await _powerAnalyzer.GetVoltsAsync();
-                var current = await _powerAnalyzer.GetAmpsAsync();
-                var power = await _powerAnalyzer.GetWattsAsync();
-                var powerFactor = await _powerAnalyzer.GetPowerFactorAsync();
-                var frequency = await _powerAnalyzer.GetFrequencyAsync();
+                // Read all measurements at once
+                var measurements = await _powerAnalyzer.GetElectricalsAsync();
 
                 // Update display
-                UpdateMeasurementDisplay(voltage, current, power, powerFactor, frequency);
+                UpdateMeasurementDisplay(measurements);
             }
             catch (Exception ex)
             {
@@ -174,21 +168,18 @@ namespace HendersonvilleTrafficTest.Forms
             }
         }
 
-        private void UpdateMeasurementDisplay(double voltage, double current, double power, double powerFactor, double frequency)
+        private void UpdateMeasurementDisplay(ElectricalMeasurement measurements)
         {
-            txtVoltage.Text = $"{voltage:F3} V";
+            txtVoltage.Text = $"{measurements.Voltage:F3} V";
             txtVoltage.ForeColor = Color.Black;
             
-            txtCurrent.Text = $"{current:F6} A";
+            txtCurrent.Text = $"{measurements.Current:F6} A";
             txtCurrent.ForeColor = Color.Black;
             
-            txtPower.Text = $"{power:F3} W";
+            txtPower.Text = $"{measurements.Power:F3} W";
             txtPower.ForeColor = Color.Black;
             
-            txtPowerFactor.Text = $"{powerFactor:F3}";
-            txtPowerFactor.ForeColor = Color.Black;
-            
-            txtFrequency.Text = $"{frequency:F2} Hz";
+            txtFrequency.Text = $"{measurements.Frequency:F2} Hz";
             txtFrequency.ForeColor = Color.Black;
         }
 
@@ -202,9 +193,6 @@ namespace HendersonvilleTrafficTest.Forms
             
             txtPower.Text = "ERROR";
             txtPower.ForeColor = Color.Red;
-            
-            txtPowerFactor.Text = "ERROR";
-            txtPowerFactor.ForeColor = Color.Red;
             
             txtFrequency.Text = "ERROR";
             txtFrequency.ForeColor = Color.Red;
@@ -303,7 +291,7 @@ namespace HendersonvilleTrafficTest.Forms
             {
                 try
                 {
-                    await ReadAllMeasurements();
+                    await ReadMeasurements();
                 }
                 catch
                 {

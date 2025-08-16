@@ -3,6 +3,7 @@ using HendersonvilleTrafficTest.Communication;
 using HendersonvilleTrafficTest.Configuration;
 using System.Globalization;
 using System.IO.Ports;
+using static System.Windows.Forms.DataFormats;
 
 namespace HendersonvilleTrafficTest.Equipment.Hardware
 {
@@ -26,7 +27,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
                 ReadTimeoutMs = 2000,
                 WriteTimeoutMs = 2000,
                 NewLine = "\n",
-                DtrEnable = false,
+                DtrEnable = true,
                 RtsEnable = false
             };
         }
@@ -58,6 +59,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
 
                 // Clear status
                 await _communication.SendCommandAsync("*CLS");
+                
 
                 // Set device to remote mode for SCPI control
                 await _communication.SendCommandAsync("SYST:REM");
@@ -77,8 +79,8 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
         {
             var modeCommand = mode switch
             {
-                PowerMode.AC => "CHAN:MODE AC",
-                PowerMode.DC => "CONF:MODE DC",
+                PowerMode.AC => "CHAN:ACQ:MODE AC",
+                PowerMode.DC => "CHAN:ACQ:MODE DC",
                 _ => throw new ArgumentException($"Unsupported power mode: {mode}")
             };
 
@@ -104,84 +106,60 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
             await Task.Delay(500);
         }
 
-        public async Task<double> GetVoltsAsync()
+        public async Task<ElectricalMeasurement> GetElectricalsAsync()
         {
-            var response = await _communication.SendCommandAndReceiveAsync("CHAN:MEAS:DATA? 1", 4000);
-            if (string.IsNullOrEmpty(response))
+            try
             {
-                throw new InvalidOperationException("No response received for voltage measurement");
-            }
+                
+                var response = await _communication.SendCommandAndReceiveAsync("CHAN:MEAS:DATA?", 5000);
+                if (string.IsNullOrEmpty(response))
+                {
+                    throw new InvalidOperationException("No response received for electrical measurements");
+                }
+                
+                LogInfo($"Raw measurement response: {response}");
 
-            if (!double.TryParse(response.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out double voltage))
+                // Parse the comma-separated response
+                // Format: voltage,current,power,frequency,... (we only need first 4 values)
+                var values = response.Trim().Split(',');
+                if (values.Length < 4)
+                {
+                    throw new InvalidOperationException($"Invalid measurement response format: {response}");
+                }
+
+                var voltage = ParseMeasurementValue(values[0], "voltage");
+                var current = ParseMeasurementValue(values[1], "current");
+                var power = ParseMeasurementValue(values[2], "power");
+                var frequency = ParseMeasurementValue(values[3], "frequency");
+
+                return new ElectricalMeasurement(voltage, current, power, frequency);
+            }
+            catch (Exception ex)
             {
-                throw new InvalidOperationException($"Invalid voltage response: {response}");
+                LogError($"Failed to get electrical measurements: {ex.Message}");
+                throw new InvalidOperationException($"Failed to read electrical measurements: {ex.Message}");
             }
-
-            return voltage;
         }
 
-        public async Task<double> GetAmpsAsync()
+        private static double ParseMeasurementValue(string value, string measurementName)
         {
-            var response = await _communication.SendCommandAndReceiveAsync("CHAN:MEAS:DATA? 2", 4000);
-            if (string.IsNullOrEmpty(response))
+            if (string.IsNullOrWhiteSpace(value))
             {
-                throw new InvalidOperationException("No response received for current measurement");
+                throw new InvalidOperationException($"Empty {measurementName} value");
             }
 
-            if (!double.TryParse(response.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out double current))
+            // Handle NAN values
+            if (value.Trim().Equals("NAN", StringComparison.OrdinalIgnoreCase))
             {
-                throw new InvalidOperationException($"Invalid current response: {response}");
+                return 0.0; // Return 0 for NAN values
             }
 
-            return current;
-        }
-
-        public async Task<double> GetWattsAsync()
-        {
-            var response = await _communication.SendCommandAndReceiveAsync("CHAN:MEAS:DATA? 3", 2000);
-            if (string.IsNullOrEmpty(response))
+            if (!double.TryParse(value.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out double result))
             {
-                throw new InvalidOperationException("No response received for power measurement");
+                throw new InvalidOperationException($"Invalid {measurementName} value: {value}");
             }
 
-            if (!double.TryParse(response.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out double power))
-            {
-                throw new InvalidOperationException($"Invalid power response: {response}");
-            }
-
-            return power;
-        }
-
-        public async Task<double> GetPowerFactorAsync()
-        {
-            var response = "1";
-            if (string.IsNullOrEmpty(response))
-            {
-                throw new InvalidOperationException("No response received for power factor measurement");
-            }
-
-            if (!double.TryParse(response.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out double powerFactor))
-            {
-                throw new InvalidOperationException($"Invalid power factor response: {response}");
-            }
-
-            return powerFactor;
-        }
-
-        public async Task<double> GetFrequencyAsync()
-        {
-            var response = await _communication.SendCommandAndReceiveAsync("CHAN:MEAS:DATA? 4", 2000);
-            if (string.IsNullOrEmpty(response))
-            {
-                throw new InvalidOperationException("No response received for frequency measurement");
-            }
-
-            if (!double.TryParse(response.Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out double frequency))
-            {
-                throw new InvalidOperationException($"Invalid frequency response: {response}");
-            }
-
-            return frequency;
+            return result;
         }
 
         public async Task<string> GetDeviceInfoAsync()

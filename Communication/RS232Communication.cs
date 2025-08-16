@@ -164,24 +164,35 @@ namespace HendersonvilleTrafficTest.Communication
                             return null;
                         }
 
-                        // Clear any existing data in the buffer
-                        _serialPort.DiscardInBuffer();
-                        
-                        // Send command
-                        _serialPort.WriteLine(command);
-                        
-                        // Wait for response
-                        var originalTimeout = _serialPort.ReadTimeout;
-                        _serialPort.ReadTimeout = timeoutMs;
+                        // Temporarily disable DataReceived event to prevent race condition
+                        _serialPort.DataReceived -= OnDataReceived;
                         
                         try
                         {
-                            var response = _serialPort.ReadLine();
-                            return response;
+                            // Clear any existing data in the buffer
+                            _serialPort.DiscardInBuffer();
+                            
+                            // Send command
+                            _serialPort.WriteLine(command);
+                            
+                            // Wait for response with proper timeout management
+                            var originalTimeout = _serialPort.ReadTimeout;
+                            _serialPort.ReadTimeout = timeoutMs;
+                            
+                            try
+                            {
+                                var response = _serialPort.ReadLine();
+                                return response;
+                            }
+                            finally
+                            {
+                                _serialPort.ReadTimeout = originalTimeout;
+                            }
                         }
                         finally
                         {
-                            _serialPort.ReadTimeout = originalTimeout;
+                            // Re-enable DataReceived event
+                            _serialPort.DataReceived += OnDataReceived;
                         }
                     }
                     catch (TimeoutException)

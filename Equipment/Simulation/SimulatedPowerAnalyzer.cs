@@ -21,45 +21,24 @@ namespace HendersonvilleTrafficTest.Equipment.Simulation
             return Task.CompletedTask;
         }
 
-        public Task<double> GetVoltsAsync()
+        public Task<ElectricalMeasurement> GetElectricalsAsync()
         {
             var baseVoltage = _mode == PowerMode.AC ? 120.0 : 12.0;
-            var noise = (_random.NextDouble() - 0.5) * 0.5;
-            return Task.FromResult(baseVoltage + noise);
-        }
+            var voltageNoise = (_random.NextDouble() - 0.5) * 0.5;
+            var voltage = baseVoltage + voltageNoise;
 
-        public Task<double> GetAmpsAsync()
-        {
             var baseCurrent = _mode == PowerMode.AC ? 2.5 : 5.0;
-            var noise = (_random.NextDouble() - 0.5) * 0.1;
-            return Task.FromResult(baseCurrent + noise);
-        }
+            var currentNoise = (_random.NextDouble() - 0.5) * 0.1;
+            var current = baseCurrent + currentNoise;
 
-        public Task<double> GetWattsAsync()
-        {
             var baseWattage = _mode == PowerMode.AC ? 250.0 : 50.0;
-            var noise = (_random.NextDouble() - 0.5) * 5.0;
-            return Task.FromResult(baseWattage + noise);
-        }
+            var wattageNoise = (_random.NextDouble() - 0.5) * 5.0;
+            var power = baseWattage + wattageNoise;
 
-        public Task<double> GetPowerFactorAsync()
-        {
-            if (_mode == PowerMode.DC)
-                return Task.FromResult(1.0);
+            var frequency = _mode == PowerMode.DC ? 0.0 : 60.0 + (_random.NextDouble() - 0.5) * 0.1;
 
-            var basePF = 0.85;
-            var noise = (_random.NextDouble() - 0.5) * 0.05;
-            return Task.FromResult(Math.Max(0.1, Math.Min(1.0, basePF + noise)));
-        }
-
-        public Task<double> GetFrequencyAsync()
-        {
-            if (_mode == PowerMode.DC)
-                return Task.FromResult(0.0);
-
-            var baseFreq = 60.0;
-            var noise = (_random.NextDouble() - 0.5) * 0.1;
-            return Task.FromResult(baseFreq + noise);
+            var measurement = new ElectricalMeasurement(voltage, current, power, frequency);
+            return Task.FromResult(measurement);
         }
     }
 }

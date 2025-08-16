@@ -43,8 +43,6 @@ namespace HendersonvilleTrafficTest.Forms
             this.txtCurrent = new TextBox();
             this.lblPower = new Label();
             this.txtPower = new TextBox();
-            this.lblPowerFactor = new Label();
-            this.txtPowerFactor = new TextBox();
             this.lblFrequency = new Label();
             this.txtFrequency = new TextBox();
             this.btnReadOnce = new Button();
@@ -155,8 +153,6 @@ namespace HendersonvilleTrafficTest.Forms
             this.grpMeasurements.Controls.Add(this.txtCurrent);
             this.grpMeasurements.Controls.Add(this.lblPower);
             this.grpMeasurements.Controls.Add(this.txtPower);
-            this.grpMeasurements.Controls.Add(this.lblPowerFactor);
-            this.grpMeasurements.Controls.Add(this.txtPowerFactor);
             this.grpMeasurements.Controls.Add(this.lblFrequency);
             this.grpMeasurements.Controls.Add(this.txtFrequency);
             this.grpMeasurements.Controls.Add(this.btnReadOnce);
@@ -164,7 +160,7 @@ namespace HendersonvilleTrafficTest.Forms
             this.grpMeasurements.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             this.grpMeasurements.Location = new Point(12, 110);
             this.grpMeasurements.Name = "grpMeasurements";
-            this.grpMeasurements.Size = new Size(470, 200);
+            this.grpMeasurements.Size = new Size(470, 150);
             this.grpMeasurements.TabIndex = 2;
             this.grpMeasurements.TabStop = false;
             this.grpMeasurements.Text = "Measurements";
@@ -239,48 +235,25 @@ namespace HendersonvilleTrafficTest.Forms
             this.txtPower.TextAlign = HorizontalAlignment.Center;
             
             // 
-            // lblPowerFactor
-            // 
-            this.lblPowerFactor.AutoSize = true;
-            this.lblPowerFactor.Font = new Font("Segoe UI", 9F);
-            this.lblPowerFactor.Location = new Point(240, 30);
-            this.lblPowerFactor.Name = "lblPowerFactor";
-            this.lblPowerFactor.Size = new Size(76, 15);
-            this.lblPowerFactor.TabIndex = 6;
-            this.lblPowerFactor.Text = "Power Factor:";
-            
-            // 
-            // txtPowerFactor
-            // 
-            this.txtPowerFactor.Font = new Font("Segoe UI", 9F);
-            this.txtPowerFactor.Location = new Point(330, 27);
-            this.txtPowerFactor.Name = "txtPowerFactor";
-            this.txtPowerFactor.ReadOnly = true;
-            this.txtPowerFactor.Size = new Size(100, 23);
-            this.txtPowerFactor.TabIndex = 7;
-            this.txtPowerFactor.Text = "-- PF";
-            this.txtPowerFactor.TextAlign = HorizontalAlignment.Center;
-            
-            // 
             // lblFrequency
             // 
             this.lblFrequency.AutoSize = true;
             this.lblFrequency.Font = new Font("Segoe UI", 9F);
-            this.lblFrequency.Location = new Point(240, 60);
+            this.lblFrequency.Location = new Point(240, 30);
             this.lblFrequency.Name = "lblFrequency";
             this.lblFrequency.Size = new Size(84, 15);
-            this.lblFrequency.TabIndex = 8;
+            this.lblFrequency.TabIndex = 6;
             this.lblFrequency.Text = "Frequency (Hz):";
             
             // 
             // txtFrequency
             // 
             this.txtFrequency.Font = new Font("Segoe UI", 9F);
-            this.txtFrequency.Location = new Point(330, 57);
+            this.txtFrequency.Location = new Point(330, 27);
             this.txtFrequency.Name = "txtFrequency";
             this.txtFrequency.ReadOnly = true;
             this.txtFrequency.Size = new Size(100, 23);
-            this.txtFrequency.TabIndex = 9;
+            this.txtFrequency.TabIndex = 7;
             this.txtFrequency.Text = "-- Hz";
             this.txtFrequency.TextAlign = HorizontalAlignment.Center;
             
@@ -288,10 +261,10 @@ namespace HendersonvilleTrafficTest.Forms
             // btnReadOnce
             // 
             this.btnReadOnce.Font = new Font("Segoe UI", 9F);
-            this.btnReadOnce.Location = new Point(15, 130);
+            this.btnReadOnce.Location = new Point(15, 100);
             this.btnReadOnce.Name = "btnReadOnce";
             this.btnReadOnce.Size = new Size(100, 30);
-            this.btnReadOnce.TabIndex = 10;
+            this.btnReadOnce.TabIndex = 8;
             this.btnReadOnce.Text = "Read Once";
             this.btnReadOnce.UseVisualStyleBackColor = true;
             this.btnReadOnce.Click += new EventHandler(this.btnReadOnce_Click);
@@ -301,10 +274,10 @@ namespace HendersonvilleTrafficTest.Forms
             // 
             this.chkAutoRead.AutoSize = true;
             this.chkAutoRead.Font = new Font("Segoe UI", 9F);
-            this.chkAutoRead.Location = new Point(130, 137);
+            this.chkAutoRead.Location = new Point(130, 107);
             this.chkAutoRead.Name = "chkAutoRead";
             this.chkAutoRead.Size = new Size(125, 19);
-            this.chkAutoRead.TabIndex = 11;
+            this.chkAutoRead.TabIndex = 9;
             this.chkAutoRead.Text = "Auto Read (1 sec)";
             this.chkAutoRead.UseVisualStyleBackColor = true;
             this.chkAutoRead.CheckedChanged += new EventHandler(this.chkAutoRead_CheckedChanged);
@@ -316,7 +289,7 @@ namespace HendersonvilleTrafficTest.Forms
             this.grpDeviceInfo.Controls.Add(this.btnGetDeviceInfo);
             this.grpDeviceInfo.Controls.Add(this.btnCheckErrors);
             this.grpDeviceInfo.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            this.grpDeviceInfo.Location = new Point(12, 330);
+            this.grpDeviceInfo.Location = new Point(12, 280);
             this.grpDeviceInfo.Name = "grpDeviceInfo";
             this.grpDeviceInfo.Size = new Size(470, 100);
             this.grpDeviceInfo.TabIndex = 3;
@@ -371,7 +344,7 @@ namespace HendersonvilleTrafficTest.Forms
             // 
             this.AutoScaleDimensions = new SizeF(7F, 15F);
             this.AutoScaleMode = AutoScaleMode.Font;
-            this.ClientSize = new Size(500, 450);
+            this.ClientSize = new Size(500, 400);
             this.Controls.Add(this.grpDeviceInfo);
             this.Controls.Add(this.grpMeasurements);
             this.Controls.Add(this.grpMode);
@@ -410,8 +383,6 @@ namespace HendersonvilleTrafficTest.Forms
         private TextBox txtCurrent;
         private Label lblPower;
         private TextBox txtPower;
-        private Label lblPowerFactor;
-        private TextBox txtPowerFactor;
         private Label lblFrequency;
         private TextBox txtFrequency;
         private Button btnReadOnce;
