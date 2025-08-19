@@ -7,47 +7,19 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
 {
     public class UsbTemperatureSensor : EquipmentCommunicationBase, ITemperatureSensor
     {
-        private byte[]? _lastReceivedData;
-        private readonly object _dataLock = new();
         
-        public TemperatureSensorType SensorType { get; set; } = TemperatureSensorType.OHT20;
+        public TemperatureSensorType SensorType { get; set; } = TemperatureSensorType.OT150;
 
         public UsbTemperatureSensor() : base("USB Temperature Sensor", CreateSerialSettings())
         {
-            _communication.ByteDataReceived += OnByteDataReceived;
-        }
-
-        private void OnByteDataReceived(object? sender, byte[] data)
-        {
-            lock (_dataLock)
+            // No longer need event subscriptions - using synchronous communication
+            
+            // Set sensor type from configuration
+            var config = ConfigurationManager.Current.Equipment;
+            if (Enum.TryParse<TemperatureSensorType>(config.TemperatureSensorType, out var sensorType))
             {
-                _lastReceivedData = new byte[data.Length];
-                Array.Copy(data, _lastReceivedData, data.Length);
+                SensorType = sensorType;
             }
-        }
-
-        private async Task<byte[]?> WaitForResponseAsync(int timeoutMs = 1000)
-        {
-            var startTime = DateTime.Now;
-            
-            lock (_dataLock) { _lastReceivedData = null; }
-            
-            while ((DateTime.Now - startTime).TotalMilliseconds < timeoutMs)
-            {
-                lock (_dataLock)
-                {
-                    if (_lastReceivedData != null)
-                    {
-                        var result = new byte[_lastReceivedData.Length];
-                        Array.Copy(_lastReceivedData, result, _lastReceivedData.Length);
-                        _lastReceivedData = null;
-                        return result;
-                    }
-                }
-                await Task.Delay(25);
-            }
-            
-            return null;
         }
 
         private static SerialPortSettings CreateSerialSettings()
@@ -116,13 +88,8 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
             {
                 var command = new byte[] { 0x02, 0xFD };
                 
-                // Clear any existing data first
-                await _communication.ClearBuffersAsync();
-                
-                // Send the command multiple times with small delays to ensure delivery
-                await _communication.SendBytesAsync(command);
-                
-                var response = await WaitForResponseAsync(2000);
+                // Use the new synchronous send-and-receive method
+                var response = await _communication.SendBytesAndReceiveAsync(command, 2000, 7);
                 
                 if (response == null || response.Length < 7)
                 {
@@ -146,13 +113,15 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
 
         private TemperatureReading ParseSensorResponse(byte[] response)
         {
-            // Response format: 0xFD, 0x02, E0, AB, 38, 60, C0
-            // Bytes 2-3: HUM (humidity data)
-            // Bytes 4-5: TEMP (temperature data)  
+            // Response format: 0xFD, 0x02, HUM_LSB, HUM_MSB, TEMP_LSB, TEMP_MSB, FLAG
+            // Bytes 0-1: Header (0xFD, 0x02)
+            // Bytes 2-3: HUM (LSB, MSB) - little endian
+            // Bytes 4-5: TEMP (LSB, MSB) - little endian  
             // Byte 6: FLAG
             
-            var humBytes = (ushort)((response[2] << 8) | response[3]);
-            var tempBytes = (ushort)((response[4] << 8) | response[5]);
+            // Parse little endian 16-bit values
+            var humBytes = (ushort)(response[2] | (response[3] << 8));  // LSB first, then MSB
+            var tempBytes = (ushort)(response[4] | (response[5] << 8)); // LSB first, then MSB
             var flag = response[6];
             
             var reading = new TemperatureReading();
@@ -162,19 +131,22 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
             reading.HasErrorOverflow = (flag & 0x20) != 0;  // Bit 5
             reading.IsHeatingOn = (flag & 0x40) != 0;  // Bit 6
             reading.IsTemperatureValid = (flag & 0x80) != 0;  // Bit 7
-            reading.IsHumidityValid = (flag & 0x100) != 0;  // Bit 8 (note: this might not work as flag is only 1 byte)
+            // Note: For humidity validity, we rely on sensor type since flag is only 1 byte
+            reading.IsHumidityValid = (SensorType == TemperatureSensorType.OHT20) && reading.IsTemperatureValid;
             
             // Convert temperature based on sensor type
             reading.Temperature = ConvertTemperature(tempBytes, SensorType);
             
             // Convert humidity (only valid for OHT20)
-            if (SensorType == TemperatureSensorType.OHT20 && reading.IsHumidityValid)
+            if (SensorType == TemperatureSensorType.OHT20)
             {
                 reading.Humidity = ConvertHumidity(humBytes);
+                // For non-OHT20 sensors, humidity should be zero according to documentation
             }
             else
             {
                 reading.Humidity = null;
+                reading.IsHumidityValid = false;
             }
             
             LogDebug($"Sensor reading - Temp: {reading.Temperature:F1}°C, Humidity: {reading.Humidity?.ToString("F1") ?? "N/A"}%, Errors: {reading.ErrorCount}");

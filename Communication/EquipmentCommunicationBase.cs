@@ -118,6 +118,31 @@ namespace HendersonvilleTrafficTest.Communication
             }
         }
 
+        protected async Task<byte[]?> SendBytesWithResponseAsync(byte[] command, int timeoutMs = 2000, int expectedBytes = 0)
+        {
+            try
+            {
+                LogDebug($"{_equipmentName} -> {ByteUtilities.BytesToHexString(command)}");
+                var response = await _communication.SendBytesAndReceiveAsync(command, timeoutMs, expectedBytes);
+                
+                if (response != null)
+                {
+                    LogDebug($"{_equipmentName} <- {ByteUtilities.BytesToHexString(response)}");
+                }
+                else
+                {
+                    LogWarning($"{_equipmentName} no response to byte command");
+                }
+                
+                return response;
+            }
+            catch (Exception ex)
+            {
+                LogError($"{_equipmentName} send bytes with response error: {ex.Message}");
+                return null;
+            }
+        }
+
 
 
 

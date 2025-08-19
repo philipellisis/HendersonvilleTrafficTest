@@ -63,6 +63,10 @@ namespace HendersonvilleTrafficTest.Configuration
         [Description("Baud rate for USB Temperature Sensor")]
         public int TemperatureSensorBaudRate { get; set; } = 9600;
 
+        [XmlElement("TemperatureSensorType")]
+        [Description("Temperature sensor type (OHT20, OT60, OT150)")]
+        public string TemperatureSensorType { get; set; } = "OT150";
+
         [XmlElement("PowerAnalyzerComPort")]
         [Description("COM port for NPA101 Power Analyzer")]
         public string PowerAnalyzerComPort { get; set; } = "COM3";

@@ -8,8 +8,6 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
     public class NcdRelayController : EquipmentCommunicationBase, IRelayController
     {
         private readonly bool[] _outputStates;
-        private byte[]? _lastReceivedData;
-        private readonly object _dataLock = new();
         
         public int MaxOutputChannels { get; } = 8;
         public int MaxInputChannels { get; } = 8;
@@ -17,41 +15,9 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
         public NcdRelayController() : base("NCD Relay Controller", CreateSerialSettings())
         {
             _outputStates = new bool[MaxOutputChannels];
-            _communication.ByteDataReceived += OnByteDataReceived;
+            // No longer need event subscriptions - using synchronous communication
         }
 
-        private void OnByteDataReceived(object? sender, byte[] data)
-        {
-            lock (_dataLock)
-            {
-                _lastReceivedData = new byte[data.Length];
-                Array.Copy(data, _lastReceivedData, data.Length);
-            }
-        }
-
-        private async Task<byte[]?> WaitForResponseAsync(int timeoutMs = 1000)
-        {
-            var startTime = DateTime.Now;
-            
-            lock (_dataLock) { _lastReceivedData = null; }
-            
-            while ((DateTime.Now - startTime).TotalMilliseconds < timeoutMs)
-            {
-                lock (_dataLock)
-                {
-                    if (_lastReceivedData != null)
-                    {
-                        var result = new byte[_lastReceivedData.Length];
-                        Array.Copy(_lastReceivedData, result, _lastReceivedData.Length);
-                        _lastReceivedData = null;
-                        return result;
-                    }
-                }
-                await Task.Delay(25);
-            }
-            
-            return null;
-        }
 
         private static SerialPortSettings CreateSerialSettings()
         {
@@ -115,8 +81,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
         private async Task<bool> TestCommunicationAsync()
         {
             var testCommand = new byte[] { 254, 116, 1 };
-            await SendBytesAsync(testCommand);
-            var response = await WaitForResponseAsync(1000);
+            var response = await SendBytesWithResponseAsync(testCommand, 1000, 1);
             return response != null && response.Length > 0;
         }
 
@@ -130,8 +95,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
                 byte checksumByte = (byte)(22 + outputNumber);
                 var command = new byte[] { 170, 3, 254, commandByte, 0, checksumByte };
                 
-                await SendBytesAsync(command);
-                var response = await WaitForResponseAsync(2000);
+                var response = await SendBytesWithResponseAsync(command, 2000, 3);
                 
                 if (response != null && response.Length >= 3 && response[0] == 0xAA && response[2] == 85)
                 {
@@ -161,8 +125,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
                 byte checksumByte = (byte)(14 + outputNumber);
                 var command = new byte[] { 170, 3, 254, commandByte, 0, checksumByte };
 
-                await SendBytesAsync(command);
-                var response = await WaitForResponseAsync(2000);
+                var response = await SendBytesWithResponseAsync(command, 2000, 3);
 
                 if (response != null && response.Length >= 3 && response[0] == 0xAA && response[2] == 85)
                 {
@@ -192,8 +155,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
                 byte checksumByte = (byte)(63 + inputNumber);
                 var command = new byte[] { 170, 2, 254, commandByte, checksumByte };
 
-                await SendBytesAsync(command);
-                var response = await WaitForResponseAsync(2000);
+                var response = await SendBytesWithResponseAsync(command, 2000, 3);
 
                 if (response != null && response.Length > 2)
                 {
@@ -221,8 +183,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
                 byte commandByte = (byte)(115 + outputNumber);
                 var command = new byte[] { 254, commandByte, 1 };
                 
-                await SendBytesAsync(command);
-                var response = await WaitForResponseAsync(1000);
+                var response = await SendBytesWithResponseAsync(command, 1000, 1);
                 
                 if (response != null && response.Length > 0)
                 {

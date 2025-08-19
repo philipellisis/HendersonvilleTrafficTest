@@ -14,18 +14,35 @@ namespace HendersonvilleTrafficTest.Forms
             var factory = new EquipmentFactory();
             _temperatureSensor = factory.CreateTemperatureSensor();
             
-            LoadSensorTypes();
             InitializeSensor();
+            UpdateSensorTypeDisplay();
         }
 
-        private void LoadSensorTypes()
+        private void UpdateSensorTypeDisplay()
         {
-            cmbSensorType.Items.AddRange(new object[] {
-                "OHT20 (Temperature + Humidity)",
-                "OT60 (Temperature -10 to +60°C)",
-                "OT150 (Temperature -50 to +150°C)"
-            });
-            cmbSensorType.SelectedIndex = 0; // Default to OHT20
+            // Update the title to show the current sensor type from configuration
+            var sensorTypeText = _temperatureSensor.SensorType switch
+            {
+                TemperatureSensorType.OHT20 => "OHT20 (Temperature + Humidity)",
+                TemperatureSensorType.OT60 => "OT60 (Temperature -10 to +60°C)",
+                TemperatureSensorType.OT150 => "OT150 (Temperature -50 to +150°C)",
+                _ => "Unknown"
+            };
+            
+            this.Text = $"Temperature Sensor Test - {sensorTypeText}";
+            
+            // Update humidity field visibility based on sensor type
+            bool supportsHumidity = _temperatureSensor.SensorType == TemperatureSensorType.OHT20;
+            lblHumidity.Enabled = supportsHumidity;
+            txtHumidity.Enabled = supportsHumidity;
+            chkHumValid.Enabled = supportsHumidity;
+            
+            if (!supportsHumidity)
+            {
+                txtHumidity.Text = "N/A";
+                txtHumidity.ForeColor = Color.Gray;
+                chkHumValid.Checked = false;
+            }
         }
 
         private async void InitializeSensor()
@@ -65,7 +82,6 @@ namespace HendersonvilleTrafficTest.Forms
             lblConnectionStatus.ForeColor = connected ? Color.Green : Color.Red;
             
             // Enable/disable controls
-            grpSensorConfig.Enabled = !connected;
             btnReadOnce.Enabled = connected;
             chkAutoRead.Enabled = connected;
             
@@ -197,26 +213,6 @@ namespace HendersonvilleTrafficTest.Forms
             chkErrorOverflow.ForeColor = reading.HasErrorOverflow ? Color.Red : Color.Gray;
         }
 
-        private void cmbSensorType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (_temperatureSensor != null)
-            {
-                _temperatureSensor.SensorType = (TemperatureSensorType)cmbSensorType.SelectedIndex;
-                
-                // Update humidity field visibility based on sensor type
-                bool supportsHumidity = _temperatureSensor.SensorType == TemperatureSensorType.OHT20;
-                lblHumidity.Enabled = supportsHumidity;
-                txtHumidity.Enabled = supportsHumidity;
-                chkHumValid.Enabled = supportsHumidity;
-                
-                if (!supportsHumidity)
-                {
-                    txtHumidity.Text = "N/A";
-                    txtHumidity.ForeColor = Color.Gray;
-                    chkHumValid.Checked = false;
-                }
-            }
-        }
 
         private void chkAutoRead_CheckedChanged(object sender, EventArgs e)
         {

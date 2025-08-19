@@ -5,9 +5,6 @@ namespace HendersonvilleTrafficTest.Forms
         private System.ComponentModel.IContainer components = null;
         private Label lblTitle;
         private Label lblConnectionStatus;
-        private GroupBox grpSensorConfig;
-        private Label lblSensorType;
-        private ComboBox cmbSensorType;
         private GroupBox grpReadings;
         private Label lblTemperature;
         private TextBox txtTemperature;
@@ -30,9 +27,6 @@ namespace HendersonvilleTrafficTest.Forms
         {
             this.lblTitle = new Label();
             this.lblConnectionStatus = new Label();
-            this.grpSensorConfig = new GroupBox();
-            this.lblSensorType = new Label();
-            this.cmbSensorType = new ComboBox();
             this.grpReadings = new GroupBox();
             this.lblTemperature = new Label();
             this.txtTemperature = new TextBox();
@@ -50,7 +44,6 @@ namespace HendersonvilleTrafficTest.Forms
             this.chkAutoRead = new CheckBox();
             this.btnClose = new Button();
             this.autoReadTimer = new System.Windows.Forms.Timer();
-            this.grpSensorConfig.SuspendLayout();
             this.grpReadings.SuspendLayout();
             this.grpControls.SuspendLayout();
             this.SuspendLayout();
@@ -78,41 +71,6 @@ namespace HendersonvilleTrafficTest.Forms
             this.lblConnectionStatus.Text = "Connecting...";
             this.lblConnectionStatus.ForeColor = Color.Orange;
 
-            // 
-            // grpSensorConfig
-            // 
-            this.grpSensorConfig.Controls.Add(this.cmbSensorType);
-            this.grpSensorConfig.Controls.Add(this.lblSensorType);
-            this.grpSensorConfig.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            this.grpSensorConfig.Location = new Point(12, 70);
-            this.grpSensorConfig.Name = "grpSensorConfig";
-            this.grpSensorConfig.Size = new Size(460, 60);
-            this.grpSensorConfig.TabIndex = 2;
-            this.grpSensorConfig.TabStop = false;
-            this.grpSensorConfig.Text = "Sensor Configuration";
-
-            // 
-            // lblSensorType
-            // 
-            this.lblSensorType.AutoSize = true;
-            this.lblSensorType.Font = new Font("Segoe UI", 9F);
-            this.lblSensorType.Location = new Point(15, 25);
-            this.lblSensorType.Name = "lblSensorType";
-            this.lblSensorType.Size = new Size(75, 15);
-            this.lblSensorType.TabIndex = 0;
-            this.lblSensorType.Text = "Sensor Type:";
-
-            // 
-            // cmbSensorType
-            // 
-            this.cmbSensorType.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.cmbSensorType.Font = new Font("Segoe UI", 9F);
-            this.cmbSensorType.FormattingEnabled = true;
-            this.cmbSensorType.Location = new Point(100, 22);
-            this.cmbSensorType.Name = "cmbSensorType";
-            this.cmbSensorType.Size = new Size(200, 23);
-            this.cmbSensorType.TabIndex = 1;
-            this.cmbSensorType.SelectedIndexChanged += new EventHandler(this.cmbSensorType_SelectedIndexChanged);
 
             // 
             // grpReadings
@@ -128,7 +86,7 @@ namespace HendersonvilleTrafficTest.Forms
             this.grpReadings.Controls.Add(this.txtTemperature);
             this.grpReadings.Controls.Add(this.lblTemperature);
             this.grpReadings.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            this.grpReadings.Location = new Point(12, 140);
+            this.grpReadings.Location = new Point(12, 70);
             this.grpReadings.Name = "grpReadings";
             this.grpReadings.Size = new Size(460, 160);
             this.grpReadings.TabIndex = 3;
@@ -263,7 +221,7 @@ namespace HendersonvilleTrafficTest.Forms
             this.grpControls.Controls.Add(this.btnReadOnce);
             this.grpControls.Controls.Add(this.btnConnect);
             this.grpControls.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            this.grpControls.Location = new Point(12, 310);
+            this.grpControls.Location = new Point(12, 240);
             this.grpControls.Name = "grpControls";
             this.grpControls.Size = new Size(460, 80);
             this.grpControls.TabIndex = 4;
@@ -314,7 +272,7 @@ namespace HendersonvilleTrafficTest.Forms
             // btnClose
             // 
             this.btnClose.Font = new Font("Segoe UI", 9F);
-            this.btnClose.Location = new Point(397, 400);
+            this.btnClose.Location = new Point(397, 330);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new Size(75, 30);
             this.btnClose.TabIndex = 5;
@@ -333,11 +291,10 @@ namespace HendersonvilleTrafficTest.Forms
             // 
             this.AutoScaleDimensions = new SizeF(7F, 15F);
             this.AutoScaleMode = AutoScaleMode.Font;
-            this.ClientSize = new Size(484, 442);
+            this.ClientSize = new Size(484, 372);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.grpControls);
             this.Controls.Add(this.grpReadings);
-            this.Controls.Add(this.grpSensorConfig);
             this.Controls.Add(this.lblConnectionStatus);
             this.Controls.Add(this.lblTitle);
             this.Font = new Font("Segoe UI", 9F);
@@ -348,8 +305,6 @@ namespace HendersonvilleTrafficTest.Forms
             this.ShowIcon = false;
             this.StartPosition = FormStartPosition.CenterParent;
             this.Text = "Temperature Sensor Test";
-            this.grpSensorConfig.ResumeLayout(false);
-            this.grpSensorConfig.PerformLayout();
             this.grpReadings.ResumeLayout(false);
             this.grpReadings.PerformLayout();
             this.grpControls.ResumeLayout(false);

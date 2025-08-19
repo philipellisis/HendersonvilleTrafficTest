@@ -10,8 +10,6 @@ namespace HendersonvilleTrafficTest.Communication
         private readonly object _lock = new();
         private bool _disposed = false;
 
-        public event EventHandler<string>? DataReceived;
-        public event EventHandler<byte[]>? ByteDataReceived;
         public event EventHandler<string>? ErrorOccurred;
         public event EventHandler? ConnectionStateChanged;
 
@@ -59,7 +57,7 @@ namespace HendersonvilleTrafficTest.Communication
                             _serialPort.NewLine = _settings.NewLine;
                         }
 
-                        _serialPort.DataReceived += OnDataReceived;
+                        // Only subscribe to error events - let hardware implementations handle data reception
                         _serialPort.ErrorReceived += OnErrorReceived;
 
                         _serialPort.Open();
@@ -164,35 +162,24 @@ namespace HendersonvilleTrafficTest.Communication
                             return null;
                         }
 
-                        // Temporarily disable ALL data received events to prevent race condition
-                        _serialPort.DataReceived -= OnDataReceived;
+                        // Clear any existing data in the buffer
+                        _serialPort.DiscardInBuffer();
+                        
+                        // Send command
+                        _serialPort.WriteLine(command);
+                        
+                        // Wait for response with proper timeout management
+                        var originalTimeout = _serialPort.ReadTimeout;
+                        _serialPort.ReadTimeout = timeoutMs;
                         
                         try
                         {
-                            // Clear any existing data in the buffer
-                            _serialPort.DiscardInBuffer();
-                            
-                            // Send command
-                            _serialPort.WriteLine(command);
-                            
-                            // Wait for response with proper timeout management
-                            var originalTimeout = _serialPort.ReadTimeout;
-                            _serialPort.ReadTimeout = timeoutMs;
-                            
-                            try
-                            {
-                                var response = _serialPort.ReadLine();
-                                return response;
-                            }
-                            finally
-                            {
-                                _serialPort.ReadTimeout = originalTimeout;
-                            }
+                            var response = _serialPort.ReadLine();
+                            return response;
                         }
                         finally
                         {
-                            // Re-enable DataReceived event (which will re-enable both DataReceived and ByteDataReceived)
-                            _serialPort.DataReceived += OnDataReceived;
+                            _serialPort.ReadTimeout = originalTimeout;
                         }
                     }
                     catch (TimeoutException)
@@ -248,6 +235,157 @@ namespace HendersonvilleTrafficTest.Communication
             });
         }
 
+        public async Task<byte[]?> ReadBytesAsync(int timeoutMs = 1000, int expectedBytes = 0)
+        {
+            return await Task.Run(() =>
+            {
+                lock (_lock)
+                {
+                    try
+                    {
+                        if (_serialPort?.IsOpen != true)
+                        {
+                            return null;
+                        }
+
+                        var originalTimeout = _serialPort.ReadTimeout;
+                        _serialPort.ReadTimeout = timeoutMs;
+                        
+                        try
+                        {
+                            // Wait for data to arrive
+                            var startTime = DateTime.Now;
+                            while (_serialPort.BytesToRead == 0 && (DateTime.Now - startTime).TotalMilliseconds < timeoutMs)
+                            {
+                                Thread.Sleep(10);
+                            }
+
+                            if (_serialPort.BytesToRead == 0)
+                            {
+                                return null; // Timeout waiting for data
+                            }
+
+                            // If we're expecting a specific number of bytes, wait for them
+                            if (expectedBytes > 0)
+                            {
+                                while (_serialPort.BytesToRead < expectedBytes && (DateTime.Now - startTime).TotalMilliseconds < timeoutMs)
+                                {
+                                    Thread.Sleep(10);
+                                }
+                            }
+
+                            // Read all available bytes
+                            var bytesToRead = _serialPort.BytesToRead;
+                            var buffer = new byte[bytesToRead];
+                            var bytesRead = _serialPort.Read(buffer, 0, bytesToRead);
+                            
+                            if (bytesRead > 0)
+                            {
+                                var result = new byte[bytesRead];
+                                Array.Copy(buffer, result, bytesRead);
+                                return result;
+                            }
+                            
+                            return null;
+                        }
+                        finally
+                        {
+                            _serialPort.ReadTimeout = originalTimeout;
+                        }
+                    }
+                    catch (TimeoutException)
+                    {
+                        return null;
+                    }
+                    catch (Exception ex)
+                    {
+                        OnErrorOccurred($"Failed to read bytes: {ex.Message}");
+                        return null;
+                    }
+                }
+            });
+        }
+
+        public async Task<byte[]?> SendBytesAndReceiveAsync(byte[] data, int timeoutMs = 1000, int expectedBytes = 0)
+        {
+            return await Task.Run(() =>
+            {
+                lock (_lock)
+                {
+                    try
+                    {
+                        if (_serialPort?.IsOpen != true)
+                        {
+                            OnErrorOccurred("Cannot send bytes: Port is not open");
+                            return null;
+                        }
+
+                        // Clear any existing data in the buffer
+                        _serialPort.DiscardInBuffer();
+                        
+                        // Send bytes
+                        _serialPort.Write(data, 0, data.Length);
+                        
+                        // Wait for response with proper timeout management
+                        var originalTimeout = _serialPort.ReadTimeout;
+                        _serialPort.ReadTimeout = timeoutMs;
+                        
+                        try
+                        {
+                            // Wait for data to arrive
+                            var startTime = DateTime.Now;
+                            while (_serialPort.BytesToRead == 0 && (DateTime.Now - startTime).TotalMilliseconds < timeoutMs)
+                            {
+                                Thread.Sleep(10);
+                            }
+
+                            if (_serialPort.BytesToRead == 0)
+                            {
+                                return null; // Timeout waiting for data
+                            }
+
+                            // If we're expecting a specific number of bytes, wait for them
+                            if (expectedBytes > 0)
+                            {
+                                while (_serialPort.BytesToRead < expectedBytes && (DateTime.Now - startTime).TotalMilliseconds < timeoutMs)
+                                {
+                                    Thread.Sleep(10);
+                                }
+                            }
+
+                            // Read all available bytes
+                            var bytesToRead = _serialPort.BytesToRead;
+                            var buffer = new byte[bytesToRead];
+                            var bytesRead = _serialPort.Read(buffer, 0, bytesToRead);
+                            
+                            if (bytesRead > 0)
+                            {
+                                var result = new byte[bytesRead];
+                                Array.Copy(buffer, result, bytesRead);
+                                return result;
+                            }
+                            
+                            return null;
+                        }
+                        finally
+                        {
+                            _serialPort.ReadTimeout = originalTimeout;
+                        }
+                    }
+                    catch (TimeoutException)
+                    {
+                        OnErrorOccurred($"Timeout waiting for response to byte command");
+                        return null;
+                    }
+                    catch (Exception ex)
+                    {
+                        OnErrorOccurred($"Failed to send bytes and receive response: {ex.Message}");
+                        return null;
+                    }
+                }
+            });
+        }
+
         public async Task ClearBuffersAsync()
         {
             await Task.Run(() =>
@@ -278,38 +416,22 @@ namespace HendersonvilleTrafficTest.Communication
             return SerialPort.GetPortNames();
         }
 
-        private void OnDataReceived(object sender, SerialDataReceivedEventArgs e)
+        public void SubscribeToDataReceived(SerialDataReceivedEventHandler handler)
         {
-            try
+            if (_serialPort != null)
             {
-                if (_serialPort?.IsOpen == true && _serialPort.BytesToRead > 0)
-                {
-                    // Read raw bytes first
-                    var buffer = new byte[_serialPort.BytesToRead];
-                    var bytesRead = _serialPort.Read(buffer, 0, buffer.Length);
-                    
-                    if (bytesRead > 0)
-                    {
-                        var byteData = new byte[bytesRead];
-                        Array.Copy(buffer, byteData, bytesRead);
-                        
-                        // Fire byte data event
-                        ByteDataReceived?.Invoke(this, byteData);
-                        
-                        // Also convert to string and fire text event (for compatibility)
-                        var textData = System.Text.Encoding.ASCII.GetString(byteData);
-                        if (!string.IsNullOrEmpty(textData))
-                        {
-                            DataReceived?.Invoke(this, textData);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                OnErrorOccurred($"Error reading data: {ex.Message}");
+                _serialPort.DataReceived += handler;
             }
         }
+
+        public void UnsubscribeFromDataReceived(SerialDataReceivedEventHandler handler)
+        {
+            if (_serialPort != null)
+            {
+                _serialPort.DataReceived -= handler;
+            }
+        }
+
 
         private void OnErrorReceived(object sender, SerialErrorReceivedEventArgs e)
         {

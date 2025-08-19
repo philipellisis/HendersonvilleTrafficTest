@@ -69,8 +69,6 @@ namespace HendersonvilleTrafficTest.Communication
                 _communication = new RS232Communication(_settings);
                 
                 // Subscribe to events
-                _communication.DataReceived += OnDataReceived;
-                _communication.ByteDataReceived += OnByteDataReceived;
                 _communication.ErrorOccurred += OnErrorOccurred;
                 _communication.ConnectionStateChanged += OnConnectionStateChanged;
 
