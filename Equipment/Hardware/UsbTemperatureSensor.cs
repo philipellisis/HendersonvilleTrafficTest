@@ -63,10 +63,10 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
                 Handshake = Handshake.None,
                 ReadTimeoutMs = 1000,
                 WriteTimeoutMs = 1000,
-                NewLine = "\r\n",
+                NewLine = "\r",
                 UseNewLineForBinary = false,
-                DtrEnable = true,
-                RtsEnable = true
+                DtrEnable = false,
+                RtsEnable = false
             };
         }
 
@@ -116,7 +116,12 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
             {
                 var command = new byte[] { 0x02, 0xFD };
                 
-                await SendBytesAsync(command);
+                // Clear any existing data first
+                await _communication.ClearBuffersAsync();
+                
+                // Send the command multiple times with small delays to ensure delivery
+                await _communication.SendBytesAsync(command);
+                
                 var response = await WaitForResponseAsync(2000);
                 
                 if (response == null || response.Length < 7)

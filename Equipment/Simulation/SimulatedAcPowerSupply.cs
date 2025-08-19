@@ -52,5 +52,39 @@ namespace HendersonvilleTrafficTest.Equipment.Simulation
             _isPoweredOn = false;
             return Task.CompletedTask;
         }
+
+        public Task<double> GetCurrentAsync()
+        {
+            if (!_isPoweredOn)
+                return Task.FromResult(0.0);
+
+            // Simulate current based on voltage (assuming some load)
+            var baseCurrent = _volts / 120.0 * 5.0; // Simulated 5A load at 120V
+            var noise = (_random.NextDouble() - 0.5) * 0.1;
+            return Task.FromResult(Math.Max(0, baseCurrent + noise));
+        }
+
+        public Task<double> GetPowerAsync()
+        {
+            if (!_isPoweredOn)
+                return Task.FromResult(0.0);
+
+            // Simulate power as voltage * current
+            var current = _volts / 120.0 * 5.0; // Same calculation as current
+            var power = _volts * current;
+            var noise = (_random.NextDouble() - 0.5) * 5.0;
+            return Task.FromResult(Math.Max(0, power + noise));
+        }
+
+        public Task<double> GetPowerFactorAsync()
+        {
+            if (!_isPoweredOn)
+                return Task.FromResult(0.0);
+
+            // Simulate a typical power factor for AC loads
+            var basePF = 0.85;
+            var noise = (_random.NextDouble() - 0.5) * 0.05;
+            return Task.FromResult(Math.Max(0.1, Math.Min(1.0, basePF + noise)));
+        }
     }
 }

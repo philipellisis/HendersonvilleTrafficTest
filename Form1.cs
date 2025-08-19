@@ -32,5 +32,11 @@ namespace HendersonvilleTrafficTest
             using var testForm = new PowerAnalyzerTestForm();
             testForm.ShowDialog(this);
         }
+
+        private void btnTestAcPowerSupply_Click(object sender, EventArgs e)
+        {
+            using var testForm = new AcPowerSupplyTestForm();
+            testForm.ShowDialog(this);
+        }
     }
 }

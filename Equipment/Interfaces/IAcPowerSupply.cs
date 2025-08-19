@@ -9,6 +9,9 @@ namespace HendersonvilleTrafficTest.Equipment.Interfaces
         Task SetFrequencyAsync(double frequency);
         Task PowerOnAsync();
         Task PowerOffAsync();
+        Task<double> GetCurrentAsync();
+        Task<double> GetPowerAsync();
+        Task<double> GetPowerFactorAsync();
         bool IsConnected { get; }
     }
 }

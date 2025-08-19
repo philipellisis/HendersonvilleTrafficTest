@@ -164,7 +164,7 @@ namespace HendersonvilleTrafficTest.Communication
                             return null;
                         }
 
-                        // Temporarily disable DataReceived event to prevent race condition
+                        // Temporarily disable ALL data received events to prevent race condition
                         _serialPort.DataReceived -= OnDataReceived;
                         
                         try
@@ -191,7 +191,7 @@ namespace HendersonvilleTrafficTest.Communication
                         }
                         finally
                         {
-                            // Re-enable DataReceived event
+                            // Re-enable DataReceived event (which will re-enable both DataReceived and ByteDataReceived)
                             _serialPort.DataReceived += OnDataReceived;
                         }
                     }

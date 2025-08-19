@@ -10,6 +10,7 @@
         private Button btnTestRelayController;
         private Button btnTestTemperatureSensor;
         private Button btnTestPowerAnalyzer;
+        private Button btnTestAcPowerSupply;
 
         /// <summary>
         ///  Clean up any resources being used.
@@ -36,6 +37,7 @@
             this.btnTestRelayController = new Button();
             this.btnTestTemperatureSensor = new Button();
             this.btnTestPowerAnalyzer = new Button();
+            this.btnTestAcPowerSupply = new Button();
             this.SuspendLayout();
             
             // 
@@ -87,11 +89,24 @@
             this.btnTestPowerAnalyzer.Click += new EventHandler(this.btnTestPowerAnalyzer_Click);
             
             // 
+            // btnTestAcPowerSupply
+            // 
+            this.btnTestAcPowerSupply.Font = new Font("Segoe UI", 10F);
+            this.btnTestAcPowerSupply.Location = new Point(700, 12);
+            this.btnTestAcPowerSupply.Name = "btnTestAcPowerSupply";
+            this.btnTestAcPowerSupply.Size = new Size(160, 35);
+            this.btnTestAcPowerSupply.TabIndex = 4;
+            this.btnTestAcPowerSupply.Text = "Test AC Power Supply";
+            this.btnTestAcPowerSupply.UseVisualStyleBackColor = true;
+            this.btnTestAcPowerSupply.Click += new EventHandler(this.btnTestAcPowerSupply_Click);
+            
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new SizeF(7F, 15F);
             this.AutoScaleMode = AutoScaleMode.Font;
-            this.ClientSize = new Size(800, 450);
+            this.ClientSize = new Size(880, 450);
+            this.Controls.Add(this.btnTestAcPowerSupply);
             this.Controls.Add(this.btnTestPowerAnalyzer);
             this.Controls.Add(this.btnTestTemperatureSensor);
             this.Controls.Add(this.btnTestRelayController);
