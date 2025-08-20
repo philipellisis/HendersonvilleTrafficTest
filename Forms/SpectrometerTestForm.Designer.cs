@@ -17,6 +17,7 @@ namespace HendersonvilleTrafficTest.Forms
         private Label lblPeakWavelength;
         private Label lblPeakIntensity;
         private Label lblTotalIntensity;
+        private Label lblCieCoordinates;
         private TextBox txtSpectrumData;
         private Button btnClose;
         private System.Windows.Forms.Timer autoTimer;
@@ -37,6 +38,7 @@ namespace HendersonvilleTrafficTest.Forms
             this.lblPeakWavelength = new Label();
             this.lblPeakIntensity = new Label();
             this.lblTotalIntensity = new Label();
+            this.lblCieCoordinates = new Label();
             this.txtSpectrumData = new TextBox();
             this.btnClose = new Button();
             this.autoTimer = new System.Windows.Forms.Timer();
@@ -177,6 +179,7 @@ namespace HendersonvilleTrafficTest.Forms
             // grpSpectrumData
             // 
             this.grpSpectrumData.Controls.Add(this.txtSpectrumData);
+            this.grpSpectrumData.Controls.Add(this.lblCieCoordinates);
             this.grpSpectrumData.Controls.Add(this.lblTotalIntensity);
             this.grpSpectrumData.Controls.Add(this.lblPeakIntensity);
             this.grpSpectrumData.Controls.Add(this.lblPeakWavelength);
@@ -225,6 +228,18 @@ namespace HendersonvilleTrafficTest.Forms
             this.lblTotalIntensity.ForeColor = Color.DarkRed;
 
             // 
+            // lblCieCoordinates
+            // 
+            this.lblCieCoordinates.AutoSize = true;
+            this.lblCieCoordinates.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            this.lblCieCoordinates.Location = new Point(550, 25);
+            this.lblCieCoordinates.Name = "lblCieCoordinates";
+            this.lblCieCoordinates.Size = new Size(180, 15);
+            this.lblCieCoordinates.TabIndex = 3;
+            this.lblCieCoordinates.Text = "CIE: x=-- y=-- u'=-- v'=--";
+            this.lblCieCoordinates.ForeColor = Color.DarkMagenta;
+
+            // 
             // txtSpectrumData
             // 
             this.txtSpectrumData.Font = new Font("Consolas", 9F);
@@ -234,7 +249,7 @@ namespace HendersonvilleTrafficTest.Forms
             this.txtSpectrumData.ReadOnly = true;
             this.txtSpectrumData.ScrollBars = ScrollBars.Vertical;
             this.txtSpectrumData.Size = new Size(730, 75);
-            this.txtSpectrumData.TabIndex = 3;
+            this.txtSpectrumData.TabIndex = 4;
             this.txtSpectrumData.Text = "No spectrum data captured yet...";
 
             // 

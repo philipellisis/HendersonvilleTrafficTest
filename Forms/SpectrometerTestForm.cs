@@ -1,5 +1,6 @@
 using HendersonvilleTrafficTest.Equipment.Interfaces;
 using HendersonvilleTrafficTest.Services;
+using HendersonvilleTrafficTest.Shared;
 
 namespace HendersonvilleTrafficTest.Forms
 {
@@ -76,6 +77,7 @@ namespace HendersonvilleTrafficTest.Forms
             lblPeakWavelength.Text = "Peak: -- nm";
             lblPeakIntensity.Text = "Peak Intensity: --";
             lblTotalIntensity.Text = "Total: --";
+            lblCieCoordinates.Text = "CIE: x=-- y=-- u'=-- v'=--";
             txtSpectrumData.Clear();
         }
 
@@ -182,14 +184,41 @@ namespace HendersonvilleTrafficTest.Forms
                 lblPeakIntensity.Text = $"Peak Intensity: {peakIntensity:F0}";
                 lblTotalIntensity.Text = $"Total: {totalIntensity:F0}";
 
-                // Update spectrum data text box with key statistics
-                txtSpectrumData.Text = $"Spectrum captured at {reading.Timestamp:HH:mm:ss}\r\n" +
-                                      $"Data points: {reading.Wavelengths.Length}\r\n" +
-                                      $"Range: {reading.Wavelengths.Min():F1} - {reading.Wavelengths.Max():F1} nm\r\n" +
-                                      $"Peak wavelength: {peakWavelength:F1} nm\r\n" +
-                                      $"Peak intensity: {peakIntensity:F0}\r\n" +
-                                      $"Total intensity: {totalIntensity:F0}\r\n" +
-                                      $"Average intensity: {reading.Intensities.Average():F0}";
+                // Calculate CIE color coordinates
+                try
+                {
+                    var cieResult = CieColorCalculator.CalculateFromSpectrum(reading);
+                    lblCieCoordinates.Text = $"CIE: x={cieResult.CcX:F4} y={cieResult.CcY:F4} u'={cieResult.UPrime:F4} v'={cieResult.VPrime:F4}";
+                    
+                    // Update spectrum data text box with key statistics
+                    txtSpectrumData.Text = $"Spectrum captured at {reading.Timestamp:HH:mm:ss}\r\n" +
+                                          $"Data points: {reading.Wavelengths.Length}\r\n" +
+                                          $"Range: {reading.Wavelengths.Min():F1} - {reading.Wavelengths.Max():F1} nm\r\n" +
+                                          $"Peak wavelength: {peakWavelength:F1} nm\r\n" +
+                                          $"Peak intensity: {peakIntensity:F0}\r\n" +
+                                          $"Total intensity: {totalIntensity:F0}\r\n" +
+                                          $"Average intensity: {reading.Intensities.Average():F0}\r\n" +
+                                          $"\r\nCIE Color Analysis:\r\n" +
+                                          $"X = {cieResult.X:F2}, Y = {cieResult.Y:F2}, Z = {cieResult.Z:F2}\r\n" +
+                                          $"x = {cieResult.CcX:F4}, y = {cieResult.CcY:F4}\r\n" +
+                                          $"u' = {cieResult.UPrime:F4}, v' = {cieResult.VPrime:F4}\r\n" +
+                                          $"Luminance: {cieResult.Luminance:F1} cd/m²\r\n" +
+                                          $"Watts/Sr: {cieResult.WattsPerSteradian:F2}";
+                }
+                catch (Exception ex)
+                {
+                    lblCieCoordinates.Text = "CIE: Error calculating coordinates";
+                    
+                    // Update spectrum data text box with basic statistics only
+                    txtSpectrumData.Text = $"Spectrum captured at {reading.Timestamp:HH:mm:ss}\r\n" +
+                                          $"Data points: {reading.Wavelengths.Length}\r\n" +
+                                          $"Range: {reading.Wavelengths.Min():F1} - {reading.Wavelengths.Max():F1} nm\r\n" +
+                                          $"Peak wavelength: {peakWavelength:F1} nm\r\n" +
+                                          $"Peak intensity: {peakIntensity:F0}\r\n" +
+                                          $"Total intensity: {totalIntensity:F0}\r\n" +
+                                          $"Average intensity: {reading.Intensities.Average():F0}\r\n" +
+                                          $"\r\nCIE calculation error: {ex.Message}";
+                }
             }
         }
 
