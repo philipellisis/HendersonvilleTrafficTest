@@ -11,6 +11,7 @@
         private Button btnTestTemperatureSensor;
         private Button btnTestPowerAnalyzer;
         private Button btnTestAcPowerSupply;
+        private Button btnTestSpectrometer;
 
         /// <summary>
         ///  Clean up any resources being used.
@@ -38,6 +39,7 @@
             this.btnTestTemperatureSensor = new Button();
             this.btnTestPowerAnalyzer = new Button();
             this.btnTestAcPowerSupply = new Button();
+            this.btnTestSpectrometer = new Button();
             this.SuspendLayout();
             
             // 
@@ -101,11 +103,24 @@
             this.btnTestAcPowerSupply.Click += new EventHandler(this.btnTestAcPowerSupply_Click);
             
             // 
+            // btnTestSpectrometer
+            // 
+            this.btnTestSpectrometer.Font = new Font("Segoe UI", 10F);
+            this.btnTestSpectrometer.Location = new Point(12, 60);
+            this.btnTestSpectrometer.Name = "btnTestSpectrometer";
+            this.btnTestSpectrometer.Size = new Size(150, 35);
+            this.btnTestSpectrometer.TabIndex = 5;
+            this.btnTestSpectrometer.Text = "Test Spectrometer";
+            this.btnTestSpectrometer.UseVisualStyleBackColor = true;
+            this.btnTestSpectrometer.Click += new EventHandler(this.btnTestSpectrometer_Click);
+            
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new SizeF(7F, 15F);
             this.AutoScaleMode = AutoScaleMode.Font;
             this.ClientSize = new Size(880, 450);
+            this.Controls.Add(this.btnTestSpectrometer);
             this.Controls.Add(this.btnTestAcPowerSupply);
             this.Controls.Add(this.btnTestPowerAnalyzer);
             this.Controls.Add(this.btnTestTemperatureSensor);

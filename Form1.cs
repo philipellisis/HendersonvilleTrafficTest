@@ -38,5 +38,11 @@ namespace HendersonvilleTrafficTest
             using var testForm = new AcPowerSupplyTestForm();
             testForm.ShowDialog(this);
         }
+
+        private void btnTestSpectrometer_Click(object sender, EventArgs e)
+        {
+            using var testForm = new SpectrometerTestForm();
+            testForm.ShowDialog(this);
+        }
     }
 }
