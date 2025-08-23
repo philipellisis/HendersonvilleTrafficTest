@@ -25,9 +25,9 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
                 Handshake = Handshake.None,
                 ReadTimeoutMs = 2000,
                 WriteTimeoutMs = 2000,
-                NewLine = "\r\n",
+                NewLine = "\n",
                 DtrEnable = false,
-                RtsEnable = true
+                RtsEnable = false
             };
         }
 
@@ -44,15 +44,11 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
         {
             try
             {
-                //// Set device to remote mode for SCPI control
-                //await _communication.SendCommandAsync("SYST:REM");
-                //await Task.Delay(200);
-                //// Clear buffers first
-                //await _communication.ClearBuffersAsync();
-                //await Task.Delay(500);
-                // Clear status and errors
-                //await _communication.SendCommandAsync("*CLS");
-                //await Task.Delay(200);
+
+                // Clear buffers first
+                await _communication.ClearBuffersAsync();
+                await Task.Delay(500);
+
                 // Send identification query to verify device
                 var idResponse = await _communication.SendCommandAndReceiveAsync("*IDN?", 3000);
                 if (string.IsNullOrEmpty(idResponse) || !idResponse.ToUpper().Contains("IT7321"))
@@ -64,11 +60,15 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
                 LogInfo($"Device identified: {idResponse}");
 
                 // Give the device time to be ready for next commands
-                await Task.Delay(1000);
+                await Task.Delay(200);
 
+                // Set device to remote mode for SCPI control
+                await _communication.SendCommandAsync("SYST:REM");
+                await Task.Delay(200);
 
-
-
+                //Clear status and errors
+                await _communication.SendCommandAsync("*CLS");
+                await Task.Delay(200);
 
                 // Initialize power supply to safe state
                 await PowerOffAsync(); // Ensure output is off

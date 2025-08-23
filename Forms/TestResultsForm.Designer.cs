@@ -25,6 +25,8 @@ namespace HendersonvilleTrafficTest.Forms
         private TextBox txtDescription;
         private Label lblMfgNo;
         private TextBox txtMfgNo;
+        
+        private Panel pnlTestParameters;
 
         protected override void Dispose(bool disposing)
         {
@@ -58,6 +60,7 @@ namespace HendersonvilleTrafficTest.Forms
             this.txtDescription = new System.Windows.Forms.TextBox();
             this.lblMfgNo = new System.Windows.Forms.Label();
             this.txtMfgNo = new System.Windows.Forms.TextBox();
+            this.pnlTestParameters = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
             // txtPassFail
@@ -252,6 +255,16 @@ namespace HendersonvilleTrafficTest.Forms
             this.txtMfgNo.Size = new System.Drawing.Size(200, 36);
             this.txtMfgNo.TabIndex = 20;
             // 
+            // pnlTestParameters
+            // 
+            this.pnlTestParameters.AutoScroll = true;
+            this.pnlTestParameters.BackColor = System.Drawing.Color.White;
+            this.pnlTestParameters.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlTestParameters.Location = new System.Drawing.Point(50, 320);
+            this.pnlTestParameters.Name = "pnlTestParameters";
+            this.pnlTestParameters.Size = new System.Drawing.Size(1180, 350);
+            this.pnlTestParameters.TabIndex = 21;
+            // 
             // TestResultsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -278,6 +291,7 @@ namespace HendersonvilleTrafficTest.Forms
             this.Controls.Add(this.txtOperator);
             this.Controls.Add(this.lblOperator);
             this.Controls.Add(this.txtPassFail);
+            this.Controls.Add(this.pnlTestParameters);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Name = "TestResultsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
