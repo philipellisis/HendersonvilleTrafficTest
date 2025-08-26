@@ -4,8 +4,6 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
 {
     public class StellarNetBlueWaveSpectrometer : ISpectrometer
     {
-        public double MinWavelength { get; private set; } = 380.0;
-        public double MaxWavelength { get; private set; } = 780.0;
         public bool IsConnected { get; private set; } = false;
 
         public Task InitializeAsync()
@@ -26,10 +24,10 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
             throw new NotImplementedException("Auto-range command not implemented");
         }
 
-        public Task SetRangeAsync(double minWavelength, double maxWavelength)
+        public Task SetIntegrationTimeAsync(uint integrationTimeMicros)
         {
-            // TODO: Send USB command to set wavelength range
-            throw new NotImplementedException("Set range command not implemented");
+            // TODO: Send USB command to set integration time
+            throw new NotImplementedException("Set integration time command not implemented");
         }
     }
 }

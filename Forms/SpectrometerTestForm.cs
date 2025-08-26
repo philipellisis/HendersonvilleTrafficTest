@@ -30,7 +30,7 @@ namespace HendersonvilleTrafficTest.Forms
                 if (_spectrometer.IsConnected)
                 {
                     UpdateConnectionUI(true);
-                    lblWavelengthRange.Text = $"Range: {_spectrometer.MinWavelength:F0} - {_spectrometer.MaxWavelength:F0} nm";
+                    lblWavelengthRange.Text = $"Range: 380-780 nm";
                     await CaptureSpectrum();
                 }
                 else
@@ -98,7 +98,7 @@ namespace HendersonvilleTrafficTest.Forms
                 
                 if (_spectrometer.IsConnected)
                 {
-                    lblWavelengthRange.Text = $"Range: {_spectrometer.MinWavelength:F0} - {_spectrometer.MaxWavelength:F0} nm";
+                    lblWavelengthRange.Text = $"Range: 380 - 780 nm";
                     await CaptureSpectrum();
                 }
                 else
@@ -125,7 +125,7 @@ namespace HendersonvilleTrafficTest.Forms
             try
             {
                 await _spectrometer.AutoRangeAsync();
-                lblWavelengthRange.Text = $"Range: {_spectrometer.MinWavelength:F0} - {_spectrometer.MaxWavelength:F0} nm";
+                lblWavelengthRange.Text = $"Range: 380 - 780 nm";
                 MessageBox.Show("Auto-range completed", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)

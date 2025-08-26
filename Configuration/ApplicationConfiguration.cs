@@ -35,9 +35,9 @@ namespace HendersonvilleTrafficTest.Configuration
         [Description("Power Analyzer Mode (Simulation or Hardware)")]
         public EquipmentMode PowerAnalyzerMode { get; set; } = EquipmentMode.Simulation;
 
-        [XmlElement("SpectrometerMode")]
-        [Description("Spectrometer Mode (Simulation or Hardware)")]
-        public EquipmentMode SpectrometerMode { get; set; } = EquipmentMode.Simulation;
+        [XmlElement("SpectrometerType")]
+        [Description("Spectrometer Type (Simulation, StellarNet, or OceanOpticsST)")]
+        public SpectrometerType SpectrometerType { get; set; } = SpectrometerType.Simulation;
 
         [XmlElement("TemperatureSensorMode")]
         [Description("Temperature Sensor Mode (Simulation or Hardware)")]

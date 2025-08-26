@@ -30,9 +30,13 @@ namespace HendersonvilleTrafficTest.Services
 
         public ISpectrometer CreateSpectrometer()
         {
-            return ConfigurationManager.Current.Equipment.SpectrometerMode == EquipmentMode.Simulation
-                ? new SimulatedSpectrometer() 
-                : new StellarNetBlueWaveSpectrometer();
+            return ConfigurationManager.Current.Equipment.SpectrometerType switch
+            {
+                Configuration.SpectrometerType.Simulation => new SimulatedSpectrometer(),
+                Configuration.SpectrometerType.StellarNet => new StellarNetBlueWaveSpectrometer(),
+                Configuration.SpectrometerType.OceanOpticsST => new OceanOpticsStSpectrometer(),
+                _ => new SimulatedSpectrometer()
+            };
         }
 
         public ITemperatureSensor CreateTemperatureSensor()
