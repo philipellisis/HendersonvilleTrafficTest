@@ -75,9 +75,15 @@ namespace HendersonvilleTrafficTest.Forms
             paramControl.SectionTitle = sectionTitle;
             paramControl.SetAllParameterData(parameterData);
             
-            // Position the control
-            int yPosition = parameterControls.Count * 395; // Height + 10px spacing
-            paramControl.Location = new Point(10, yPosition);
+            // Position the control horizontally
+            int controlWidth = 620; // Control width + spacing
+            int controlsPerRow = pnlTestParameters.Width / controlWidth; // How many fit per row
+            int currentIndex = parameterControls.Count;
+            
+            int xPosition = (currentIndex % controlsPerRow) * controlWidth + 10;
+            int yPosition = (currentIndex / controlsPerRow) * 395 + 10; // Height + spacing
+            
+            paramControl.Location = new Point(xPosition, yPosition);
             
             // Add to panel and track
             pnlTestParameters.Controls.Add(paramControl);
@@ -109,8 +115,13 @@ namespace HendersonvilleTrafficTest.Forms
         {
             if (parameterControls.Count > 0)
             {
-                int totalHeight = parameterControls.Count * 395;
-                pnlTestParameters.AutoScrollMinSize = new Size(0, totalHeight);
+                int controlWidth = 620;
+                int controlsPerRow = pnlTestParameters.Width / controlWidth;
+                int numberOfRows = (parameterControls.Count + controlsPerRow - 1) / controlsPerRow; // Ceiling division
+                int totalHeight = numberOfRows * 395 + 20; // Height + padding
+                int totalWidth = Math.Min(parameterControls.Count, controlsPerRow) * controlWidth + 20;
+                
+                pnlTestParameters.AutoScrollMinSize = new Size(totalWidth, totalHeight);
             }
         }
 
@@ -124,6 +135,31 @@ namespace HendersonvilleTrafficTest.Forms
         {
             var control = parameterControls.FirstOrDefault(c => c.SectionTitle == sectionTitle);
             control?.SetParameterStatus(parameter, column, passed);
+        }
+
+        public void RefreshLayout()
+        {
+            // Reposition all controls when panel size changes
+            for (int i = 0; i < parameterControls.Count; i++)
+            {
+                int controlWidth = 620;
+                int controlsPerRow = Math.Max(1, pnlTestParameters.Width / controlWidth);
+                
+                int xPosition = (i % controlsPerRow) * controlWidth + 10;
+                int yPosition = (i / controlsPerRow) * 395 + 10;
+                
+                parameterControls[i].Location = new Point(xPosition, yPosition);
+            }
+            UpdateScrollableArea();
+        }
+
+        protected override void OnResize(EventArgs e)
+        {
+            base.OnResize(e);
+            if (parameterControls.Count > 0)
+            {
+                RefreshLayout();
+            }
         }
     }
 }
