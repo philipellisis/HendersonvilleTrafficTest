@@ -62,6 +62,10 @@ namespace HendersonvilleTrafficTest.Forms
             {
                 CreateBooleanEditor();
             }
+            else if (_selectedProperty.PropertyType.IsArray)
+            {
+                CreateArrayEditor();
+            }
             else if (IsNumericType(_selectedProperty.PropertyType))
             {
                 CreateNumericEditor();
@@ -151,6 +155,78 @@ namespace HendersonvilleTrafficTest.Forms
             textBox.TextChanged += (s, e) =>
             {
                 _selectedProperty.SetValue(textBox.Text);
+            };
+
+            pnlEditor.Controls.Add(textBox);
+        }
+
+        private void CreateArrayEditor()
+        {
+            var array = _selectedProperty!.Value as Array;
+            if (array == null) return;
+
+            var textBox = new TextBox
+            {
+                Dock = DockStyle.Fill,
+                Multiline = true,
+                ScrollBars = ScrollBars.Both,
+                WordWrap = false,
+                Font = new Font("Consolas", 9F),
+                ReadOnly = false
+            };
+
+            // Convert array to text (one value per line)
+            var lines = new string[array.Length];
+            for (int i = 0; i < array.Length; i++)
+            {
+                var value = array.GetValue(i);
+                lines[i] = $"[{i:D3}] {value?.ToString() ?? "0"}";
+            }
+            textBox.Text = string.Join(Environment.NewLine, lines);
+
+            // Handle text changes
+            textBox.TextChanged += (s, e) =>
+            {
+                try
+                {
+                    var textLines = textBox.Text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+                    var elementType = _selectedProperty.PropertyType.GetElementType()!;
+                    var newArray = Array.CreateInstance(elementType, array.Length);
+
+                    for (int i = 0; i < Math.Min(textLines.Length, array.Length); i++)
+                    {
+                        var line = textLines[i].Trim();
+                        
+                        // Extract value after the index prefix [###]
+                        var bracketEnd = line.IndexOf(']');
+                        if (bracketEnd >= 0 && bracketEnd < line.Length - 1)
+                        {
+                            var valueText = line.Substring(bracketEnd + 1).Trim();
+                            
+                            try
+                            {
+                                var convertedValue = Convert.ChangeType(valueText, elementType);
+                                newArray.SetValue(convertedValue, i);
+                            }
+                            catch
+                            {
+                                // If conversion fails, keep original value
+                                newArray.SetValue(array.GetValue(i), i);
+                            }
+                        }
+                        else
+                        {
+                            // No proper format, keep original value
+                            newArray.SetValue(array.GetValue(i), i);
+                        }
+                    }
+
+                    _selectedProperty.SetValue(newArray);
+                }
+                catch
+                {
+                    // If parsing fails, ignore the change
+                }
             };
 
             pnlEditor.Controls.Add(textBox);

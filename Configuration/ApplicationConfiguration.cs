@@ -18,6 +18,9 @@ namespace HendersonvilleTrafficTest.Configuration
 
         [XmlElement("SafetySettings")]
         public SafetySettings Safety { get; set; } = new();
+
+        [XmlElement("CalibrationSettings")]
+        public CalibrationSettings Calibration { get; set; } = new();
     }
 
     [Serializable]
@@ -162,5 +165,34 @@ namespace HendersonvilleTrafficTest.Configuration
         [XmlElement("LightCurtainRequired")]
         [Description("Require light curtain for operation")]
         public bool LightCurtainRequired { get; set; } = true;
+    }
+
+    [Serializable]
+    public class CalibrationSettings
+    {
+        [XmlArray("SpectrometerCalibrationFactors")]
+        [XmlArrayItem("Factor")]
+        [Description("Calibration factors from 380nm to 780nm in 1nm increments (401 values)")]
+        public double[] SpectrometerCalibrationFactors { get; set; } = new double[401];
+
+        [XmlArray("StandardLampSpectrum")]
+        [XmlArrayItem("Intensity")]
+        [Description("Standard lamp spectrum values from 380nm to 780nm in 1nm increments (401 values)")]
+        public double[] StandardLampSpectrum { get; set; } = new double[401];
+
+        public CalibrationSettings()
+        {
+            // Initialize all calibration factors to 1.0 (no calibration applied)
+            for (int i = 0; i < SpectrometerCalibrationFactors.Length; i++)
+            {
+                SpectrometerCalibrationFactors[i] = 1.0;
+            }
+
+            // Initialize standard lamp spectrum to 1.0 (flat spectrum)
+            for (int i = 0; i < StandardLampSpectrum.Length; i++)
+            {
+                StandardLampSpectrum[i] = 1.0;
+            }
+        }
     }
 }
