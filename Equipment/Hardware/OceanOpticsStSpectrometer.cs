@@ -2,6 +2,7 @@ using HendersonvilleTrafficTest.Equipment.Interfaces;
 using NetOceanDirect;
 using System;
 using System.Threading.Tasks;
+using HendersonvilleTrafficTest.Shared;
 
 namespace HendersonvilleTrafficTest.Equipment.Hardware
 {
@@ -87,12 +88,13 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
                         throw new InvalidOperationException($"Could not read spectrum. Error code: {errorCode}");
                     }
 
-                    return new SpectrumReading
+                    SpectrumReading reading = new SpectrumReading
                     {
                         Wavelengths = _wavelengths,
                         Intensities = spectrum,
                         Timestamp = DateTime.Now
                     };
+                    return MathUtils.NormalizeSpectrumReading(reading);
                 }
                 catch (Exception)
                 {
