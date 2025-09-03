@@ -180,6 +180,26 @@ namespace HendersonvilleTrafficTest.Configuration
         [Description("Standard lamp spectrum values from 380nm to 780nm in 1nm increments (401 values)")]
         public double[] StandardLampSpectrum { get; set; } = new double[401];
 
+        [XmlElement("CalibrationLampVoltage")]
+        [Description("Calibration lamp voltage setting")]
+        public double CalibrationLampVoltage { get; set; } = 12.0;
+
+        [XmlElement("CalibrationLampCurrent")]
+        [Description("Target calibration lamp current in amps")]
+        public double CalibrationLampCurrent { get; set; } = 1.0;
+
+        [XmlElement("CalibrationCurrentTolerance")]
+        [Description("Acceptable current tolerance in amps")]
+        public double CalibrationCurrentTolerance { get; set; } = 0.05;
+
+        [XmlElement("CalibrationWarmupTimeSeconds")]
+        [Description("Calibration lamp warmup time in seconds")]
+        public int CalibrationWarmupTimeSeconds { get; set; } = 30;
+
+        [XmlElement("CalibrationRampTimeSeconds")]
+        [Description("Time to ramp voltage up/down in seconds")]
+        public int CalibrationRampTimeSeconds { get; set; } = 10;
+
         public CalibrationSettings()
         {
             // Initialize all calibration factors to 1.0 (no calibration applied)

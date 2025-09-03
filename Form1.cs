@@ -45,6 +45,12 @@ namespace HendersonvilleTrafficTest
             testForm.ShowDialog(this);
         }
 
+        private void btnSpectrometerCalibration_Click(object sender, EventArgs e)
+        {
+            using var calibrationForm = new SpectrometerCalibrationForm();
+            calibrationForm.ShowDialog(this);
+        }
+
         private void btnLogin_Click(object sender, EventArgs e)
         {
             using var testResultsForm = new TestResultsForm();

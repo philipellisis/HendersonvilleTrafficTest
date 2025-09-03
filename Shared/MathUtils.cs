@@ -1,4 +1,5 @@
 using HendersonvilleTrafficTest.Equipment.Interfaces;
+using HendersonvilleTrafficTest.Configuration;
 
 namespace HendersonvilleTrafficTest.Shared
 {
@@ -10,15 +11,15 @@ namespace HendersonvilleTrafficTest.Shared
             return y1 + ((x - x1) / (x2 - x1)) * (y2 - y1);
         }
 
-        public static SpectrumReading NormalizeSpectrumReading(SpectrumReading input)
+        public static SpectrumReading NormalizeSpectrumReading(SpectrumReading input, SpectrumReading? darkCurrent = null)
         {
             const int startWavelength = 380;
             const int finishWavelength = 780;
             const int spectrometerWavelengths = finishWavelength - startWavelength + 1;
             
             double[] wavelengths = input.Wavelengths;
-            double[] spd = input.Intensities;
-            double[] spds = new double[spectrometerWavelengths];
+            double[] intensities = input.Intensities;
+            double[] normalizedIntensities = new double[spectrometerWavelengths];
             double[] normalizedWavelengths = new double[spectrometerWavelengths];
             
             // Create normalized wavelength array (380 to 780 in 1nm increments)
@@ -27,65 +28,82 @@ namespace HendersonvilleTrafficTest.Shared
                 normalizedWavelengths[i] = startWavelength + i;
             }
             
-            int cnt = 0;
-            int actualWavelength = startWavelength;
-            bool done = false;
+            // Initialize accumulation arrays
+            double[] accumulator = new double[spectrometerWavelengths];
+            int[] counts = new int[spectrometerWavelengths];
             
-            while (!done)
+            // Accumulate and count values for each integer wavelength
+            for (int index = 0; index < wavelengths.Length; index++)
             {
-                // Handle case where start wavelength is larger than the starting wavelength provided
-                if (cnt == 0 && wavelengths[cnt] > actualWavelength)
+                int roundedWavelength = (int)Math.Round(wavelengths[index], 0);
+                
+                // Check if wavelength is within our range
+                if (roundedWavelength >= startWavelength && roundedWavelength <= finishWavelength)
                 {
-                    while (!((wavelengths[cnt] <= actualWavelength && wavelengths[cnt + 1] > actualWavelength) || cnt + 1 >= wavelengths.Length - 1))
+                    int arrayIndex = roundedWavelength - startWavelength;
+                    
+                    // Subtract dark current if provided
+                    double correctedIntensity = intensities[index];
+                    if (darkCurrent != null && index < darkCurrent.Intensities.Length)
                     {
-                        spds[actualWavelength - startWavelength] = 0;
-                        actualWavelength++;
-                    }
-                }
-                
-                // Find the appropriate wavelength range for interpolation
-                while (!((wavelengths[cnt] <= actualWavelength && wavelengths[cnt + 1] > actualWavelength) || cnt + 1 >= wavelengths.Length - 1))
-                {
-                    cnt++;
-                }
-                
-                // Perform interpolation if we're within the wavelength range
-                if (wavelengths[cnt] <= actualWavelength && wavelengths[cnt + 1] > actualWavelength)
-                {
-                    spds[actualWavelength - startWavelength] = Interpolate(spd[cnt], spd[cnt + 1], actualWavelength, wavelengths[cnt], wavelengths[cnt + 1]);
-                    actualWavelength++;
-                }
-                
-                // Handle end of wavelength data
-                if (cnt + 1 >= wavelengths.Length - 1)
-                {
-                    if (actualWavelength == finishWavelength && cnt + 1 == wavelengths.Length - 1)
-                    {
-                        spds[actualWavelength - startWavelength] = spd[wavelengths.Length - 1];
+                        correctedIntensity -= darkCurrent.Intensities[index];
                     }
                     
-                    // Fill remaining wavelengths with 0
-                    while (actualWavelength <= finishWavelength)
+                    accumulator[arrayIndex] += correctedIntensity;
+                    counts[arrayIndex]++;
+                }
+            }
+            
+            // Calculate averages for each wavelength
+            for (int i = 0; i < spectrometerWavelengths; i++)
+            {
+                if (counts[i] > 0)
+                {
+                    normalizedIntensities[i] = accumulator[i] / counts[i];
+                    
+                    // Ensure non-negative values
+                    if (normalizedIntensities[i] < 0)
                     {
-                        if (actualWavelength - startWavelength < spds.Length)
-                        {
-                            spds[actualWavelength - startWavelength] = 0;
-                        }
-                        actualWavelength++;
+                        normalizedIntensities[i] = 0;
                     }
                 }
-                
-                if (actualWavelength > finishWavelength)
+                else
                 {
-                    done = true;
+                    // No data for this wavelength, set to 0
+                    normalizedIntensities[i] = 0;
                 }
             }
             
             return new SpectrumReading
             {
                 Wavelengths = normalizedWavelengths,
-                Intensities = spds,
+                Intensities = normalizedIntensities,
                 Timestamp = input.Timestamp
+            };
+        }
+
+        public static SpectrumReading ApplyCalibrationFactors(SpectrumReading normalizedReading, uint integrationTimeMicros)
+        {
+            var calibrationFactors = ConfigurationManager.Current.Calibration.SpectrometerCalibrationFactors;
+            
+            if (normalizedReading.Intensities.Length != calibrationFactors.Length)
+            {
+                throw new ArgumentException("Normalized reading intensities length must match calibration factors length (401 values)");
+            }
+
+            double[] calibratedIntensities = new double[normalizedReading.Intensities.Length];
+            double integrationTimeSeconds = integrationTimeMicros / 1_000_000.0; // Convert microseconds to seconds
+
+            for (int idx = 0; idx < normalizedReading.Intensities.Length; idx++)
+            {
+                calibratedIntensities[idx] = normalizedReading.Intensities[idx] * (calibrationFactors[idx] / integrationTimeSeconds);
+            }
+
+            return new SpectrumReading
+            {
+                Wavelengths = normalizedReading.Wavelengths,
+                Intensities = calibratedIntensities,
+                Timestamp = normalizedReading.Timestamp
             };
         }
     }

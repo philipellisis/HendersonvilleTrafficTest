@@ -12,6 +12,7 @@
         private Button btnTestPowerAnalyzer;
         private Button btnTestAcPowerSupply;
         private Button btnTestSpectrometer;
+        private Button btnSpectrometerCalibration;
         
         private Label lblUsername;
         private TextBox txtUsername;
@@ -46,6 +47,7 @@
             this.btnTestPowerAnalyzer = new Button();
             this.btnTestAcPowerSupply = new Button();
             this.btnTestSpectrometer = new Button();
+            this.btnSpectrometerCalibration = new Button();
             this.lblUsername = new Label();
             this.txtUsername = new TextBox();
             this.lblPassword = new Label();
@@ -126,6 +128,18 @@
             this.btnTestSpectrometer.Click += new EventHandler(this.btnTestSpectrometer_Click);
             
             // 
+            // btnSpectrometerCalibration
+            // 
+            this.btnSpectrometerCalibration.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            this.btnSpectrometerCalibration.Location = new Point(50, 90);
+            this.btnSpectrometerCalibration.Name = "btnSpectrometerCalibration";
+            this.btnSpectrometerCalibration.Size = new Size(200, 50);
+            this.btnSpectrometerCalibration.TabIndex = 11;
+            this.btnSpectrometerCalibration.Text = "Spectrometer Calibration";
+            this.btnSpectrometerCalibration.UseVisualStyleBackColor = true;
+            this.btnSpectrometerCalibration.Click += new EventHandler(this.btnSpectrometerCalibration_Click);
+            
+            // 
             // lblUsername
             // 
             this.lblUsername.AutoSize = true;
@@ -189,6 +203,7 @@
             this.Controls.Add(this.lblPassword);
             this.Controls.Add(this.txtUsername);
             this.Controls.Add(this.lblUsername);
+            this.Controls.Add(this.btnSpectrometerCalibration);
             this.Controls.Add(this.btnTestSpectrometer);
             this.Controls.Add(this.btnTestAcPowerSupply);
             this.Controls.Add(this.btnTestPowerAnalyzer);

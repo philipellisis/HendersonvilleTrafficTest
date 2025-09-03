@@ -262,14 +262,14 @@ namespace HendersonvilleTrafficTest.Forms
             this.pnlTestParameters.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pnlTestParameters.Location = new System.Drawing.Point(50, 320);
             this.pnlTestParameters.Name = "pnlTestParameters";
-            this.pnlTestParameters.Size = new System.Drawing.Size(1579, 350);
+            this.pnlTestParameters.Size = new System.Drawing.Size(810, 648);
             this.pnlTestParameters.TabIndex = 21;
             // 
             // TestResultsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1692, 720);
+            this.ClientSize = new System.Drawing.Size(1692, 999);
             this.Controls.Add(this.txtMfgNo);
             this.Controls.Add(this.lblMfgNo);
             this.Controls.Add(this.txtDescription);
