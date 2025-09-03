@@ -45,7 +45,7 @@ namespace HendersonvilleTrafficTest.Controls
             this.dgvParameters.Name = "dgvParameters";
             this.dgvParameters.ReadOnly = true;
             this.dgvParameters.RowHeadersVisible = false;
-            this.dgvParameters.Size = new System.Drawing.Size(600, 350);
+            this.dgvParameters.Size = new System.Drawing.Size(600, 400);
             this.dgvParameters.TabIndex = 1;
             this.dgvParameters.DefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.dgvParameters.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
@@ -91,7 +91,7 @@ namespace HendersonvilleTrafficTest.Controls
             this.Controls.Add(this.dgvParameters);
             this.Controls.Add(this.lblSectionTitle);
             this.Name = "TestParametersControl";
-            this.Size = new System.Drawing.Size(600, 385);
+            this.Size = new System.Drawing.Size(600, 400);
             ((System.ComponentModel.ISupportInitialize)(this.dgvParameters)).EndInit();
             this.ResumeLayout(false);
         }
