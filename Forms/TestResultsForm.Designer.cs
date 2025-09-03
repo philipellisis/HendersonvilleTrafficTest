@@ -4,7 +4,7 @@ namespace HendersonvilleTrafficTest.Forms
     {
         private System.ComponentModel.IContainer components = null;
         
-        private TextBox txtPassFail;
+        private Label lblPassFail;
         private Label lblOperator;
         private TextBox txtOperator;
         private Label lblTimeDate;
@@ -27,6 +27,7 @@ namespace HendersonvilleTrafficTest.Forms
         private TextBox txtMfgNo;
         
         private FlowLayoutPanel pnlTestParameters;
+        private GroupBox grpProductInfo;
 
         protected override void Dispose(bool disposing)
         {
@@ -39,7 +40,7 @@ namespace HendersonvilleTrafficTest.Forms
 
         private void InitializeComponent()
         {
-            this.txtPassFail = new System.Windows.Forms.TextBox();
+            this.lblPassFail = new System.Windows.Forms.Label();
             this.lblOperator = new System.Windows.Forms.Label();
             this.txtOperator = new System.Windows.Forms.TextBox();
             this.lblTimeDate = new System.Windows.Forms.Label();
@@ -61,24 +62,26 @@ namespace HendersonvilleTrafficTest.Forms
             this.lblMfgNo = new System.Windows.Forms.Label();
             this.txtMfgNo = new System.Windows.Forms.TextBox();
             this.pnlTestParameters = new System.Windows.Forms.FlowLayoutPanel();
+            this.grpProductInfo = new System.Windows.Forms.GroupBox();
+            this.grpProductInfo.SuspendLayout();
             this.SuspendLayout();
             // 
-            // txtPassFail
+            // lblPassFail
             // 
-            this.txtPassFail.Font = new System.Drawing.Font("Arial", 48F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.txtPassFail.Location = new System.Drawing.Point(50, 50);
-            this.txtPassFail.Name = "txtPassFail";
-            this.txtPassFail.ReadOnly = true;
-            this.txtPassFail.Size = new System.Drawing.Size(250, 81);
-            this.txtPassFail.TabIndex = 0;
-            this.txtPassFail.Text = "PASS";
-            this.txtPassFail.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.lblPassFail.Font = new System.Drawing.Font("Arial", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblPassFail.Location = new System.Drawing.Point(50, 50);
+            this.lblPassFail.Name = "lblPassFail";
+            this.lblPassFail.Size = new System.Drawing.Size(500, 150);
+            this.lblPassFail.TabIndex = 0;
+            this.lblPassFail.Text = "PASS";
+            this.lblPassFail.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblPassFail.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             // 
             // lblOperator
             // 
             this.lblOperator.AutoSize = true;
             this.lblOperator.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblOperator.Location = new System.Drawing.Point(350, 60);
+            this.lblOperator.Location = new System.Drawing.Point(20, 30);
             this.lblOperator.Name = "lblOperator";
             this.lblOperator.Size = new System.Drawing.Size(115, 30);
             this.lblOperator.TabIndex = 1;
@@ -87,7 +90,7 @@ namespace HendersonvilleTrafficTest.Forms
             // txtOperator
             // 
             this.txtOperator.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtOperator.Location = new System.Drawing.Point(501, 57);
+            this.txtOperator.Location = new System.Drawing.Point(150, 27);
             this.txtOperator.Name = "txtOperator";
             this.txtOperator.Size = new System.Drawing.Size(200, 36);
             this.txtOperator.TabIndex = 2;
@@ -96,7 +99,7 @@ namespace HendersonvilleTrafficTest.Forms
             // 
             this.lblTimeDate.AutoSize = true;
             this.lblTimeDate.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblTimeDate.Location = new System.Drawing.Point(350, 110);
+            this.lblTimeDate.Location = new System.Drawing.Point(20, 70);
             this.lblTimeDate.Name = "lblTimeDate";
             this.lblTimeDate.Size = new System.Drawing.Size(129, 30);
             this.lblTimeDate.TabIndex = 3;
@@ -105,7 +108,7 @@ namespace HendersonvilleTrafficTest.Forms
             // txtTimeDate
             // 
             this.txtTimeDate.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtTimeDate.Location = new System.Drawing.Point(501, 107);
+            this.txtTimeDate.Location = new System.Drawing.Point(150, 67);
             this.txtTimeDate.Name = "txtTimeDate";
             this.txtTimeDate.ReadOnly = true;
             this.txtTimeDate.Size = new System.Drawing.Size(200, 36);
@@ -115,7 +118,7 @@ namespace HendersonvilleTrafficTest.Forms
             // 
             this.lblCount.AutoSize = true;
             this.lblCount.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblCount.Location = new System.Drawing.Point(350, 160);
+            this.lblCount.Location = new System.Drawing.Point(20, 110);
             this.lblCount.Name = "lblCount";
             this.lblCount.Size = new System.Drawing.Size(81, 30);
             this.lblCount.TabIndex = 5;
@@ -124,7 +127,7 @@ namespace HendersonvilleTrafficTest.Forms
             // txtCount
             // 
             this.txtCount.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtCount.Location = new System.Drawing.Point(501, 157);
+            this.txtCount.Location = new System.Drawing.Point(150, 107);
             this.txtCount.Name = "txtCount";
             this.txtCount.Size = new System.Drawing.Size(200, 36);
             this.txtCount.TabIndex = 6;
@@ -133,7 +136,7 @@ namespace HendersonvilleTrafficTest.Forms
             // 
             this.lblSerialNo.AutoSize = true;
             this.lblSerialNo.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblSerialNo.Location = new System.Drawing.Point(350, 210);
+            this.lblSerialNo.Location = new System.Drawing.Point(20, 150);
             this.lblSerialNo.Name = "lblSerialNo";
             this.lblSerialNo.Size = new System.Drawing.Size(112, 30);
             this.lblSerialNo.TabIndex = 7;
@@ -142,7 +145,7 @@ namespace HendersonvilleTrafficTest.Forms
             // txtSerialNo
             // 
             this.txtSerialNo.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtSerialNo.Location = new System.Drawing.Point(501, 207);
+            this.txtSerialNo.Location = new System.Drawing.Point(150, 147);
             this.txtSerialNo.Name = "txtSerialNo";
             this.txtSerialNo.Size = new System.Drawing.Size(200, 36);
             this.txtSerialNo.TabIndex = 8;
@@ -151,7 +154,7 @@ namespace HendersonvilleTrafficTest.Forms
             // 
             this.lblAcDcTest.AutoSize = true;
             this.lblAcDcTest.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblAcDcTest.Location = new System.Drawing.Point(350, 260);
+            this.lblAcDcTest.Location = new System.Drawing.Point(380, 30);
             this.lblAcDcTest.Name = "lblAcDcTest";
             this.lblAcDcTest.Size = new System.Drawing.Size(136, 30);
             this.lblAcDcTest.TabIndex = 9;
@@ -160,7 +163,7 @@ namespace HendersonvilleTrafficTest.Forms
             // txtAcDcTest
             // 
             this.txtAcDcTest.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtAcDcTest.Location = new System.Drawing.Point(501, 257);
+            this.txtAcDcTest.Location = new System.Drawing.Point(520, 27);
             this.txtAcDcTest.Name = "txtAcDcTest";
             this.txtAcDcTest.Size = new System.Drawing.Size(200, 36);
             this.txtAcDcTest.TabIndex = 10;
@@ -169,7 +172,7 @@ namespace HendersonvilleTrafficTest.Forms
             // 
             this.lblTestCode.AutoSize = true;
             this.lblTestCode.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblTestCode.Location = new System.Drawing.Point(757, 60);
+            this.lblTestCode.Location = new System.Drawing.Point(380, 70);
             this.lblTestCode.Name = "lblTestCode";
             this.lblTestCode.Size = new System.Drawing.Size(120, 30);
             this.lblTestCode.TabIndex = 11;
@@ -178,7 +181,7 @@ namespace HendersonvilleTrafficTest.Forms
             // txtTestCode
             // 
             this.txtTestCode.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtTestCode.Location = new System.Drawing.Point(903, 57);
+            this.txtTestCode.Location = new System.Drawing.Point(520, 67);
             this.txtTestCode.Name = "txtTestCode";
             this.txtTestCode.Size = new System.Drawing.Size(200, 36);
             this.txtTestCode.TabIndex = 12;
@@ -187,7 +190,7 @@ namespace HendersonvilleTrafficTest.Forms
             // 
             this.lblCatNo.AutoSize = true;
             this.lblCatNo.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblCatNo.Location = new System.Drawing.Point(757, 110);
+            this.lblCatNo.Location = new System.Drawing.Point(380, 110);
             this.lblCatNo.Name = "lblCatNo";
             this.lblCatNo.Size = new System.Drawing.Size(94, 30);
             this.lblCatNo.TabIndex = 13;
@@ -196,7 +199,7 @@ namespace HendersonvilleTrafficTest.Forms
             // txtCatNo
             // 
             this.txtCatNo.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtCatNo.Location = new System.Drawing.Point(903, 107);
+            this.txtCatNo.Location = new System.Drawing.Point(520, 107);
             this.txtCatNo.Name = "txtCatNo";
             this.txtCatNo.Size = new System.Drawing.Size(200, 36);
             this.txtCatNo.TabIndex = 14;
@@ -205,7 +208,7 @@ namespace HendersonvilleTrafficTest.Forms
             // 
             this.lblProdType.AutoSize = true;
             this.lblProdType.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblProdType.Location = new System.Drawing.Point(757, 160);
+            this.lblProdType.Location = new System.Drawing.Point(380, 150);
             this.lblProdType.Name = "lblProdType";
             this.lblProdType.Size = new System.Drawing.Size(125, 30);
             this.lblProdType.TabIndex = 15;
@@ -214,7 +217,7 @@ namespace HendersonvilleTrafficTest.Forms
             // txtProdType
             // 
             this.txtProdType.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtProdType.Location = new System.Drawing.Point(903, 157);
+            this.txtProdType.Location = new System.Drawing.Point(520, 147);
             this.txtProdType.Name = "txtProdType";
             this.txtProdType.Size = new System.Drawing.Size(200, 36);
             this.txtProdType.TabIndex = 16;
@@ -223,7 +226,7 @@ namespace HendersonvilleTrafficTest.Forms
             // 
             this.lblDescription.AutoSize = true;
             this.lblDescription.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblDescription.Location = new System.Drawing.Point(757, 210);
+            this.lblDescription.Location = new System.Drawing.Point(20, 190);
             this.lblDescription.Name = "lblDescription";
             this.lblDescription.Size = new System.Drawing.Size(138, 30);
             this.lblDescription.TabIndex = 17;
@@ -232,7 +235,7 @@ namespace HendersonvilleTrafficTest.Forms
             // txtDescription
             // 
             this.txtDescription.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtDescription.Location = new System.Drawing.Point(903, 207);
+            this.txtDescription.Location = new System.Drawing.Point(150, 187);
             this.txtDescription.Name = "txtDescription";
             this.txtDescription.Size = new System.Drawing.Size(200, 36);
             this.txtDescription.TabIndex = 18;
@@ -241,7 +244,7 @@ namespace HendersonvilleTrafficTest.Forms
             // 
             this.lblMfgNo.AutoSize = true;
             this.lblMfgNo.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblMfgNo.Location = new System.Drawing.Point(757, 260);
+            this.lblMfgNo.Location = new System.Drawing.Point(380, 190);
             this.lblMfgNo.Name = "lblMfgNo";
             this.lblMfgNo.Size = new System.Drawing.Size(103, 30);
             this.lblMfgNo.TabIndex = 19;
@@ -250,7 +253,7 @@ namespace HendersonvilleTrafficTest.Forms
             // txtMfgNo
             // 
             this.txtMfgNo.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtMfgNo.Location = new System.Drawing.Point(903, 257);
+            this.txtMfgNo.Location = new System.Drawing.Point(520, 187);
             this.txtMfgNo.Name = "txtMfgNo";
             this.txtMfgNo.Size = new System.Drawing.Size(200, 36);
             this.txtMfgNo.TabIndex = 20;
@@ -268,38 +271,51 @@ namespace HendersonvilleTrafficTest.Forms
             this.pnlTestParameters.TabIndex = 21;
             this.pnlTestParameters.WrapContents = false;
             // 
+            // grpProductInfo
+            // 
+            this.grpProductInfo.Controls.Add(this.txtMfgNo);
+            this.grpProductInfo.Controls.Add(this.lblMfgNo);
+            this.grpProductInfo.Controls.Add(this.txtDescription);
+            this.grpProductInfo.Controls.Add(this.lblDescription);
+            this.grpProductInfo.Controls.Add(this.txtProdType);
+            this.grpProductInfo.Controls.Add(this.lblProdType);
+            this.grpProductInfo.Controls.Add(this.txtCatNo);
+            this.grpProductInfo.Controls.Add(this.lblCatNo);
+            this.grpProductInfo.Controls.Add(this.txtTestCode);
+            this.grpProductInfo.Controls.Add(this.lblTestCode);
+            this.grpProductInfo.Controls.Add(this.txtAcDcTest);
+            this.grpProductInfo.Controls.Add(this.lblAcDcTest);
+            this.grpProductInfo.Controls.Add(this.txtSerialNo);
+            this.grpProductInfo.Controls.Add(this.lblSerialNo);
+            this.grpProductInfo.Controls.Add(this.txtCount);
+            this.grpProductInfo.Controls.Add(this.lblCount);
+            this.grpProductInfo.Controls.Add(this.txtTimeDate);
+            this.grpProductInfo.Controls.Add(this.lblTimeDate);
+            this.grpProductInfo.Controls.Add(this.txtOperator);
+            this.grpProductInfo.Controls.Add(this.lblOperator);
+            this.grpProductInfo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.grpProductInfo.Location = new System.Drawing.Point(600, 50);
+            this.grpProductInfo.Name = "grpProductInfo";
+            this.grpProductInfo.Size = new System.Drawing.Size(750, 250);
+            this.grpProductInfo.TabIndex = 22;
+            this.grpProductInfo.TabStop = false;
+            this.grpProductInfo.Text = "Product Information";
+            // 
             // TestResultsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1692, 999);
-            this.Controls.Add(this.txtMfgNo);
-            this.Controls.Add(this.lblMfgNo);
-            this.Controls.Add(this.txtDescription);
-            this.Controls.Add(this.lblDescription);
-            this.Controls.Add(this.txtProdType);
-            this.Controls.Add(this.lblProdType);
-            this.Controls.Add(this.txtCatNo);
-            this.Controls.Add(this.lblCatNo);
-            this.Controls.Add(this.txtTestCode);
-            this.Controls.Add(this.lblTestCode);
-            this.Controls.Add(this.txtAcDcTest);
-            this.Controls.Add(this.lblAcDcTest);
-            this.Controls.Add(this.txtSerialNo);
-            this.Controls.Add(this.lblSerialNo);
-            this.Controls.Add(this.txtCount);
-            this.Controls.Add(this.lblCount);
-            this.Controls.Add(this.txtTimeDate);
-            this.Controls.Add(this.lblTimeDate);
-            this.Controls.Add(this.txtOperator);
-            this.Controls.Add(this.lblOperator);
-            this.Controls.Add(this.txtPassFail);
+            this.Controls.Add(this.grpProductInfo);
+            this.Controls.Add(this.lblPassFail);
             this.Controls.Add(this.pnlTestParameters);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Name = "TestResultsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Test Results - Operator Dashboard";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.grpProductInfo.ResumeLayout(false);
+            this.grpProductInfo.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 

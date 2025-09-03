@@ -64,9 +64,9 @@ namespace HendersonvilleTrafficTest.Forms
 
         public void SetPassFailStatus(bool passed)
         {
-            txtPassFail.Text = passed ? "PASS" : "FAIL";
-            txtPassFail.BackColor = passed ? Color.Green : Color.Red;
-            txtPassFail.ForeColor = Color.White;
+            lblPassFail.Text = passed ? "PASS" : "FAIL";
+            lblPassFail.BackColor = passed ? Color.Green : Color.Red;
+            lblPassFail.ForeColor = Color.White;
         }
 
         public void AddTestSection(string sectionTitle, TestParameterData[] parameterData)
