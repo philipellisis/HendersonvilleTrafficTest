@@ -74,23 +74,11 @@ namespace HendersonvilleTrafficTest.Forms
             var paramControl = new TestParametersControl();
             paramControl.SectionTitle = sectionTitle;
             paramControl.SetAllParameterData(parameterData);
+            paramControl.Margin = new Padding(5, 5, 5, 15); // Add margin for proper spacing
             
-            // Position the control horizontally
-            int controlWidth = 620; // Control width + spacing
-            int controlsPerRow = pnlTestParameters.Width / controlWidth; // How many fit per row
-            int currentIndex = parameterControls.Count;
-            
-            int xPosition = (currentIndex % controlsPerRow) * controlWidth + 10;
-            int yPosition = (currentIndex / controlsPerRow) * 395 + 10; // Height + spacing
-            
-            paramControl.Location = new Point(xPosition, yPosition);
-            
-            // Add to panel and track
+            // FlowLayoutPanel handles positioning automatically
             pnlTestParameters.Controls.Add(paramControl);
             parameterControls.Add(paramControl);
-            
-            // Update panel scroll size
-            UpdateScrollableArea();
         }
 
         public void AddMultipleTestSections(Dictionary<string, TestParameterData[]> sections)
@@ -113,16 +101,7 @@ namespace HendersonvilleTrafficTest.Forms
 
         private void UpdateScrollableArea()
         {
-            if (parameterControls.Count > 0)
-            {
-                int controlWidth = 620;
-                int controlsPerRow = pnlTestParameters.Width / controlWidth;
-                int numberOfRows = (parameterControls.Count + controlsPerRow - 1) / controlsPerRow; // Ceiling division
-                int totalHeight = numberOfRows * 395 + 20; // Height + padding
-                int totalWidth = Math.Min(parameterControls.Count, controlsPerRow) * controlWidth + 20;
-                
-                pnlTestParameters.AutoScrollMinSize = new Size(totalWidth, totalHeight);
-            }
+            // FlowLayoutPanel handles scrolling automatically, no manual calculation needed
         }
 
         public void UpdateParameterValues(string sectionTitle, string parameter, string lcl, string meas, string ucl)

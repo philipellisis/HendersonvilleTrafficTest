@@ -26,7 +26,7 @@ namespace HendersonvilleTrafficTest.Forms
         private Label lblMfgNo;
         private TextBox txtMfgNo;
         
-        private Panel pnlTestParameters;
+        private FlowLayoutPanel pnlTestParameters;
 
         protected override void Dispose(bool disposing)
         {
@@ -60,7 +60,7 @@ namespace HendersonvilleTrafficTest.Forms
             this.txtDescription = new System.Windows.Forms.TextBox();
             this.lblMfgNo = new System.Windows.Forms.Label();
             this.txtMfgNo = new System.Windows.Forms.TextBox();
-            this.pnlTestParameters = new System.Windows.Forms.Panel();
+            this.pnlTestParameters = new System.Windows.Forms.FlowLayoutPanel();
             this.SuspendLayout();
             // 
             // txtPassFail
@@ -260,10 +260,13 @@ namespace HendersonvilleTrafficTest.Forms
             this.pnlTestParameters.AutoScroll = true;
             this.pnlTestParameters.BackColor = System.Drawing.Color.White;
             this.pnlTestParameters.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlTestParameters.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.pnlTestParameters.Location = new System.Drawing.Point(50, 320);
             this.pnlTestParameters.Name = "pnlTestParameters";
+            this.pnlTestParameters.Padding = new System.Windows.Forms.Padding(10);
             this.pnlTestParameters.Size = new System.Drawing.Size(810, 648);
             this.pnlTestParameters.TabIndex = 21;
+            this.pnlTestParameters.WrapContents = false;
             // 
             // TestResultsForm
             // 

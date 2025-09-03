@@ -24,10 +24,10 @@ namespace HendersonvilleTrafficTest.Controls
             // lblSectionTitle
             // 
             this.lblSectionTitle.AutoSize = false;
-            this.lblSectionTitle.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
-            this.lblSectionTitle.Location = new System.Drawing.Point(0, 0);
+            this.lblSectionTitle.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold);
+            this.lblSectionTitle.Location = new System.Drawing.Point(0, 5);
             this.lblSectionTitle.Name = "lblSectionTitle";
-            this.lblSectionTitle.Size = new System.Drawing.Size(600, 35);
+            this.lblSectionTitle.Size = new System.Drawing.Size(600, 55);
             this.lblSectionTitle.TabIndex = 0;
             this.lblSectionTitle.Text = "Test Section";
             this.lblSectionTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -40,21 +40,22 @@ namespace HendersonvilleTrafficTest.Controls
             this.dgvParameters.AllowUserToAddRows = false;
             this.dgvParameters.AllowUserToDeleteRows = false;
             this.dgvParameters.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvParameters.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvParameters.Location = new System.Drawing.Point(0, 35);
+            this.dgvParameters.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.dgvParameters.Location = new System.Drawing.Point(0, 65);
             this.dgvParameters.Name = "dgvParameters";
             this.dgvParameters.ReadOnly = true;
             this.dgvParameters.RowHeadersVisible = false;
-            this.dgvParameters.Size = new System.Drawing.Size(600, 400);
+            this.dgvParameters.Size = new System.Drawing.Size(600, 490);
             this.dgvParameters.TabIndex = 1;
-            this.dgvParameters.DefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.dgvParameters.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            this.dgvParameters.DefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 16F);
+            this.dgvParameters.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
             this.dgvParameters.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.LightGray;
-            this.dgvParameters.ColumnHeadersHeight = 40;
-            this.dgvParameters.RowTemplate.Height = 30;
+            this.dgvParameters.ColumnHeadersHeight = 50;
+            this.dgvParameters.RowTemplate.Height = 40;
             this.dgvParameters.BackgroundColor = System.Drawing.Color.White;
             this.dgvParameters.GridColor = System.Drawing.Color.Black;
             this.dgvParameters.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.dgvParameters.ScrollBars = System.Windows.Forms.ScrollBars.None;
 
             // Create columns
             var paramColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -62,7 +63,7 @@ namespace HendersonvilleTrafficTest.Controls
             paramColumn.Name = "PARAM";
             paramColumn.ReadOnly = true;
             paramColumn.DefaultCellStyle.BackColor = System.Drawing.Color.LightGray;
-            paramColumn.DefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            paramColumn.DefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
 
             var lclColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             lclColumn.HeaderText = "LCL";
@@ -88,10 +89,13 @@ namespace HendersonvilleTrafficTest.Controls
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.MinimumSize = new System.Drawing.Size(600, 600);
+            this.MaximumSize = new System.Drawing.Size(600, 600);
             this.Controls.Add(this.dgvParameters);
             this.Controls.Add(this.lblSectionTitle);
             this.Name = "TestParametersControl";
-            this.Size = new System.Drawing.Size(600, 400);
+            this.Size = new System.Drawing.Size(600, 600);
             ((System.ComponentModel.ISupportInitialize)(this.dgvParameters)).EndInit();
             this.ResumeLayout(false);
         }
