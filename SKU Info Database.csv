@@ -1,0 +1,4 @@
+Statut,SapId,SapDes,Color,Coq,Dimension,LabelToPrint,Sequence,Form,Voltage1,Frequency1,Snom1,Pnom1,Inom1,Voltage2,Frequency2,Snom2,Pnom2,Inom2,Voltage3,Frequency3,Snom3,Pnom3,Inom3,PerLevelClass,LumIntDist,PhantomClass,SymbolClass,ImpactResist,IngressProt,EnvironClass,EnergyStar,Note
+ACTIVE,"	DR6-RTFB-VLA  ",DR6-RTFB-VLA 120V ITE TNT ANALOG,RED,TINT,12,DR6_GTX_VLA,S-R6RFB-VLA-G4,AC,120,60,6.8,6.7,0.056,,,,,,,,,,,,,,,,,,,"Tower Sequence update for DR6-RxFB-VLA-xxx VCO fourth generation
+SEP/05/2022  DAVID JARA    EC-03059/DOC-2002808
+ACTUALIZADO ETIQUETA 20 FEB 2025"

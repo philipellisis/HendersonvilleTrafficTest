@@ -21,6 +21,9 @@ namespace HendersonvilleTrafficTest.Configuration
 
         [XmlElement("CalibrationSettings")]
         public CalibrationSettings Calibration { get; set; } = new();
+
+        [XmlElement("DataAccessSettings")]
+        public DataAccessSettings DataAccess { get; set; } = new();
     }
 
     [Serializable]
@@ -214,5 +217,13 @@ namespace HendersonvilleTrafficTest.Configuration
                 StandardLampSpectrum[i] = 1.0;
             }
         }
+    }
+
+    [Serializable]
+    public class DataAccessSettings
+    {
+        [XmlElement("DataAccessMode")]
+        [Description("Data access mode (Local or Database)")]
+        public DataAccessMode DataAccessMode { get; set; } = DataAccessMode.Local;
     }
 }

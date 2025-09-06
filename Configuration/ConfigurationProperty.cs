@@ -37,6 +37,7 @@ namespace HendersonvilleTrafficTest.Configuration
             ExtractPropertiesFromObject(config.Database, "Database", properties);
             ExtractPropertiesFromObject(config.Safety, "Safety", properties);
             ExtractPropertiesFromObject(config.Calibration, "Calibration", properties);
+            ExtractPropertiesFromObject(config.DataAccess, "Data Access", properties);
 
             return properties;
         }

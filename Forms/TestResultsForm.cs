@@ -4,22 +4,30 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using HendersonvilleTrafficTest.Controls;
+using HendersonvilleTrafficTest.Services;
+using HendersonvilleTrafficTest.Services.Interfaces;
+using HendersonvilleTrafficTest.Services.Models;
 
 namespace HendersonvilleTrafficTest.Forms
 {
     public partial class TestResultsForm : Form
     {
         private List<TestParametersControl> parameterControls = new List<TestParametersControl>();
+        private readonly IDataAccessService _dataAccessService;
 
         public TestResultsForm()
         {
             InitializeComponent();
+            _dataAccessService = new DataAccessServiceFactory().CreateDataAccessService();
             InitializeFormData();
         }
 
-        private void InitializeFormData()
+        private async void InitializeFormData()
         {
             txtTimeDate.Text = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
+            
+            // Load test sequences into dropdown
+            await LoadTestSequences();
             
             // Demo: Add sample test sections
             AddSampleTestSections();
@@ -103,6 +111,28 @@ namespace HendersonvilleTrafficTest.Forms
             parameterControls.Clear();
         }
 
+        private async Task LoadTestSequences()
+        {
+            try
+            {
+                var testSequences = await _dataAccessService.GetAllTestSequencesAsync();
+                txtTestCode.Items.Clear();
+                foreach (var sequence in testSequences)
+                {
+                    txtTestCode.Items.Add(sequence);
+                }
+                
+                if (txtTestCode.Items.Count > 0)
+                {
+                    txtTestCode.SelectedIndex = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading test sequences: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void UpdateScrollableArea()
         {
             // FlowLayoutPanel handles scrolling automatically, no manual calculation needed
@@ -134,6 +164,174 @@ namespace HendersonvilleTrafficTest.Forms
                 parameterControls[i].Location = new Point(xPosition, yPosition);
             }
             UpdateScrollableArea();
+        }
+
+        private async void txtTestCode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (txtTestCode.SelectedItem == null)
+                return;
+
+            var selectedSequenceId = txtTestCode.SelectedItem.ToString();
+            if (string.IsNullOrEmpty(selectedSequenceId))
+                return;
+
+            try
+            {
+                var testSequenceSteps = await _dataAccessService.GetTestSequenceAsync(selectedSequenceId);
+                
+                // Clear existing test sections
+                ClearTestSections();
+                
+                // Create test sections from the loaded data
+                CreateTestSectionsFromSequence(testSequenceSteps);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading test sequence '{selectedSequenceId}': {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void CreateTestSectionsFromSequence(TestSequenceStep[] steps)
+        {
+            // Group steps by their step number or create individual sections
+            foreach (var step in steps)
+            {
+                var parameterData = ConvertStepToParameterData(step);
+                AddTestSection($"Step {step.Step}: {step.StpNam}", parameterData);
+            }
+        }
+
+        private TestParameterData[] ConvertStepToParameterData(TestSequenceStep step)
+        {
+            var parameterList = new List<TestParameterData>();
+
+            // Add VAC parameters if active
+            if (step.VacAct == 1)
+            {
+                parameterList.Add(new TestParameterData
+                {
+                    Parameter = "VAC",
+                    LCL = step.VacLcl.ToString("F1"),
+                    MEAS = step.VacSet.ToString("F1"),
+                    UCL = step.VacUcl.ToString("F1"),
+                    MEASPassed = true
+                });
+            }
+
+            // Add VDC parameters if active
+            if (step.VdcAct == 1)
+            {
+                parameterList.Add(new TestParameterData
+                {
+                    Parameter = "VDC",
+                    LCL = step.VdcLcl.ToString("F1"),
+                    MEAS = step.VdcSet.ToString("F1"),
+                    UCL = step.VdcUcl.ToString("F1"),
+                    MEASPassed = true
+                });
+            }
+
+            // Add frequency parameters if active
+            if (step.FrqAct == 1)
+            {
+                parameterList.Add(new TestParameterData
+                {
+                    Parameter = "FREQ (Hz)",
+                    LCL = step.FrqLcl.ToString("F1"),
+                    MEAS = step.FrqSet.ToString("F1"),
+                    UCL = step.FrqUcl.ToString("F1"),
+                    MEASPassed = true
+                });
+            }
+
+            // Add current parameters if active
+            if (step.IAct == 1)
+            {
+                parameterList.Add(new TestParameterData
+                {
+                    Parameter = "mA",
+                    LCL = step.ILcl.ToString("F1"),
+                    MEAS = "0",
+                    UCL = step.IUcl.ToString("F1"),
+                    MEASPassed = true
+                });
+            }
+
+            // Add power parameters if active
+            if (step.PAct == 1)
+            {
+                parameterList.Add(new TestParameterData
+                {
+                    Parameter = "W",
+                    LCL = step.PLcl.ToString("F1"),
+                    MEAS = "0",
+                    UCL = step.PUcl.ToString("F1"),
+                    MEASPassed = true
+                });
+            }
+
+            // Add power factor parameters if active
+            if (step.PFAct == 1)
+            {
+                parameterList.Add(new TestParameterData
+                {
+                    Parameter = "PF",
+                    LCL = step.PFLcl.ToString("F2"),
+                    MEAS = "0",
+                    UCL = step.PFUcl.ToString("F2"),
+                    MEASPassed = true
+                });
+            }
+
+            // Add THD parameters if active
+            if (step.THDAct == 1)
+            {
+                parameterList.Add(new TestParameterData
+                {
+                    Parameter = "THD(%)",
+                    LCL = step.THDLIC.ToString("F1"),
+                    MEAS = "0",
+                    UCL = step.THDLSC.ToString("F1"),
+                    MEASPassed = true
+                });
+            }
+
+            // Add intensity parameters if active
+            if (step.IntAct == 1)
+            {
+                parameterList.Add(new TestParameterData
+                {
+                    Parameter = "INTEN",
+                    LCL = step.IntLIC.ToString("F0"),
+                    MEAS = "0",
+                    UCL = step.IntLSC.ToString("F0"),
+                    MEASPassed = true
+                });
+            }
+
+            // Add color parameters if active
+            if (step.ColorAct == 1)
+            {
+                parameterList.Add(new TestParameterData
+                {
+                    Parameter = "CCX",
+                    LCL = step.X1.ToString("F3"),
+                    MEAS = "0",
+                    UCL = step.X2.ToString("F3"),
+                    MEASPassed = true
+                });
+                
+                parameterList.Add(new TestParameterData
+                {
+                    Parameter = "CCY",
+                    LCL = step.Y1.ToString("F3"),
+                    MEAS = "0",
+                    UCL = step.Y2.ToString("F3"),
+                    MEASPassed = true
+                });
+            }
+
+            return parameterList.ToArray();
         }
 
         protected override void OnResize(EventArgs e)

@@ -16,7 +16,7 @@ namespace HendersonvilleTrafficTest.Forms
         private Label lblAcDcTest;
         private TextBox txtAcDcTest;
         private Label lblTestCode;
-        private TextBox txtTestCode;
+        private ComboBox txtTestCode;
         private Label lblCatNo;
         private TextBox txtCatNo;
         private Label lblProdType;
@@ -52,7 +52,7 @@ namespace HendersonvilleTrafficTest.Forms
             this.lblAcDcTest = new System.Windows.Forms.Label();
             this.txtAcDcTest = new System.Windows.Forms.TextBox();
             this.lblTestCode = new System.Windows.Forms.Label();
-            this.txtTestCode = new System.Windows.Forms.TextBox();
+            this.txtTestCode = new System.Windows.Forms.ComboBox();
             this.lblCatNo = new System.Windows.Forms.Label();
             this.txtCatNo = new System.Windows.Forms.TextBox();
             this.lblProdType = new System.Windows.Forms.Label();
@@ -180,11 +180,13 @@ namespace HendersonvilleTrafficTest.Forms
             // 
             // txtTestCode
             // 
+            this.txtTestCode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.txtTestCode.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.txtTestCode.Location = new System.Drawing.Point(520, 67);
             this.txtTestCode.Name = "txtTestCode";
-            this.txtTestCode.Size = new System.Drawing.Size(200, 36);
+            this.txtTestCode.Size = new System.Drawing.Size(200, 38);
             this.txtTestCode.TabIndex = 12;
+            this.txtTestCode.SelectedIndexChanged += new System.EventHandler(this.txtTestCode_SelectedIndexChanged);
             // 
             // lblCatNo
             // 
