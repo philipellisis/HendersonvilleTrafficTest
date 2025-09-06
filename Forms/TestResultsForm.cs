@@ -60,6 +60,10 @@ namespace HendersonvilleTrafficTest.Forms
 
             AddTestSection("120V Test Results", section1Data);
             AddTestSection("240V Test Results", section2Data);
+            AddTestSection("Warm Light Test", section1Data);
+            AddTestSection("Cool Light Test", section2Data);
+            AddTestSection("High Power Test", section1Data);
+            AddTestSection("Low Power Test", section2Data);
         }
 
         public void SetPassFailStatus(bool passed)

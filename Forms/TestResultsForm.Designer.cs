@@ -68,6 +68,7 @@ namespace HendersonvilleTrafficTest.Forms
             // 
             // lblPassFail
             // 
+            this.lblPassFail.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.lblPassFail.Font = new System.Drawing.Font("Arial", 72F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.lblPassFail.Location = new System.Drawing.Point(50, 50);
             this.lblPassFail.Name = "lblPassFail";
@@ -75,7 +76,6 @@ namespace HendersonvilleTrafficTest.Forms
             this.lblPassFail.TabIndex = 0;
             this.lblPassFail.Text = "PASS";
             this.lblPassFail.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblPassFail.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             // 
             // lblOperator
             // 
@@ -263,13 +263,13 @@ namespace HendersonvilleTrafficTest.Forms
             this.pnlTestParameters.AutoScroll = true;
             this.pnlTestParameters.BackColor = System.Drawing.Color.White;
             this.pnlTestParameters.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlTestParameters.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.pnlTestParameters.FlowDirection = System.Windows.Forms.FlowDirection.LeftToRight;
             this.pnlTestParameters.Location = new System.Drawing.Point(50, 320);
             this.pnlTestParameters.Name = "pnlTestParameters";
             this.pnlTestParameters.Padding = new System.Windows.Forms.Padding(10);
-            this.pnlTestParameters.Size = new System.Drawing.Size(810, 648);
+            this.pnlTestParameters.Size = new System.Drawing.Size(1900, 1300);
             this.pnlTestParameters.TabIndex = 21;
-            this.pnlTestParameters.WrapContents = false;
+            this.pnlTestParameters.WrapContents = true;
             // 
             // grpProductInfo
             // 
@@ -293,7 +293,7 @@ namespace HendersonvilleTrafficTest.Forms
             this.grpProductInfo.Controls.Add(this.lblTimeDate);
             this.grpProductInfo.Controls.Add(this.txtOperator);
             this.grpProductInfo.Controls.Add(this.lblOperator);
-            this.grpProductInfo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.grpProductInfo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.grpProductInfo.Location = new System.Drawing.Point(600, 50);
             this.grpProductInfo.Name = "grpProductInfo";
             this.grpProductInfo.Size = new System.Drawing.Size(750, 250);
@@ -305,7 +305,7 @@ namespace HendersonvilleTrafficTest.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1692, 999);
+            this.ClientSize = new System.Drawing.Size(2000, 1700);
             this.Controls.Add(this.grpProductInfo);
             this.Controls.Add(this.lblPassFail);
             this.Controls.Add(this.pnlTestParameters);
@@ -317,7 +317,6 @@ namespace HendersonvilleTrafficTest.Forms
             this.grpProductInfo.ResumeLayout(false);
             this.grpProductInfo.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
     }
