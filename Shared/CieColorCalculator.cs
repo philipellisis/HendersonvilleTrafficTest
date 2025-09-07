@@ -97,7 +97,7 @@ namespace HendersonvilleTrafficTest.Shared
         /// <param name="wavelengthEnd">End wavelength for calculation</param>
         /// <returns>CIE color coordinates and derived values</returns>
         public static CieColorResult CalculateFromSpectrumData(double[] wavelengths, double[] intensities,
-            double wavelengthStart, double wavelengthEnd)
+            double wavelengthStart = 380, double wavelengthEnd = 780)
         {
             if (wavelengths == null) throw new ArgumentNullException(nameof(wavelengths));
             if (intensities == null) throw new ArgumentNullException(nameof(intensities));

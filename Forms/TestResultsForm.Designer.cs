@@ -28,6 +28,7 @@ namespace HendersonvilleTrafficTest.Forms
         
         private FlowLayoutPanel pnlTestParameters;
         private GroupBox grpProductInfo;
+        private Button btnColorCalibration;
 
         protected override void Dispose(bool disposing)
         {
@@ -63,6 +64,7 @@ namespace HendersonvilleTrafficTest.Forms
             this.txtMfgNo = new System.Windows.Forms.TextBox();
             this.pnlTestParameters = new System.Windows.Forms.FlowLayoutPanel();
             this.grpProductInfo = new System.Windows.Forms.GroupBox();
+            this.btnColorCalibration = new System.Windows.Forms.Button();
             this.grpProductInfo.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -303,11 +305,23 @@ namespace HendersonvilleTrafficTest.Forms
             this.grpProductInfo.TabStop = false;
             this.grpProductInfo.Text = "Product Information";
             // 
+            // btnColorCalibration
+            // 
+            this.btnColorCalibration.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnColorCalibration.Location = new System.Drawing.Point(1400, 50);
+            this.btnColorCalibration.Name = "btnColorCalibration";
+            this.btnColorCalibration.Size = new System.Drawing.Size(150, 60);
+            this.btnColorCalibration.TabIndex = 23;
+            this.btnColorCalibration.Text = "Color Calibration";
+            this.btnColorCalibration.UseVisualStyleBackColor = true;
+            this.btnColorCalibration.Click += new System.EventHandler(this.btnColorCalibration_Click);
+            // 
             // TestResultsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(2000, 1700);
+            this.Controls.Add(this.btnColorCalibration);
             this.Controls.Add(this.grpProductInfo);
             this.Controls.Add(this.lblPassFail);
             this.Controls.Add(this.pnlTestParameters);

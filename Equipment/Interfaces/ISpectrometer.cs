@@ -11,7 +11,7 @@ namespace HendersonvilleTrafficTest.Equipment.Interfaces
     {
         Task InitializeAsync();
         Task<SpectrumReading> GetSpectrumReadingAsync();
-        Task AutoRangeAsync();
+        Task<uint> AutoRangeAsync();
         Task SetIntegrationTimeAsync(uint integrationTimeMicros);
         bool IsConnected { get; }
     }

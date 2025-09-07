@@ -24,6 +24,9 @@ namespace HendersonvilleTrafficTest.Configuration
 
         [XmlElement("DataAccessSettings")]
         public DataAccessSettings DataAccess { get; set; } = new();
+
+        [XmlElement("TowerSettings")]
+        public TowerSettings Tower { get; set; } = new();
     }
 
     [Serializable]
@@ -225,5 +228,71 @@ namespace HendersonvilleTrafficTest.Configuration
         [XmlElement("DataAccessMode")]
         [Description("Data access mode (Local or Database)")]
         public DataAccessMode DataAccessMode { get; set; } = DataAccessMode.Local;
+    }
+
+    [Serializable]
+    public class TowerSettings
+    {
+        [XmlElement("TowerId")]
+        [Description("Unique identifier for this measurement tower")]
+        public string TowerId { get; set; } = "Tower001";
+
+        [XmlElement("BlueColorSample")]
+        public ColorSample BlueColorSample { get; set; } = new();
+
+        [XmlElement("GreenColorSample")]
+        public ColorSample GreenColorSample { get; set; } = new();
+
+        [XmlElement("YellowColorSample")]
+        public ColorSample YellowColorSample { get; set; } = new();
+
+        [XmlElement("OrangeColorSample")]
+        public ColorSample OrangeColorSample { get; set; } = new();
+
+        [XmlElement("RedColorSample")]
+        public ColorSample RedColorSample { get; set; } = new();
+
+        [XmlElement("WhiteColorSample")]
+        public ColorSample WhiteColorSample { get; set; } = new();
+    }
+
+    [Serializable]
+    public class ColorSample
+    {
+        [XmlElement("A_Color")]
+        [Description("A coefficient for color calibration")]
+        public double A_Color { get; set; } = 1.0;
+
+        [XmlElement("B_Color")]
+        [Description("B coefficient for color calibration")]
+        public double B_Color { get; set; } = 0.0;
+
+        [XmlElement("LUX_Initial")]
+        [Description("Initial LUX measurement for calibration")]
+        public double LUX_Initial { get; set; } = 1000.0;
+
+        [XmlElement("Temperature_Initial")]
+        [Description("Initial temperature measurement for calibration (°C)")]
+        public double Temperature_Initial { get; set; } = 25.0;
+
+        [XmlElement("TestVoltage")]
+        [Description("Test voltage for this color sample")]
+        public double TestVoltage { get; set; } = 120.0;
+
+        [XmlElement("IsAC")]
+        [Description("True for AC test, False for DC test")]
+        public bool IsAC { get; set; } = true;
+
+        [XmlElement("LUX_Current")]
+        [Description("Current LUX measurement for calibration")]
+        public double LUX_Current { get; set; } = 1000.0;
+
+        [XmlElement("Temperature_Current")]
+        [Description("Current temperature measurement for calibration (°C)")]
+        public double Temperature_Current { get; set; } = 25.0;
+
+        [XmlElement("EclCalib")]
+        [Description("ECL calibration value")]
+        public double EclCalib { get; set; } = 1.0;
     }
 }

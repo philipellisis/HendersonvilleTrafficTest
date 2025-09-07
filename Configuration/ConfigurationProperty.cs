@@ -38,6 +38,15 @@ namespace HendersonvilleTrafficTest.Configuration
             ExtractPropertiesFromObject(config.Safety, "Safety", properties);
             ExtractPropertiesFromObject(config.Calibration, "Calibration", properties);
             ExtractPropertiesFromObject(config.DataAccess, "Data Access", properties);
+            ExtractPropertiesFromObject(config.Tower, "Tower Settings", properties);
+
+            // Extract nested color sample properties
+            ExtractPropertiesFromObject(config.Tower.BlueColorSample, "Blue Color Sample", properties);
+            ExtractPropertiesFromObject(config.Tower.GreenColorSample, "Green Color Sample", properties);
+            ExtractPropertiesFromObject(config.Tower.YellowColorSample, "Yellow Color Sample", properties);
+            ExtractPropertiesFromObject(config.Tower.OrangeColorSample, "Orange Color Sample", properties);
+            ExtractPropertiesFromObject(config.Tower.RedColorSample, "Red Color Sample", properties);
+            ExtractPropertiesFromObject(config.Tower.WhiteColorSample, "White Color Sample", properties);
 
             return properties;
         }

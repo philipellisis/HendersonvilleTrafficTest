@@ -334,6 +334,12 @@ namespace HendersonvilleTrafficTest.Forms
             return parameterList.ToArray();
         }
 
+        private void btnColorCalibration_Click(object sender, EventArgs e)
+        {
+            var colorCalibrationForm = new ColorCalibrationForm();
+            colorCalibrationForm.ShowDialog(this);
+        }
+
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);

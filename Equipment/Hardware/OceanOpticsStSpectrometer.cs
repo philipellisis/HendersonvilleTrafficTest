@@ -8,6 +8,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
 {
     public class OceanOpticsStSpectrometer : ISpectrometer
     {
+        private const uint integrationTime = 1000;
         private OceanDirect? _ocean;
         private int _deviceId = -1;
         private double[] _wavelengths = Array.Empty<double>();
@@ -103,9 +104,9 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
             });
         }
 
-        public Task AutoRangeAsync()
+        public Task<uint> AutoRangeAsync()
         {
-            return Task.CompletedTask;
+            return Task.FromResult(integrationTime);
         }
 
         public async Task SetIntegrationTimeAsync(uint integrationTimeMicros)

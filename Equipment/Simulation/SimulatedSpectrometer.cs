@@ -5,6 +5,7 @@ namespace HendersonvilleTrafficTest.Equipment.Simulation
     public class SimulatedSpectrometer : ISpectrometer
     {
         private readonly Random _random = new();
+        private const uint integrationTime = 1000;
         private const double MinWavelength = 380.0;
         private const double MaxWavelength = 780.0;
         
@@ -41,9 +42,9 @@ namespace HendersonvilleTrafficTest.Equipment.Simulation
             return Task.FromResult(reading);
         }
 
-        public Task AutoRangeAsync()
+        public Task<uint> AutoRangeAsync()
         {
-            return Task.CompletedTask;
+            return Task.FromResult(integrationTime);
         }
 
         public Task SetIntegrationTimeAsync(uint integrationTimeMicros)

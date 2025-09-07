@@ -18,7 +18,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
             throw new NotImplementedException("Get spectrum reading not implemented");
         }
 
-        public Task AutoRangeAsync()
+        public Task<uint> AutoRangeAsync()
         {
             // TODO: Send USB command to perform auto-ranging
             throw new NotImplementedException("Auto-range command not implemented");
