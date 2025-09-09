@@ -237,6 +237,50 @@ namespace HendersonvilleTrafficTest.Configuration
         [Description("Unique identifier for this measurement tower")]
         public string TowerId { get; set; } = "Tower001";
 
+        [XmlElement("LightCurtainRelay")]
+        [Description("Relay number (1-8) used to control the light curtain")]
+        public int LightCurtainRelay { get; set; } = 1;
+
+        [XmlElement("TestStartButtonInput")]
+        [Description("Input number for test start button")]
+        public int TestStartButtonInput { get; set; } = 1;
+
+        [XmlElement("NewTestButtonInput")]
+        [Description("Input number for new test button")]
+        public int NewTestButtonInput { get; set; } = 2;
+
+        [XmlElement("EStopInput")]
+        [Description("Input number for emergency stop")]
+        public int EStopInput { get; set; } = 3;
+
+        [XmlElement("LightCurrentInput")]
+        [Description("Input number for light current sensor")]
+        public int LightCurrentInput { get; set; } = 4;
+
+        [XmlElement("ACDCSelectPositive")]
+        [Description("Relay number for AC/DC select positive")]
+        public int ACDCSelectPositive { get; set; } = 1;
+
+        [XmlElement("ACDCSelectNegative")]
+        [Description("Relay number for AC/DC select negative")]
+        public int ACDCSelectNegative { get; set; } = 2;
+
+        [XmlElement("FBHandOrManPositive")]
+        [Description("Relay number for FB/Hand or Manual positive")]
+        public int FBHandOrManPositive { get; set; } = 3;
+
+        [XmlElement("FBHandOrManNegative")]
+        [Description("Relay number for FB/Hand or Manual negative")]
+        public int FBHandOrManNegative { get; set; } = 4;
+
+        [XmlElement("CountdownShort")]
+        [Description("Relay number for countdown short")]
+        public int CountdownShort { get; set; } = 5;
+
+        [XmlElement("LaserPower")]
+        [Description("Relay number for laser power")]
+        public int LaserPower { get; set; } = 6;
+
         [XmlElement("BlueColorSample")]
         public ColorSample BlueColorSample { get; set; } = new();
 

@@ -51,11 +51,26 @@ namespace HendersonvilleTrafficTest.Equipment.Simulation
             return Task.CompletedTask;
         }
 
-        public Task<byte> ReadAnalogValueAsync(int inputNumber)
+        public Task<bool> ReadAnalogValueAsync(int inputNumber)
         {
             ValidateInputNumber(inputNumber);
             
-            // Simulate analog reading with baseline + noise
+            var towerConfig = HendersonvilleTrafficTest.Configuration.ConfigurationManager.Current.Tower;
+            
+            // Return safe values for E-Stop and Light Current inputs to allow testing
+            if (inputNumber == towerConfig.EStopInput)
+            {
+                // E-Stop not activated (false = safe to continue)
+                return Task.FromResult(false);
+            }
+            
+            if (inputNumber == towerConfig.LightCurrentInput)
+            {
+                // Light current not detected (false = safe to continue)
+                return Task.FromResult(false);
+            }
+            
+            // For other inputs, simulate normal analog reading with baseline + noise
             var baseline = _analogBaseline[inputNumber - 1];
             var noise = (_random.NextDouble() - 0.5) * 10; // ±5 units of noise
             var value = (int)(baseline + noise);
@@ -63,7 +78,7 @@ namespace HendersonvilleTrafficTest.Equipment.Simulation
             // Clamp to valid range (0-255)
             value = Math.Max(0, Math.Min(255, value));
             
-            return Task.FromResult((byte)value);
+            return Task.FromResult(value > 128);
         }
 
         public Task<bool> GetOutputStateAsync(int outputNumber)

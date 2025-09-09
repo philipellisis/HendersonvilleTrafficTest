@@ -145,7 +145,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
             }
         }
 
-        public async Task<byte> ReadAnalogValueAsync(int inputNumber)
+        public async Task<bool> ReadAnalogValueAsync(int inputNumber)
         {
             ValidateOutputNumber(inputNumber);
 
@@ -159,18 +159,18 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
 
                 if (response != null && response.Length > 2)
                 {
-                    return response[2];
+                    return response[2] > 128;
                 }
                 else
                 {
-                    return 0;
+                    return false;
                 }
             }
             catch (Exception ex)
             {
                 LogError($"Error querying ADC {inputNumber} value: {ex.Message}");
                 // Return cached state on error
-                return 0;
+                return false;
             }
         }
 

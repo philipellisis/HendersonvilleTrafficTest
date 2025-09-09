@@ -5,7 +5,7 @@ namespace HendersonvilleTrafficTest.Equipment.Interfaces
         Task<bool> InitializeAsync();
         Task TurnOutputOnAsync(int outputNumber);
         Task TurnOutputOffAsync(int outputNumber);
-        Task<byte> ReadAnalogValueAsync(int inputNumber);
+        Task<bool> ReadAnalogValueAsync(int inputNumber);
         Task<bool> GetOutputStateAsync(int outputNumber);
         int MaxOutputChannels { get; }
         int MaxInputChannels { get; }

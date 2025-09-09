@@ -29,6 +29,10 @@ namespace HendersonvilleTrafficTest.Forms
         private FlowLayoutPanel pnlTestParameters;
         private GroupBox grpProductInfo;
         private Button btnColorCalibration;
+        private Button btnStartTest;
+        private TextBox txtTestStatus;
+        private Label lblTestStatus;
+        private ProgressBar prgTestProgress;
 
         protected override void Dispose(bool disposing)
         {
@@ -65,6 +69,10 @@ namespace HendersonvilleTrafficTest.Forms
             this.pnlTestParameters = new System.Windows.Forms.FlowLayoutPanel();
             this.grpProductInfo = new System.Windows.Forms.GroupBox();
             this.btnColorCalibration = new System.Windows.Forms.Button();
+            this.btnStartTest = new System.Windows.Forms.Button();
+            this.txtTestStatus = new System.Windows.Forms.TextBox();
+            this.lblTestStatus = new System.Windows.Forms.Label();
+            this.prgTestProgress = new System.Windows.Forms.ProgressBar();
             this.grpProductInfo.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -316,11 +324,54 @@ namespace HendersonvilleTrafficTest.Forms
             this.btnColorCalibration.UseVisualStyleBackColor = true;
             this.btnColorCalibration.Click += new System.EventHandler(this.btnColorCalibration_Click);
             // 
+            // btnStartTest
+            // 
+            this.btnStartTest.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnStartTest.Location = new System.Drawing.Point(1570, 50);
+            this.btnStartTest.Name = "btnStartTest";
+            this.btnStartTest.Size = new System.Drawing.Size(150, 60);
+            this.btnStartTest.TabIndex = 24;
+            this.btnStartTest.Text = "Start Test";
+            this.btnStartTest.UseVisualStyleBackColor = true;
+            this.btnStartTest.Click += new System.EventHandler(this.btnStartTest_Click);
+            // 
+            // lblTestStatus
+            // 
+            this.lblTestStatus.AutoSize = true;
+            this.lblTestStatus.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblTestStatus.Location = new System.Drawing.Point(1400, 140);
+            this.lblTestStatus.Name = "lblTestStatus";
+            this.lblTestStatus.Size = new System.Drawing.Size(92, 21);
+            this.lblTestStatus.TabIndex = 25;
+            this.lblTestStatus.Text = "Test Status:";
+            // 
+            // txtTestStatus
+            // 
+            this.txtTestStatus.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.txtTestStatus.Location = new System.Drawing.Point(1400, 170);
+            this.txtTestStatus.Multiline = true;
+            this.txtTestStatus.Name = "txtTestStatus";
+            this.txtTestStatus.ReadOnly = true;
+            this.txtTestStatus.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.txtTestStatus.Size = new System.Drawing.Size(320, 100);
+            this.txtTestStatus.TabIndex = 26;
+            // 
+            // prgTestProgress
+            // 
+            this.prgTestProgress.Location = new System.Drawing.Point(1400, 280);
+            this.prgTestProgress.Name = "prgTestProgress";
+            this.prgTestProgress.Size = new System.Drawing.Size(320, 20);
+            this.prgTestProgress.TabIndex = 27;
+            // 
             // TestResultsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(2000, 1700);
+            this.Controls.Add(this.prgTestProgress);
+            this.Controls.Add(this.txtTestStatus);
+            this.Controls.Add(this.lblTestStatus);
+            this.Controls.Add(this.btnStartTest);
             this.Controls.Add(this.btnColorCalibration);
             this.Controls.Add(this.grpProductInfo);
             this.Controls.Add(this.lblPassFail);
