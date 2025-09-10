@@ -27,6 +27,9 @@ namespace HendersonvilleTrafficTest.Configuration
 
         [XmlElement("TowerSettings")]
         public TowerSettings Tower { get; set; } = new();
+
+        [XmlElement("UserAccountSettings")]
+        public UserAccountSettings UserAccounts { get; set; } = new();
     }
 
     [Serializable]
@@ -338,5 +341,87 @@ namespace HendersonvilleTrafficTest.Configuration
         [XmlElement("EclCalib")]
         [Description("ECL calibration value")]
         public double EclCalib { get; set; } = 1.0;
+    }
+
+    public enum UserType
+    {
+        TestOperator = 0,
+        ProductionSupervisor = 1,
+        CalibrationTechnician = 2,
+        Engineer = 3
+    }
+
+    [Serializable]
+    public class UserAccount
+    {
+        [XmlElement("Username")]
+        [Description("Username for login")]
+        public string Username { get; set; } = "";
+
+        [XmlElement("Password")]
+        [Description("Password for login")]
+        public string Password { get; set; } = "";
+
+        [XmlElement("UserType")]
+        [Description("User type/role")]
+        public UserType UserType { get; set; } = UserType.TestOperator;
+
+        [XmlElement("IsActive")]
+        [Description("Whether this account is active")]
+        public bool IsActive { get; set; } = true;
+
+        [XmlElement("FullName")]
+        [Description("Full name of the user")]
+        public string FullName { get; set; } = "";
+    }
+
+    [Serializable]
+    public class UserAccountSettings
+    {
+        [XmlArray("UserAccounts")]
+        [XmlArrayItem("UserAccount")]
+        [Description("List of user accounts")]
+        public List<UserAccount> UserAccounts { get; set; } = new();
+
+        public UserAccountSettings()
+        {
+            // Initialize with default admin account
+            UserAccounts.Add(new UserAccount
+            {
+                Username = "admin",
+                Password = "admin",
+                UserType = UserType.Engineer,
+                IsActive = true,
+                FullName = "System Administrator"
+            });
+
+            // Add default accounts for each user type
+            UserAccounts.Add(new UserAccount
+            {
+                Username = "operator",
+                Password = "op123",
+                UserType = UserType.TestOperator,
+                IsActive = true,
+                FullName = "Test Operator"
+            });
+
+            UserAccounts.Add(new UserAccount
+            {
+                Username = "supervisor",
+                Password = "super123",
+                UserType = UserType.ProductionSupervisor,
+                IsActive = true,
+                FullName = "Production Supervisor"
+            });
+
+            UserAccounts.Add(new UserAccount
+            {
+                Username = "calibtech",
+                Password = "calib123",
+                UserType = UserType.CalibrationTechnician,
+                IsActive = true,
+                FullName = "Calibration Technician"
+            });
+        }
     }
 }

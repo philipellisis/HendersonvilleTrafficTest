@@ -39,6 +39,7 @@ namespace HendersonvilleTrafficTest.Configuration
             ExtractPropertiesFromObject(config.Calibration, "Calibration", properties);
             ExtractPropertiesFromObject(config.DataAccess, "Data Access", properties);
             ExtractPropertiesFromObject(config.Tower, "Tower Settings", properties);
+            ExtractPropertiesFromObject(config.UserAccounts, "User Account Settings", properties);
 
             // Extract nested color sample properties
             ExtractPropertiesFromObject(config.Tower.BlueColorSample, "Blue Color Sample", properties);
@@ -47,6 +48,14 @@ namespace HendersonvilleTrafficTest.Configuration
             ExtractPropertiesFromObject(config.Tower.OrangeColorSample, "Orange Color Sample", properties);
             ExtractPropertiesFromObject(config.Tower.RedColorSample, "Red Color Sample", properties);
             ExtractPropertiesFromObject(config.Tower.WhiteColorSample, "White Color Sample", properties);
+
+            // Extract user account properties
+            for (int i = 0; i < config.UserAccounts.UserAccounts.Count; i++)
+            {
+                var userAccount = config.UserAccounts.UserAccounts[i];
+                var categoryName = $"User Account {i + 1} ({userAccount.UserType})";
+                ExtractPropertiesFromObject(userAccount, categoryName, properties);
+            }
 
             return properties;
         }
