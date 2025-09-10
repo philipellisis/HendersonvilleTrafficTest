@@ -19,6 +19,7 @@ namespace HendersonvilleTrafficTest
         {
             using var testForm = new RelayControllerTestForm();
             testForm.ShowDialog(this);
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void btnTestTemperatureSensor_Click(object sender, EventArgs e)
