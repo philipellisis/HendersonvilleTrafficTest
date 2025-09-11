@@ -42,7 +42,7 @@ namespace HendersonvilleTrafficTest
 
         private UserAccount? ValidateCredentials(string username, string password)
         {
-            var userAccounts = ConfigurationManager.Current.UserAccounts.UserAccounts;
+            var userAccounts = ConfigurationManager.Current.UserAccounts.GetUserAccounts();
             return userAccounts.FirstOrDefault(u => 
                 u.Username.Equals(username, StringComparison.OrdinalIgnoreCase) && 
                 u.Password == password && 

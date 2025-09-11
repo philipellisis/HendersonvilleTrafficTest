@@ -378,50 +378,53 @@ namespace HendersonvilleTrafficTest.Configuration
     [Serializable]
     public class UserAccountSettings
     {
-        [XmlArray("UserAccounts")]
-        [XmlArrayItem("UserAccount")]
-        [Description("List of user accounts")]
-        public List<UserAccount> UserAccounts { get; set; } = new();
+        [XmlElement("UserAccountsData")]
+        [Description("User accounts stored as CSV data: Username,Password,UserType,IsActive,FullName")]
+        public string UserAccountsData { get; set; } = "";
 
         public UserAccountSettings()
         {
-            // Initialize with default admin account
-            UserAccounts.Add(new UserAccount
-            {
-                Username = "admin",
-                Password = "admin",
-                UserType = UserType.Engineer,
-                IsActive = true,
-                FullName = "System Administrator"
-            });
+            // Initialize with default accounts in CSV format
+            // Format: Username,Password,UserType,IsActive,FullName
+            UserAccountsData = "admin,admin,Engineer,True,System Administrator\n" +
+                              "operator,op123,TestOperator,True,Test Operator\n" +
+                              "supervisor,super123,ProductionSupervisor,True,Production Supervisor\n" +
+                              "calibtech,calib123,CalibrationTechnician,True,Calibration Technician";
+        }
 
-            // Add default accounts for each user type
-            UserAccounts.Add(new UserAccount
-            {
-                Username = "operator",
-                Password = "op123",
-                UserType = UserType.TestOperator,
-                IsActive = true,
-                FullName = "Test Operator"
-            });
+        public List<UserAccount> GetUserAccounts()
+        {
+            var userAccounts = new List<UserAccount>();
+            
+            if (string.IsNullOrWhiteSpace(UserAccountsData))
+                return userAccounts;
 
-            UserAccounts.Add(new UserAccount
+            var lines = UserAccountsData.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            
+            foreach (var line in lines)
             {
-                Username = "supervisor",
-                Password = "super123",
-                UserType = UserType.ProductionSupervisor,
-                IsActive = true,
-                FullName = "Production Supervisor"
-            });
+                var parts = line.Split(',');
+                if (parts.Length >= 5)
+                {
+                    var userAccount = new UserAccount
+                    {
+                        Username = parts[0].Trim(),
+                        Password = parts[1].Trim(),
+                        UserType = Enum.TryParse<UserType>(parts[2].Trim(), out var userType) ? userType : UserType.TestOperator,
+                        IsActive = bool.TryParse(parts[3].Trim(), out var isActive) ? isActive : true,
+                        FullName = parts[4].Trim()
+                    };
+                    userAccounts.Add(userAccount);
+                }
+            }
+            
+            return userAccounts;
+        }
 
-            UserAccounts.Add(new UserAccount
-            {
-                Username = "calibtech",
-                Password = "calib123",
-                UserType = UserType.CalibrationTechnician,
-                IsActive = true,
-                FullName = "Calibration Technician"
-            });
+        public void SaveUserAccounts(List<UserAccount> userAccounts)
+        {
+            var lines = userAccounts.Select(u => $"{u.Username},{u.Password},{u.UserType},{u.IsActive},{u.FullName}");
+            UserAccountsData = string.Join("\n", lines);
         }
     }
 }

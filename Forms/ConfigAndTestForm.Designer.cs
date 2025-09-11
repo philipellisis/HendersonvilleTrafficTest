@@ -7,6 +7,7 @@ namespace HendersonvilleTrafficTest.Forms
         // Configuration Section
         private GroupBox grpConfiguration;
         private Button btnConfiguration;
+        private Button btnManageUsers;
         
         // Equipment Testing Section
         private GroupBox grpEquipmentTesting;
@@ -34,6 +35,7 @@ namespace HendersonvilleTrafficTest.Forms
         {
             this.grpConfiguration = new System.Windows.Forms.GroupBox();
             this.btnConfiguration = new System.Windows.Forms.Button();
+            this.btnManageUsers = new System.Windows.Forms.Button();
             this.grpEquipmentTesting = new System.Windows.Forms.GroupBox();
             this.btnTestRelayController = new System.Windows.Forms.Button();
             this.btnTestTemperatureSensor = new System.Windows.Forms.Button();
@@ -50,11 +52,12 @@ namespace HendersonvilleTrafficTest.Forms
             // 
             // grpConfiguration
             // 
+            this.grpConfiguration.Controls.Add(this.btnManageUsers);
             this.grpConfiguration.Controls.Add(this.btnConfiguration);
             this.grpConfiguration.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.grpConfiguration.Location = new System.Drawing.Point(30, 30);
             this.grpConfiguration.Name = "grpConfiguration";
-            this.grpConfiguration.Size = new System.Drawing.Size(300, 120);
+            this.grpConfiguration.Size = new System.Drawing.Size(300, 200);
             this.grpConfiguration.TabIndex = 0;
             this.grpConfiguration.TabStop = false;
             this.grpConfiguration.Text = "Configuration";
@@ -69,6 +72,17 @@ namespace HendersonvilleTrafficTest.Forms
             this.btnConfiguration.Text = "System Configuration";
             this.btnConfiguration.UseVisualStyleBackColor = true;
             this.btnConfiguration.Click += new System.EventHandler(this.btnConfiguration_Click);
+            // 
+            // btnManageUsers
+            // 
+            this.btnManageUsers.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnManageUsers.Location = new System.Drawing.Point(30, 120);
+            this.btnManageUsers.Name = "btnManageUsers";
+            this.btnManageUsers.Size = new System.Drawing.Size(240, 60);
+            this.btnManageUsers.TabIndex = 1;
+            this.btnManageUsers.Text = "Manage Users";
+            this.btnManageUsers.UseVisualStyleBackColor = true;
+            this.btnManageUsers.Click += new System.EventHandler(this.btnManageUsers_Click);
             // 
             // grpEquipmentTesting
             // 
@@ -145,7 +159,7 @@ namespace HendersonvilleTrafficTest.Forms
             this.grpCalibration.Controls.Add(this.btnColorCalibration);
             this.grpCalibration.Controls.Add(this.btnSpectrometerCalibration);
             this.grpCalibration.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.grpCalibration.Location = new System.Drawing.Point(30, 170);
+            this.grpCalibration.Location = new System.Drawing.Point(30, 250);
             this.grpCalibration.Name = "grpCalibration";
             this.grpCalibration.Size = new System.Drawing.Size(300, 200);
             this.grpCalibration.TabIndex = 2;
@@ -178,7 +192,7 @@ namespace HendersonvilleTrafficTest.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1200, 450);
+            this.ClientSize = new System.Drawing.Size(1200, 530);
             this.Controls.Add(this.grpCalibration);
             this.Controls.Add(this.grpEquipmentTesting);
             this.Controls.Add(this.grpConfiguration);

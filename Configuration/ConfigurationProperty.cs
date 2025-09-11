@@ -49,14 +49,6 @@ namespace HendersonvilleTrafficTest.Configuration
             ExtractPropertiesFromObject(config.Tower.RedColorSample, "Red Color Sample", properties);
             ExtractPropertiesFromObject(config.Tower.WhiteColorSample, "White Color Sample", properties);
 
-            // Extract user account properties
-            for (int i = 0; i < config.UserAccounts.UserAccounts.Count; i++)
-            {
-                var userAccount = config.UserAccounts.UserAccounts[i];
-                var categoryName = $"User Account {i + 1} ({userAccount.UserType})";
-                ExtractPropertiesFromObject(userAccount, categoryName, properties);
-            }
-
             return properties;
         }
 

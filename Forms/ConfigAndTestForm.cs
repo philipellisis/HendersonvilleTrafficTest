@@ -57,5 +57,11 @@ namespace HendersonvilleTrafficTest.Forms
             using var colorCalibrationForm = new ColorCalibrationForm();
             colorCalibrationForm.ShowDialog(this);
         }
+
+        private void btnManageUsers_Click(object sender, EventArgs e)
+        {
+            using var userManagementForm = new UserManagementForm();
+            userManagementForm.ShowDialog(this);
+        }
     }
 }
