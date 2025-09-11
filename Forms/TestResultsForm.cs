@@ -339,18 +339,18 @@ namespace HendersonvilleTrafficTest.Forms
                 parameterList.Add(new TestParameterData
                 {
                     Parameter = "CCX",
-                    LCL = step.X1.ToString("F3"),
+                    LCL = "",
                     MEAS = "0",
-                    UCL = step.X2.ToString("F3"),
+                    UCL = "",
                     MEASPassed = true
                 });
                 
                 parameterList.Add(new TestParameterData
                 {
                     Parameter = "CCY",
-                    LCL = step.Y1.ToString("F3"),
+                    LCL = "",
                     MEAS = "0",
-                    UCL = step.Y2.ToString("F3"),
+                    UCL = "",
                     MEASPassed = true
                 });
             }
@@ -664,11 +664,34 @@ namespace HendersonvilleTrafficTest.Forms
                 result.IntensityTestPassed = result.IntensityMeasured >= step.IntLIC && result.IntensityMeasured <= step.IntLSC;
             }
 
-            // Color test (simplified - checking if within first color boundary)
+            // Color test - checking if chromaticity point is within polygon boundary
             if (step.ColorAct == 1)
             {
-                result.ColorTestPassed = result.CcxMeasured >= step.X1 && result.CcxMeasured <= step.X2 &&
-                                        result.CcyMeasured >= step.Y1 && result.CcyMeasured <= step.Y2;
+                // Create polygon vertices from step coordinates (X1-X6, Y1-Y6)
+                var vertices = new List<MathUtils.Point2D>();
+                
+                // Add vertices if they have valid (non-zero) coordinates
+                if (step.X1 != 0 || step.Y1 != 0) vertices.Add(new MathUtils.Point2D(step.X1, step.Y1));
+                if (step.X2 != 0 || step.Y2 != 0) vertices.Add(new MathUtils.Point2D(step.X2, step.Y2));
+                if (step.X3 != 0 || step.Y3 != 0) vertices.Add(new MathUtils.Point2D(step.X3, step.Y3));
+                if (step.X4 != 0 || step.Y4 != 0) vertices.Add(new MathUtils.Point2D(step.X4, step.Y4));
+                if (step.X5 != 0 || step.Y5 != 0) vertices.Add(new MathUtils.Point2D(step.X5, step.Y5));
+                if (step.X6 != 0 || step.Y6 != 0) vertices.Add(new MathUtils.Point2D(step.X6, step.Y6));
+                
+                // Test if chromaticity point is inside the polygon (need at least 3 vertices)
+                if (vertices.Count >= 3)
+                {
+                    result.ColorTestPassed = MathUtils.IsChromaticityPointInPolygon(
+                        result.CcxMeasured, 
+                        result.CcyMeasured, 
+                        vertices.ToArray());
+                }
+                else
+                {
+                    // Fallback to old rectangular boundary check if less than 3 vertices
+                    result.ColorTestPassed = result.CcxMeasured >= step.X1 && result.CcxMeasured <= step.X2 &&
+                                            result.CcyMeasured >= step.Y1 && result.CcyMeasured <= step.Y2;
+                }
             }
 
             // Overall test result

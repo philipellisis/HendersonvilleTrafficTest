@@ -106,5 +106,61 @@ namespace HendersonvilleTrafficTest.Shared
                 Timestamp = normalizedReading.Timestamp
             };
         }
+
+        /// <summary>
+        /// Represents a 2D point with X and Y coordinates
+        /// </summary>
+        public struct Point2D
+        {
+            public double X { get; set; }
+            public double Y { get; set; }
+
+            public Point2D(double x, double y)
+            {
+                X = x;
+                Y = y;
+            }
+        }
+
+        /// <summary>
+        /// Determines if a point is inside a polygon using the ray-casting algorithm
+        /// </summary>
+        /// <param name="point">The point to test</param>
+        /// <param name="polygon">Array of polygon vertices in order</param>
+        /// <returns>True if the point is inside the polygon, false otherwise</returns>
+        public static bool IsPointInPolygon(Point2D point, Point2D[] polygon)
+        {
+            if (polygon.Length < 3)
+                return false; // A polygon must have at least 3 vertices
+
+            bool inside = false;
+            int j = polygon.Length - 1; // Start with the last vertex
+
+            for (int i = 0; i < polygon.Length; i++)
+            {
+                // Check if the ray from the point crosses the edge from polygon[j] to polygon[i]
+                if (((polygon[i].Y > point.Y) != (polygon[j].Y > point.Y)) &&
+                    (point.X < (polygon[j].X - polygon[i].X) * (point.Y - polygon[i].Y) / (polygon[j].Y - polygon[i].Y) + polygon[i].X))
+                {
+                    inside = !inside; // Toggle the inside flag
+                }
+                j = i; // Move to the next edge
+            }
+
+            return inside;
+        }
+
+        /// <summary>
+        /// Determines if a chromaticity point is inside a polygon using the ray-casting algorithm
+        /// </summary>
+        /// <param name="chromaticityX">X coordinate of the chromaticity point</param>
+        /// <param name="chromaticityY">Y coordinate of the chromaticity point</param>
+        /// <param name="polygonVertices">Array of polygon vertices as Point2D objects</param>
+        /// <returns>True if the chromaticity point is inside the polygon, false otherwise</returns>
+        public static bool IsChromaticityPointInPolygon(double chromaticityX, double chromaticityY, Point2D[] polygonVertices)
+        {
+            var testPoint = new Point2D(chromaticityX, chromaticityY);
+            return IsPointInPolygon(testPoint, polygonVertices);
+        }
     }
 }
