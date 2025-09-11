@@ -106,6 +106,10 @@ namespace HendersonvilleTrafficTest.Configuration
         [XmlElement("SpectrometerMaxIntegrationTimeMicros")]
         [Description("Maximum integration time for spectrometer autorange in microseconds")]
         public uint SpectrometerMaxIntegrationTimeMicros { get; set; } = 10000000;
+
+        [XmlElement("SpectrometerMaxReadTimeSeconds")]
+        [Description("Maximum time to spend taking averaged spectrometer readings in seconds")]
+        public double SpectrometerMaxReadTimeSeconds { get; set; } = 1.0;
     }
 
     [Serializable]

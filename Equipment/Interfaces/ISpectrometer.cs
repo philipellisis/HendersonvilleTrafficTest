@@ -10,7 +10,7 @@ namespace HendersonvilleTrafficTest.Equipment.Interfaces
     public interface ISpectrometer
     {
         Task InitializeAsync();
-        Task<SpectrumReading> GetSpectrumReadingAsync();
+        Task<SpectrumReading> GetSpectrumReadingAsync(double? maxReadTimeSeconds = null);
         Task<uint> AutoRangeAsync();
         Task SetIntegrationTimeAsync(uint integrationTimeMicros);
         bool IsConnected { get; }

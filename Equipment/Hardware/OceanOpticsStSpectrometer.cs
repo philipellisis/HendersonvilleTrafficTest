@@ -14,6 +14,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
         private int _deviceId = -1;
         private double[] _wavelengths = Array.Empty<double>();
         private bool _disposed = false;
+        private uint _currentIntegrationTimeMicros = integrationTime;
 
         public bool IsConnected { get; private set; } = false;
 
@@ -60,6 +61,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
                     {
                         throw new InvalidOperationException($"Could not set integration time. Error code: {errorCode}");
                     }
+                    _currentIntegrationTimeMicros = integrationTime;
 
                     IsConnected = true;
                 }
@@ -71,29 +73,66 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
             });
         }
 
-        public async Task<SpectrumReading> GetSpectrumReadingAsync()
+        public async Task<SpectrumReading> GetSpectrumReadingAsync(double? maxReadTimeSeconds = null)
         {
             if (!IsConnected || _ocean == null || _deviceId == -1)
             {
                 throw new InvalidOperationException("Spectrometer not initialized or connected");
             }
 
+            // Use provided maxReadTimeSeconds or fall back to configuration
+            double actualMaxReadTime = maxReadTimeSeconds ?? ConfigurationManager.Current.Equipment.SpectrometerMaxReadTimeSeconds;
+            
+            // Calculate number of readings to average based on integration time and max read time
+            double integrationTimeSeconds = _currentIntegrationTimeMicros / 1_000_000.0; // Convert microseconds to seconds
+            int numberOfReadings = Math.Max(1, (int)(actualMaxReadTime / integrationTimeSeconds));
+
             return await Task.Run(() =>
             {
                 try
                 {
-                    int errorCode = 0;
-                    double[] spectrum = _ocean.getSpectrum(_deviceId, ref errorCode);
+                    // Initialize arrays for averaging
+                    double[]? averagedSpectrum = null;
                     
-                    if (errorCode != 0)
+                    for (int i = 0; i < numberOfReadings; i++)
                     {
-                        throw new InvalidOperationException($"Could not read spectrum. Error code: {errorCode}");
+                        int errorCode = 0;
+                        double[] spectrum = _ocean.getSpectrum(_deviceId, ref errorCode);
+                        
+                        if (errorCode != 0)
+                        {
+                            throw new InvalidOperationException($"Could not read spectrum. Error code: {errorCode}");
+                        }
+
+                        // Initialize averaged spectrum on first reading
+                        if (averagedSpectrum == null)
+                        {
+                            averagedSpectrum = new double[spectrum.Length];
+                            Array.Copy(spectrum, averagedSpectrum, spectrum.Length);
+                        }
+                        else
+                        {
+                            // Add current spectrum to running average
+                            for (int j = 0; j < spectrum.Length && j < averagedSpectrum.Length; j++)
+                            {
+                                averagedSpectrum[j] += spectrum[j];
+                            }
+                        }
+                    }
+
+                    // Calculate final average
+                    if (averagedSpectrum != null && numberOfReadings > 1)
+                    {
+                        for (int j = 0; j < averagedSpectrum.Length; j++)
+                        {
+                            averagedSpectrum[j] /= numberOfReadings;
+                        }
                     }
 
                     SpectrumReading reading = new SpectrumReading
                     {
                         Wavelengths = _wavelengths,
-                        Intensities = spectrum,
+                        Intensities = averagedSpectrum ?? Array.Empty<double>(),
                         Timestamp = DateTime.Now
                     };
                     return MathUtils.NormalizeSpectrumReading(reading);
@@ -230,6 +269,8 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
                 {
                     throw new InvalidOperationException($"Could not set integration time. Error code: {errorCode}");
                 }
+                
+                _currentIntegrationTimeMicros = integrationTimeMicros;
             });
         }
 

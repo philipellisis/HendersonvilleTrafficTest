@@ -17,7 +17,7 @@ namespace HendersonvilleTrafficTest.Equipment.Simulation
             return Task.CompletedTask;
         }
 
-        public Task<SpectrumReading> GetSpectrumReadingAsync()
+        public Task<SpectrumReading> GetSpectrumReadingAsync(double? maxReadTimeSeconds = null)
         {
             const int dataPoints = 401;
             var wavelengths = new double[dataPoints];

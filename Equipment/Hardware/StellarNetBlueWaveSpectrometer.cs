@@ -12,7 +12,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
             throw new NotImplementedException("USB interface initialization not implemented");
         }
 
-        public Task<SpectrumReading> GetSpectrumReadingAsync()
+        public Task<SpectrumReading> GetSpectrumReadingAsync(double? maxReadTimeSeconds = null)
         {
             // TODO: Send USB command to capture spectrum reading (380nm-780nm)
             throw new NotImplementedException("Get spectrum reading not implemented");
