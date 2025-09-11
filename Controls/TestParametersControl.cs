@@ -25,7 +25,7 @@ namespace HendersonvilleTrafficTest.Controls
         {
             string[] parameters = {
                 "VAC", "mA", "W", "PF", "THD(%)", "INTEN", 
-                "DOM WAVE", "CCT (K)", "CCX", "CCY", "T (C)"
+                "DOM WAVE", "CCX", "CCY", "T (C)"
             };
 
             foreach (string param in parameters)

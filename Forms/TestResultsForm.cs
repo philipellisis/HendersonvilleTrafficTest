@@ -69,7 +69,6 @@ namespace HendersonvilleTrafficTest.Forms
                 new TestParameterData { Parameter = "THD(%)", LCL = "0", MEAS = "2.5", UCL = "5", MEASPassed = true },
                 new TestParameterData { Parameter = "INTEN", LCL = "800", MEAS = "850", UCL = "1000", MEASPassed = true },
                 new TestParameterData { Parameter = "DOM WAVE", LCL = "580", MEAS = "590", UCL = "620", MEASPassed = true },
-                new TestParameterData { Parameter = "CCT (K)", LCL = "2700", MEAS = "2800", UCL = "3000", MEASPassed = true },
                 new TestParameterData { Parameter = "CCX", LCL = "0.4", MEAS = "0.42", UCL = "0.5", MEASPassed = true },
                 new TestParameterData { Parameter = "CCY", LCL = "0.35", MEAS = "0.38", UCL = "0.45", MEASPassed = true },
                 new TestParameterData { Parameter = "T (C)", LCL = "20", MEAS = "25", UCL = "30", MEASPassed = true }
@@ -84,7 +83,6 @@ namespace HendersonvilleTrafficTest.Forms
                 new TestParameterData { Parameter = "THD(%)", LCL = "0", MEAS = "1.8", UCL = "5", MEASPassed = true },
                 new TestParameterData { Parameter = "INTEN", LCL = "900", MEAS = "950", UCL = "1100", MEASPassed = true },
                 new TestParameterData { Parameter = "DOM WAVE", LCL = "585", MEAS = "595", UCL = "625", MEASPassed = true },
-                new TestParameterData { Parameter = "CCT (K)", LCL = "2800", MEAS = "2900", UCL = "3100", MEASPassed = true },
                 new TestParameterData { Parameter = "CCX", LCL = "0.42", MEAS = "0.44", UCL = "0.52", MEASPassed = true },
                 new TestParameterData { Parameter = "CCY", LCL = "0.37", MEAS = "0.40", UCL = "0.47", MEASPassed = true },
                 new TestParameterData { Parameter = "T (C)", LCL = "22", MEAS = "27", UCL = "32", MEASPassed = true }
@@ -753,12 +751,12 @@ namespace HendersonvilleTrafficTest.Forms
 
                 if (step.ColorAct == 1)
                 {
-                    control.SetParameterValues("CCX", step.X1.ToString("F3"), 
-                        result.CcxMeasured.ToString("F3"), step.X2.ToString("F3"));
+                    control.SetParameterValues("CCX", "", 
+                        result.CcxMeasured.ToString("F3"), "");
                     control.SetParameterStatus("CCX", "MEAS", result.ColorTestPassed);
 
-                    control.SetParameterValues("CCY", step.Y1.ToString("F3"), 
-                        result.CcyMeasured.ToString("F3"), step.Y2.ToString("F3"));
+                    control.SetParameterValues("CCY", "", 
+                        result.CcyMeasured.ToString("F3"), "");
                     control.SetParameterStatus("CCY", "MEAS", result.ColorTestPassed);
                 }
 
