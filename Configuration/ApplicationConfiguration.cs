@@ -98,6 +98,14 @@ namespace HendersonvilleTrafficTest.Configuration
         [XmlElement("ConnectionTimeoutMs")]
         [Description("Equipment connection timeout in milliseconds")]
         public int ConnectionTimeoutMs { get; set; } = 5000;
+
+        [XmlElement("SpectrometerMinIntegrationTimeMicros")]
+        [Description("Minimum integration time for spectrometer autorange in microseconds")]
+        public uint SpectrometerMinIntegrationTimeMicros { get; set; } = 1000;
+
+        [XmlElement("SpectrometerMaxIntegrationTimeMicros")]
+        [Description("Maximum integration time for spectrometer autorange in microseconds")]
+        public uint SpectrometerMaxIntegrationTimeMicros { get; set; } = 10000000;
     }
 
     [Serializable]

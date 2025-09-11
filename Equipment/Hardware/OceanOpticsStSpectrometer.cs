@@ -3,6 +3,7 @@ using NetOceanDirect;
 using System;
 using System.Threading.Tasks;
 using HendersonvilleTrafficTest.Shared;
+using HendersonvilleTrafficTest.Configuration;
 
 namespace HendersonvilleTrafficTest.Equipment.Hardware
 {
@@ -104,9 +105,113 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
             });
         }
 
-        public Task<uint> AutoRangeAsync()
+        private async Task<double[]> GetRawSpectrumAsync()
         {
-            return Task.FromResult(integrationTime);
+            if (!IsConnected || _ocean == null || _deviceId == -1)
+            {
+                throw new InvalidOperationException("Spectrometer not initialized or connected");
+            }
+
+            return await Task.Run(() =>
+            {
+                try
+                {
+                    int errorCode = 0;
+                    double[] spectrum = _ocean.getSpectrum(_deviceId, ref errorCode);
+                    
+                    if (errorCode != 0)
+                    {
+                        throw new InvalidOperationException($"Could not read spectrum. Error code: {errorCode}");
+                    }
+
+                    return spectrum;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            });
+        }
+
+        public async Task<uint> AutoRangeAsync()
+        {
+            if (!IsConnected || _ocean == null || _deviceId == -1)
+            {
+                throw new InvalidOperationException("Spectrometer not initialized or connected");
+            }
+
+            var config = ConfigurationManager.Current.Equipment;
+            uint minIntegrationTime = config.SpectrometerMinIntegrationTimeMicros;
+            uint maxIntegrationTime = config.SpectrometerMaxIntegrationTimeMicros;
+            
+            // Start with minimum integration time
+            uint currentIntegrationTime = minIntegrationTime;
+            
+            // Get maximum counts value for the spectrometer (typically 65535 for 16-bit or 4095 for 12-bit)
+            const double maxCounts = 65535.0;
+            const double targetMinPercent = 0.50; // 50% of max counts
+            const double targetMaxPercent = 0.95; // 95% of max counts
+            
+            const int maxIterations = 20; // Prevent infinite loops
+            int iteration = 0;
+            
+            while (iteration < maxIterations)
+            {
+                // Set the current integration time
+                await SetIntegrationTimeAsync(currentIntegrationTime);
+                
+                // Take a measurement
+                var spectrum = await GetRawSpectrumAsync();
+                
+                // Find the maximum intensity in the spectrum
+                double maxIntensity = 0;
+                foreach (double intensity in spectrum)
+                {
+                    if (intensity > maxIntensity)
+                        maxIntensity = intensity;
+                }
+                
+                // Calculate percentage of maximum counts
+                double intensityPercent = maxIntensity / maxCounts;
+                
+                // Check if we're in the target range (50%-95%)
+                if (intensityPercent >= targetMinPercent && intensityPercent <= targetMaxPercent)
+                {
+                    // We found a good integration time
+                    return currentIntegrationTime;
+                }
+                else if (intensityPercent < targetMinPercent)
+                {
+                    // Signal too weak, increase integration time
+                    uint newIntegrationTime = (uint)(currentIntegrationTime * 1.5);
+                    if (newIntegrationTime > maxIntegrationTime)
+                    {
+                        // We've reached maximum, use it
+                        currentIntegrationTime = maxIntegrationTime;
+                        await SetIntegrationTimeAsync(currentIntegrationTime);
+                        return currentIntegrationTime;
+                    }
+                    currentIntegrationTime = newIntegrationTime;
+                }
+                else if (intensityPercent > targetMaxPercent)
+                {
+                    // Signal too strong, decrease integration time
+                    uint newIntegrationTime = (uint)(currentIntegrationTime * 0.7);
+                    if (newIntegrationTime < minIntegrationTime)
+                    {
+                        // We've reached minimum, use it
+                        currentIntegrationTime = minIntegrationTime;
+                        await SetIntegrationTimeAsync(currentIntegrationTime);
+                        return currentIntegrationTime;
+                    }
+                    currentIntegrationTime = newIntegrationTime;
+                }
+                
+                iteration++;
+            }
+            
+            // If we couldn't find optimal range after max iterations, return current value
+            return currentIntegrationTime;
         }
 
         public async Task SetIntegrationTimeAsync(uint integrationTimeMicros)
