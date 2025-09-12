@@ -76,8 +76,8 @@ namespace HendersonvilleTrafficTest.Forms
                 new TestParameterData { Parameter = "THD(%)", LCL = "0", MEAS = "2.5", UCL = "5", MEASPassed = true },
                 new TestParameterData { Parameter = "INTEN", LCL = "800", MEAS = "850", UCL = "1000", MEASPassed = true },
                 new TestParameterData { Parameter = "DOM WAVE", LCL = "580", MEAS = "590", UCL = "620", MEASPassed = true },
-                new TestParameterData { Parameter = "CCX", LCL = "0.4", MEAS = "0.42", UCL = "0.5", MEASPassed = true },
-                new TestParameterData { Parameter = "CCY", LCL = "0.35", MEAS = "0.38", UCL = "0.45", MEASPassed = true },
+                new TestParameterData { Parameter = "CCX", LCL = "", MEAS = "0.42", UCL = "", MEASPassed = true, LCLActive = false, UCLActive = false },
+                new TestParameterData { Parameter = "CCY", LCL = "", MEAS = "0.38", UCL = "", MEASPassed = true, LCLActive = false, UCLActive = false },
                 new TestParameterData { Parameter = "T (C)", LCL = "20", MEAS = "25", UCL = "30", MEASPassed = true }
             };
 
@@ -349,7 +349,9 @@ namespace HendersonvilleTrafficTest.Forms
                     LCL = "",
                     MEAS = "0",
                     UCL = "",
-                    MEASPassed = true
+                    MEASPassed = true,
+                    LCLActive = false, // No LCL for color measurements
+                    UCLActive = false  // No UCL for color measurements
                 });
                 
                 parameterList.Add(new TestParameterData
@@ -358,7 +360,9 @@ namespace HendersonvilleTrafficTest.Forms
                     LCL = "",
                     MEAS = "0",
                     UCL = "",
-                    MEASPassed = true
+                    MEASPassed = true,
+                    LCLActive = false, // No LCL for color measurements
+                    UCLActive = false  // No UCL for color measurements
                 });
             }
 
