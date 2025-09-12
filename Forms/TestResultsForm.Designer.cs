@@ -33,6 +33,13 @@ namespace HendersonvilleTrafficTest.Forms
         private TextBox txtTestStatus;
         private Label lblTestStatus;
         private ProgressBar prgTestProgress;
+        
+        // Status fields
+        private Label lblNetworkStatus;
+        private Label lblIpAddress;
+        private Label lblMachineId;
+        private Label lblLineId;
+        private Label lblSoftwareRev;
 
         protected override void Dispose(bool disposing)
         {
@@ -73,6 +80,11 @@ namespace HendersonvilleTrafficTest.Forms
             this.txtTestStatus = new System.Windows.Forms.TextBox();
             this.lblTestStatus = new System.Windows.Forms.Label();
             this.prgTestProgress = new System.Windows.Forms.ProgressBar();
+            this.lblNetworkStatus = new System.Windows.Forms.Label();
+            this.lblIpAddress = new System.Windows.Forms.Label();
+            this.lblMachineId = new System.Windows.Forms.Label();
+            this.lblLineId = new System.Windows.Forms.Label();
+            this.lblSoftwareRev = new System.Windows.Forms.Label();
             this.grpProductInfo.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -363,11 +375,62 @@ namespace HendersonvilleTrafficTest.Forms
             this.prgTestProgress.Size = new System.Drawing.Size(320, 20);
             this.prgTestProgress.TabIndex = 27;
             // 
+            // lblNetworkStatus
+            // 
+            this.lblNetworkStatus.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblNetworkStatus.Location = new System.Drawing.Point(50, 220);
+            this.lblNetworkStatus.Name = "lblNetworkStatus";
+            this.lblNetworkStatus.Size = new System.Drawing.Size(200, 25);
+            this.lblNetworkStatus.TabIndex = 28;
+            this.lblNetworkStatus.Text = "Network: ACTIVE";
+            this.lblNetworkStatus.ForeColor = System.Drawing.Color.Green;
+            // 
+            // lblIpAddress
+            // 
+            this.lblIpAddress.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblIpAddress.Location = new System.Drawing.Point(270, 220);
+            this.lblIpAddress.Name = "lblIpAddress";
+            this.lblIpAddress.Size = new System.Drawing.Size(200, 25);
+            this.lblIpAddress.TabIndex = 29;
+            this.lblIpAddress.Text = "IP: 192.168.1.100";
+            // 
+            // lblMachineId
+            // 
+            this.lblMachineId.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblMachineId.Location = new System.Drawing.Point(50, 250);
+            this.lblMachineId.Name = "lblMachineId";
+            this.lblMachineId.Size = new System.Drawing.Size(200, 25);
+            this.lblMachineId.TabIndex = 30;
+            this.lblMachineId.Text = "Machine ID: PC001";
+            // 
+            // lblLineId
+            // 
+            this.lblLineId.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblLineId.Location = new System.Drawing.Point(270, 250);
+            this.lblLineId.Name = "lblLineId";
+            this.lblLineId.Size = new System.Drawing.Size(200, 25);
+            this.lblLineId.TabIndex = 31;
+            this.lblLineId.Text = "Line ID: Line001";
+            // 
+            // lblSoftwareRev
+            // 
+            this.lblSoftwareRev.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblSoftwareRev.Location = new System.Drawing.Point(50, 280);
+            this.lblSoftwareRev.Name = "lblSoftwareRev";
+            this.lblSoftwareRev.Size = new System.Drawing.Size(300, 25);
+            this.lblSoftwareRev.TabIndex = 32;
+            this.lblSoftwareRev.Text = "Software Rev: 1.0.0";
+            // 
             // TestResultsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(2000, 1700);
+            this.Controls.Add(this.lblSoftwareRev);
+            this.Controls.Add(this.lblLineId);
+            this.Controls.Add(this.lblMachineId);
+            this.Controls.Add(this.lblIpAddress);
+            this.Controls.Add(this.lblNetworkStatus);
             this.Controls.Add(this.prgTestProgress);
             this.Controls.Add(this.txtTestStatus);
             this.Controls.Add(this.lblTestStatus);

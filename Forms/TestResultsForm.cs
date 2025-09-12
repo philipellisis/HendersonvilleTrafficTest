@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using HendersonvilleTrafficTest.Configuration;
@@ -26,6 +29,7 @@ namespace HendersonvilleTrafficTest.Forms
         private  IRelayController _relayController;
         private bool _testInProgress = false;
         private List<TestMeasurementResult> _testResults = new List<TestMeasurementResult>();
+        private bool _networkActive = true;
 
         public TestResultsForm()
         {
@@ -49,6 +53,9 @@ namespace HendersonvilleTrafficTest.Forms
         private async void InitializeFormData()
         {
             txtTimeDate.Text = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss");
+            
+            // Initialize status fields
+            InitializeStatusFields();
             
             // Load test sequences into dropdown
             await LoadTestSequences();
@@ -151,6 +158,7 @@ namespace HendersonvilleTrafficTest.Forms
             }
             catch (Exception ex)
             {
+                HandleDatabaseError(ex);
                 MessageBox.Show($"Error loading test sequences: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -209,6 +217,7 @@ namespace HendersonvilleTrafficTest.Forms
             }
             catch (Exception ex)
             {
+                HandleDatabaseError(ex);
                 MessageBox.Show($"Error loading test sequence '{selectedSequenceId}': {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -431,6 +440,12 @@ namespace HendersonvilleTrafficTest.Forms
             }
             catch (Exception ex)
             {
+                // Check if this could be a database-related error
+                if (ex.Message.Contains("database") || ex.Message.Contains("connection") || ex.Message.Contains("network"))
+                {
+                    HandleDatabaseError(ex);
+                }
+                
                 UpdateTestStatus($"Error during test sequence: {ex.Message}");
                 MessageBox.Show($"Test sequence failed: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -789,6 +804,81 @@ namespace HendersonvilleTrafficTest.Forms
 
             prgTestProgress.Value = Math.Min(100, Math.Max(0, percentage));
             Application.DoEvents();
+        }
+
+        private void InitializeStatusFields()
+        {
+            // Initialize Network Status
+            UpdateNetworkStatus();
+
+            // Initialize IP Address
+            lblIpAddress.Text = $"IP: {GetLocalIPAddress()}";
+
+            // Initialize Machine ID
+            lblMachineId.Text = $"Machine ID: {Environment.MachineName}";
+
+            // Initialize Line ID from configuration
+            lblLineId.Text = $"Line ID: {ConfigurationManager.Current.Tower.LineId}";
+
+            // Initialize Software Version
+            lblSoftwareRev.Text = $"Software Rev: {GetSoftwareVersion()}";
+        }
+
+        private string GetLocalIPAddress()
+        {
+            try
+            {
+                var host = Dns.GetHostEntry(Dns.GetHostName());
+                foreach (var ip in host.AddressList)
+                {
+                    if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                    {
+                        return ip.ToString();
+                    }
+                }
+                return "No IP Found";
+            }
+            catch
+            {
+                return "IP Unavailable";
+            }
+        }
+
+        private string GetSoftwareVersion()
+        {
+            try
+            {
+                var assembly = Assembly.GetExecutingAssembly();
+                var version = assembly.GetName().Version;
+                return version != null ? version.ToString() : "Unknown";
+            }
+            catch
+            {
+                return "Unknown";
+            }
+        }
+
+        private void UpdateNetworkStatus()
+        {
+            if (_networkActive)
+            {
+                lblNetworkStatus.Text = "Network: ACTIVE";
+                lblNetworkStatus.ForeColor = Color.Green;
+            }
+            else
+            {
+                lblNetworkStatus.Text = "Network: INACTIVE";
+                lblNetworkStatus.ForeColor = Color.Red;
+            }
+        }
+
+        private void HandleDatabaseError(Exception ex)
+        {
+            _networkActive = false;
+            UpdateNetworkStatus();
+            
+            // Log the error (you could add proper logging here)
+            Console.WriteLine($"Database error: {ex.Message}");
         }
 
         protected override void OnResize(EventArgs e)

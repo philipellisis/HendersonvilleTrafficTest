@@ -260,6 +260,10 @@ namespace HendersonvilleTrafficTest.Configuration
         [Description("Unique identifier for this measurement tower")]
         public string TowerId { get; set; } = "Tower001";
 
+        [XmlElement("LineId")]
+        [Description("Production line identifier")]
+        public string LineId { get; set; } = "Line001";
+
         [XmlElement("LightCurtainRelay")]
         [Description("Relay number (1-8) used to control the light curtain")]
         public int LightCurtainRelay { get; set; } = 1;
