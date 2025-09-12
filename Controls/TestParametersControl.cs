@@ -162,34 +162,52 @@ namespace HendersonvilleTrafficTest.Controls
         {
             if (dgvParameters.Columns["PARAM"].Visible)
             {
-                // Parameter labels visible - use standard full size
-                dgvParameters.Size = new System.Drawing.Size(600, 450);
-                this.Size = new System.Drawing.Size(600, 550);
-                this.MinimumSize = new System.Drawing.Size(600, 550);
-                this.MaximumSize = new System.Drawing.Size(600, 550);
-                dgvParameters.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+                // Parameter labels visible - wider PARAM column for better readability
+                int fullWidth = 350; // Increased from 300 to accommodate wider PARAM column
+                dgvParameters.Size = new System.Drawing.Size(fullWidth, 450);
+                this.Size = new System.Drawing.Size(fullWidth, 550);
+                this.MinimumSize = new System.Drawing.Size(fullWidth, 550);
+                this.MaximumSize = new System.Drawing.Size(fullWidth, 550);
+                
+                // Update title label width to match
+                lblSectionTitle.Size = new System.Drawing.Size(fullWidth, 55);
+                
+                // Use fixed column widths for display with wider PARAM column
+                dgvParameters.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
+                
+                // Set specific column widths for full mode with labels (total = ~350px)
+                if (dgvParameters.Columns["PARAM"] != null)
+                    dgvParameters.Columns["PARAM"].Width = 125; // Increased from 75 to 125 (+50px)
+                if (dgvParameters.Columns["LCL"] != null)
+                    dgvParameters.Columns["LCL"].Width = 75;
+                if (dgvParameters.Columns["MEAS"] != null)
+                    dgvParameters.Columns["MEAS"].Width = 75;
+                if (dgvParameters.Columns["UCL"] != null)
+                    dgvParameters.Columns["UCL"].Width = 75;
             }
             else
             {
-                // Parameter labels hidden - make everything more compact
-                int compactWidth = 400; // Reduced from 600
-                int compactGridHeight = 450; // Keep same height for readability
+                // Parameter labels hidden - even more compact
+                int compactWidth = 225; // Reduced from 400 to 225 (3 columns * 75px each)
                 
-                dgvParameters.Size = new System.Drawing.Size(compactWidth, compactGridHeight);
+                dgvParameters.Size = new System.Drawing.Size(compactWidth, 450);
                 this.Size = new System.Drawing.Size(compactWidth, 550);
                 this.MinimumSize = new System.Drawing.Size(compactWidth, 550);
                 this.MaximumSize = new System.Drawing.Size(compactWidth, 550);
                 
+                // Update title label width to match
+                lblSectionTitle.Size = new System.Drawing.Size(compactWidth, 55);
+                
                 // Use fixed column widths for more compact display
                 dgvParameters.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
                 
-                // Set specific column widths for compact mode (total = ~400px)
+                // Set specific column widths for compact mode (total = ~225px)
                 if (dgvParameters.Columns["LCL"] != null)
-                    dgvParameters.Columns["LCL"].Width = 130;
+                    dgvParameters.Columns["LCL"].Width = 75;
                 if (dgvParameters.Columns["MEAS"] != null)
-                    dgvParameters.Columns["MEAS"].Width = 140;
+                    dgvParameters.Columns["MEAS"].Width = 75;
                 if (dgvParameters.Columns["UCL"] != null)
-                    dgvParameters.Columns["UCL"].Width = 130;
+                    dgvParameters.Columns["UCL"].Width = 75;
             }
         }
     }

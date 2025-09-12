@@ -24,13 +24,13 @@ namespace HendersonvilleTrafficTest.Controls
             // lblSectionTitle
             // 
             this.lblSectionTitle.AutoSize = false;
-            this.lblSectionTitle.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold);
+            this.lblSectionTitle.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
             this.lblSectionTitle.Location = new System.Drawing.Point(0, 5);
             this.lblSectionTitle.Name = "lblSectionTitle";
-            this.lblSectionTitle.Size = new System.Drawing.Size(600, 55);
+            this.lblSectionTitle.Size = new System.Drawing.Size(350, 55);
             this.lblSectionTitle.TabIndex = 0;
             this.lblSectionTitle.Text = "Test Section";
-            this.lblSectionTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblSectionTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.lblSectionTitle.BackColor = System.Drawing.Color.LightBlue;
             this.lblSectionTitle.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             
@@ -47,8 +47,8 @@ namespace HendersonvilleTrafficTest.Controls
             this.dgvParameters.RowHeadersVisible = false;
             this.dgvParameters.Size = new System.Drawing.Size(350, 450);
             this.dgvParameters.TabIndex = 1;
-            this.dgvParameters.DefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 16F);
-            this.dgvParameters.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 18F, System.Drawing.FontStyle.Bold);
+            this.dgvParameters.DefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 14F);
+            this.dgvParameters.ColumnHeadersDefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             this.dgvParameters.ColumnHeadersDefaultCellStyle.BackColor = System.Drawing.Color.LightGray;
             this.dgvParameters.ColumnHeadersHeight = 50;
             this.dgvParameters.RowTemplate.Height = 40;
@@ -90,12 +90,12 @@ namespace HendersonvilleTrafficTest.Controls
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.MinimumSize = new System.Drawing.Size(600, 550);
-            this.MaximumSize = new System.Drawing.Size(600, 550);
+            this.MinimumSize = new System.Drawing.Size(350, 550);
+            this.MaximumSize = new System.Drawing.Size(350, 550);
             this.Controls.Add(this.dgvParameters);
             this.Controls.Add(this.lblSectionTitle);
             this.Name = "TestParametersControl";
-            this.Size = new System.Drawing.Size(600, 550);
+            this.Size = new System.Drawing.Size(350, 550);
             ((System.ComponentModel.ISupportInitialize)(this.dgvParameters)).EndInit();
             this.ResumeLayout(false);
         }
