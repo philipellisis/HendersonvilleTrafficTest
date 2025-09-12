@@ -63,7 +63,7 @@ namespace HendersonvilleTrafficTest.Controls
             paramColumn.Name = "PARAM";
             paramColumn.ReadOnly = true;
             paramColumn.DefaultCellStyle.BackColor = System.Drawing.Color.LightGray;
-            paramColumn.DefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
+            paramColumn.DefaultCellStyle.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
 
             var lclColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             lclColumn.HeaderText = "LCL";

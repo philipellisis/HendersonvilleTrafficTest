@@ -287,13 +287,11 @@ namespace HendersonvilleTrafficTest.Forms
             this.pnlTestParameters.AutoScroll = true;
             this.pnlTestParameters.BackColor = System.Drawing.Color.White;
             this.pnlTestParameters.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlTestParameters.FlowDirection = System.Windows.Forms.FlowDirection.LeftToRight;
             this.pnlTestParameters.Location = new System.Drawing.Point(50, 320);
             this.pnlTestParameters.Name = "pnlTestParameters";
             this.pnlTestParameters.Padding = new System.Windows.Forms.Padding(10);
-            this.pnlTestParameters.Size = new System.Drawing.Size(1900, 1300);
+            this.pnlTestParameters.Size = new System.Drawing.Size(1670, 700);
             this.pnlTestParameters.TabIndex = 21;
-            this.pnlTestParameters.WrapContents = true;
             // 
             // grpProductInfo
             // 
@@ -347,16 +345,6 @@ namespace HendersonvilleTrafficTest.Forms
             this.btnStartTest.UseVisualStyleBackColor = true;
             this.btnStartTest.Click += new System.EventHandler(this.btnStartTest_Click);
             // 
-            // lblTestStatus
-            // 
-            this.lblTestStatus.AutoSize = true;
-            this.lblTestStatus.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblTestStatus.Location = new System.Drawing.Point(1400, 140);
-            this.lblTestStatus.Name = "lblTestStatus";
-            this.lblTestStatus.Size = new System.Drawing.Size(92, 21);
-            this.lblTestStatus.TabIndex = 25;
-            this.lblTestStatus.Text = "Test Status:";
-            // 
             // txtTestStatus
             // 
             this.txtTestStatus.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -368,6 +356,16 @@ namespace HendersonvilleTrafficTest.Forms
             this.txtTestStatus.Size = new System.Drawing.Size(320, 100);
             this.txtTestStatus.TabIndex = 26;
             // 
+            // lblTestStatus
+            // 
+            this.lblTestStatus.AutoSize = true;
+            this.lblTestStatus.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblTestStatus.Location = new System.Drawing.Point(1400, 140);
+            this.lblTestStatus.Name = "lblTestStatus";
+            this.lblTestStatus.Size = new System.Drawing.Size(95, 21);
+            this.lblTestStatus.TabIndex = 25;
+            this.lblTestStatus.Text = "Test Status:";
+            // 
             // prgTestProgress
             // 
             this.prgTestProgress.Location = new System.Drawing.Point(1400, 280);
@@ -378,12 +376,12 @@ namespace HendersonvilleTrafficTest.Forms
             // lblNetworkStatus
             // 
             this.lblNetworkStatus.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblNetworkStatus.ForeColor = System.Drawing.Color.Green;
             this.lblNetworkStatus.Location = new System.Drawing.Point(50, 220);
             this.lblNetworkStatus.Name = "lblNetworkStatus";
             this.lblNetworkStatus.Size = new System.Drawing.Size(200, 25);
             this.lblNetworkStatus.TabIndex = 28;
             this.lblNetworkStatus.Text = "Network: ACTIVE";
-            this.lblNetworkStatus.ForeColor = System.Drawing.Color.Green;
             // 
             // lblIpAddress
             // 
@@ -425,7 +423,7 @@ namespace HendersonvilleTrafficTest.Forms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(2000, 1700);
+            this.ClientSize = new System.Drawing.Size(1781, 1181);
             this.Controls.Add(this.lblSoftwareRev);
             this.Controls.Add(this.lblLineId);
             this.Controls.Add(this.lblMachineId);
@@ -447,6 +445,7 @@ namespace HendersonvilleTrafficTest.Forms
             this.grpProductInfo.ResumeLayout(false);
             this.grpProductInfo.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
     }
