@@ -91,9 +91,10 @@ namespace HendersonvilleTrafficTest.Forms
                 await PowerOffLamp(colorSample);
                 UpdateProgress(60);
 
-                // Step 6: Wait 3 seconds and take dark current measurement
-                UpdateStatus("Waiting for dark current stabilization (3 seconds)...");
-                await Task.Delay(3000);
+                // Step 6: Wait for dark current stabilization and take dark current measurement
+                var waitTimeSeconds = ConfigurationManager.Current.Equipment.WaitForDarkCurrentSeconds;
+                UpdateStatus($"Waiting for dark current stabilization ({waitTimeSeconds:F1} seconds)...");
+                await Task.Delay((int)(waitTimeSeconds * 1000));
                 UpdateProgress(70);
 
                 UpdateStatus("Taking dark current measurement...");

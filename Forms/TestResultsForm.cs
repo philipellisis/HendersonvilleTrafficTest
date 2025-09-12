@@ -579,8 +579,9 @@ namespace HendersonvilleTrafficTest.Forms
             // Power off for dark current measurement
             await PowerOffLamp(step);
             
-            UpdateTestStatus("Waiting for dark current stabilization (3 seconds)...");
-            await Task.Delay(3000);
+            var waitTimeSeconds = ConfigurationManager.Current.Equipment.WaitForDarkCurrentSeconds;
+            UpdateTestStatus($"Waiting for dark current stabilization ({waitTimeSeconds:F1} seconds)...");
+            await Task.Delay((int)(waitTimeSeconds * 1000));
 
             UpdateTestStatus("Taking dark current measurement...");
             var darkCurrentReading = await _spectrometer.GetSpectrumReadingAsync();

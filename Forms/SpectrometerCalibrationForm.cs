@@ -165,8 +165,9 @@ namespace HendersonvilleTrafficTest.Forms
             
             // Step 6: Wait for lamp to cool down
             _currentStep = (int)CalibrationStep.WaitingForDark;
-            UpdateStatus("Waiting for lamp to cool down...");
-            await WaitWithTimer(10, cancellationToken); // 10 second cooldown
+            var cooldownSeconds = ConfigurationManager.Current.Calibration.CalibrationLampCooldownSeconds;
+            UpdateStatus($"Waiting for lamp to cool down ({cooldownSeconds} seconds)...");
+            await WaitWithTimer(cooldownSeconds, cancellationToken);
             
             // Step 7: Take dark reading
             _currentStep = (int)CalibrationStep.TakingDarkReading;

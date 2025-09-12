@@ -1,6 +1,7 @@
 using HendersonvilleTrafficTest.Equipment.Interfaces;
 using HendersonvilleTrafficTest.Services;
 using HendersonvilleTrafficTest.Shared;
+using HendersonvilleTrafficTest.Configuration;
 
 namespace HendersonvilleTrafficTest.Forms
 {
@@ -156,6 +157,80 @@ namespace HendersonvilleTrafficTest.Forms
             catch (Exception ex)
             {
                 MessageBox.Show($"Failed to capture spectrum: {ex.Message}", "Error", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                
+                ClearSpectrum();
+            }
+            finally
+            {
+                btnCapture.Enabled = true;
+                btnCapture.Text = "Capture Spectrum";
+            }
+        }
+
+        /// <summary>
+        /// Performs enhanced spectrometer measurement with auto-range, normalization and calibration
+        /// (No dark current measurement since power supplies are not controlled in this form)
+        /// </summary>
+        private async Task CaptureEnhancedMeasurement()
+        {
+            if (!_spectrometer.IsConnected)
+            {
+                return;
+            }
+
+            try
+            {
+                btnCapture.Enabled = false;
+                btnCapture.Text = "Enhanced measurement...";
+                
+                // Step 1: Auto-range for optimal integration time
+                btnCapture.Text = "Auto-ranging...";
+                var integrationTime = await _spectrometer.AutoRangeAsync();
+                
+                // Step 2: Capture spectrum reading
+                btnCapture.Text = "Capturing spectrum...";
+                var spectrumReading = await _spectrometer.GetSpectrumReadingAsync();
+
+                // Step 3: Process spectrum data (normalize without dark current)
+                btnCapture.Text = "Processing data...";
+                var normalizedSpectrum = MathUtils.NormalizeSpectrumReading(spectrumReading);
+                var calibratedSpectrum = MathUtils.ApplyCalibrationFactors(normalizedSpectrum, integrationTime);
+
+                // Update display with the calibrated spectrum
+                _lastReading = calibratedSpectrum;
+                UpdateSpectrumDisplay(calibratedSpectrum);
+                
+                // Show enhanced measurement results
+                try
+                {
+                    var colorData = CieColorCalculator.CalculateFromSpectrumData(calibratedSpectrum.Wavelengths, calibratedSpectrum.Intensities);
+                    
+                    var results = $"Enhanced Measurement Results:\n\n" +
+                                $"Integration Time: {integrationTime} μs\n" +
+                                $"Data Processing: Normalized and Calibrated\n" +
+                                $"Note: No dark current correction (requires power supply control)\n\n" +
+                                $"Color Analysis:\n" +
+                                $"Luminance: {colorData.Luminance:F1} cd/m²\n" +
+                                $"CCT: {colorData.CCT:F0} K\n" +
+                                $"CIE x: {colorData.CcX:F4}\n" +
+                                $"CIE y: {colorData.CcY:F4}\n" +
+                                $"CIE u': {colorData.UPrime:F4}\n" +
+                                $"CIE v': {colorData.VPrime:F4}";
+                    
+                    MessageBox.Show(results, "Enhanced Measurement Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception colorEx)
+                {
+                    MessageBox.Show($"Measurement complete, but color calculation failed: {colorEx.Message}", 
+                        "Partial Success", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                
+                btnSaveSpectrum.Enabled = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to complete enhanced measurement: {ex.Message}", "Error", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
                 
                 ClearSpectrum();

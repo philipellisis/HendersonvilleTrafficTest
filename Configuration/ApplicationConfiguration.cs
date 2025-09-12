@@ -110,6 +110,10 @@ namespace HendersonvilleTrafficTest.Configuration
         [XmlElement("SpectrometerMaxReadTimeSeconds")]
         [Description("Maximum time to spend taking averaged spectrometer readings in seconds")]
         public double SpectrometerMaxReadTimeSeconds { get; set; } = 1.0;
+
+        [XmlElement("WaitForDarkCurrentSeconds")]
+        [Description("Wait time in seconds before measuring dark current")]
+        public double WaitForDarkCurrentSeconds { get; set; } = 2.0;
     }
 
     [Serializable]
@@ -220,6 +224,10 @@ namespace HendersonvilleTrafficTest.Configuration
         [XmlElement("CalibrationRampTimeSeconds")]
         [Description("Time to ramp voltage up/down in seconds")]
         public int CalibrationRampTimeSeconds { get; set; } = 10;
+
+        [XmlElement("CalibrationLampCooldownSeconds")]
+        [Description("Calibration lamp cooldown time in seconds")]
+        public int CalibrationLampCooldownSeconds { get; set; } = 10;
 
         public CalibrationSettings()
         {
