@@ -114,6 +114,10 @@ namespace HendersonvilleTrafficTest.Forms
         {
             var paramControl = new TestParametersControl();
             paramControl.SectionTitle = sectionTitle;
+            
+            // Only show parameter labels on the first datagrid to save space
+            paramControl.ShowParameterLabels = parameterControls.Count == 0;
+            
             paramControl.SetAllParameterData(parameterData);
             paramControl.Margin = new Padding(5, 5, 5, 15); // Add margin for proper spacing
             
@@ -228,7 +232,7 @@ namespace HendersonvilleTrafficTest.Forms
             foreach (var step in steps)
             {
                 var parameterData = ConvertStepToParameterData(step);
-                AddTestSection($"Step {step.Step}: {step.StpNam}", parameterData);
+                AddTestSection(step.StpNam, parameterData);
             }
         }
 
@@ -721,7 +725,7 @@ namespace HendersonvilleTrafficTest.Forms
 
         private void UpdateTestParameterDisplay(TestSequenceStep step, TestMeasurementResult result)
         {
-            var sectionTitle = $"Step {step.Step}: {step.StpNam}";
+            var sectionTitle = step.StpNam;
             var control = parameterControls.FirstOrDefault(c => c.SectionTitle == sectionTitle);
             
             if (control != null)
