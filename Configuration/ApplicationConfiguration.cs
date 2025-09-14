@@ -95,6 +95,14 @@ namespace HendersonvilleTrafficTest.Configuration
         [Description("Baud rate for Itech IT7321 AC Power Supply")]
         public int AcPowerSupplyBaudRate { get; set; } = 9600;
 
+        [XmlElement("DcPowerSupplyComPort")]
+        [Description("COM port for Itech IT6922A DC Power Supply")]
+        public string DcPowerSupplyComPort { get; set; } = "COM5";
+
+        [XmlElement("DcPowerSupplyBaudRate")]
+        [Description("Baud rate for Itech IT6922A DC Power Supply")]
+        public int DcPowerSupplyBaudRate { get; set; } = 9600;
+
         [XmlElement("ConnectionTimeoutMs")]
         [Description("Equipment connection timeout in milliseconds")]
         public int ConnectionTimeoutMs { get; set; } = 5000;

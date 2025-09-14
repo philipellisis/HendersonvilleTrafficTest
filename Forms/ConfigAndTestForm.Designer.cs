@@ -15,6 +15,7 @@ namespace HendersonvilleTrafficTest.Forms
         private Button btnTestTemperatureSensor;
         private Button btnTestPowerAnalyzer;
         private Button btnTestAcPowerSupply;
+        private Button btnTestDcPowerSupply;
         private Button btnTestSpectrometer;
         
         // Calibration Section
@@ -41,6 +42,7 @@ namespace HendersonvilleTrafficTest.Forms
             this.btnTestTemperatureSensor = new System.Windows.Forms.Button();
             this.btnTestPowerAnalyzer = new System.Windows.Forms.Button();
             this.btnTestAcPowerSupply = new System.Windows.Forms.Button();
+            this.btnTestDcPowerSupply = new System.Windows.Forms.Button();
             this.btnTestSpectrometer = new System.Windows.Forms.Button();
             this.grpCalibration = new System.Windows.Forms.GroupBox();
             this.btnSpectrometerCalibration = new System.Windows.Forms.Button();
@@ -87,6 +89,7 @@ namespace HendersonvilleTrafficTest.Forms
             // grpEquipmentTesting
             // 
             this.grpEquipmentTesting.Controls.Add(this.btnTestSpectrometer);
+            this.grpEquipmentTesting.Controls.Add(this.btnTestDcPowerSupply);
             this.grpEquipmentTesting.Controls.Add(this.btnTestAcPowerSupply);
             this.grpEquipmentTesting.Controls.Add(this.btnTestPowerAnalyzer);
             this.grpEquipmentTesting.Controls.Add(this.btnTestTemperatureSensor);
@@ -135,7 +138,7 @@ namespace HendersonvilleTrafficTest.Forms
             // btnTestAcPowerSupply
             // 
             this.btnTestAcPowerSupply.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnTestAcPowerSupply.Location = new System.Drawing.Point(130, 120);
+            this.btnTestAcPowerSupply.Location = new System.Drawing.Point(30, 120);
             this.btnTestAcPowerSupply.Name = "btnTestAcPowerSupply";
             this.btnTestAcPowerSupply.Size = new System.Drawing.Size(180, 60);
             this.btnTestAcPowerSupply.TabIndex = 3;
@@ -143,13 +146,24 @@ namespace HendersonvilleTrafficTest.Forms
             this.btnTestAcPowerSupply.UseVisualStyleBackColor = true;
             this.btnTestAcPowerSupply.Click += new System.EventHandler(this.btnTestAcPowerSupply_Click);
             // 
+            // btnTestDcPowerSupply
+            // 
+            this.btnTestDcPowerSupply.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnTestDcPowerSupply.Location = new System.Drawing.Point(230, 120);
+            this.btnTestDcPowerSupply.Name = "btnTestDcPowerSupply";
+            this.btnTestDcPowerSupply.Size = new System.Drawing.Size(180, 60);
+            this.btnTestDcPowerSupply.TabIndex = 4;
+            this.btnTestDcPowerSupply.Text = "Test DC Power Supply";
+            this.btnTestDcPowerSupply.UseVisualStyleBackColor = true;
+            this.btnTestDcPowerSupply.Click += new System.EventHandler(this.btnTestDcPowerSupply_Click);
+            // 
             // btnTestSpectrometer
             // 
             this.btnTestSpectrometer.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnTestSpectrometer.Location = new System.Drawing.Point(330, 120);
+            this.btnTestSpectrometer.Location = new System.Drawing.Point(430, 120);
             this.btnTestSpectrometer.Name = "btnTestSpectrometer";
             this.btnTestSpectrometer.Size = new System.Drawing.Size(180, 60);
-            this.btnTestSpectrometer.TabIndex = 4;
+            this.btnTestSpectrometer.TabIndex = 5;
             this.btnTestSpectrometer.Text = "Test Spectrometer";
             this.btnTestSpectrometer.UseVisualStyleBackColor = true;
             this.btnTestSpectrometer.Click += new System.EventHandler(this.btnTestSpectrometer_Click);

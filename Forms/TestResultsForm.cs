@@ -640,87 +640,105 @@ namespace HendersonvilleTrafficTest.Forms
 
         private void EvaluateTestResults(TestSequenceStep step, TestMeasurementResult result)
         {
-            // Voltage test
+            // Store voltage limits
             if (step.VacAct == 1)
             {
-                result.VoltageTestPassed = result.VoltageMeasured >= step.VacLcl && result.VoltageMeasured <= step.VacUcl;
+                result.VoltageLcl = step.VacLcl;
+                result.VoltageUcl = step.VacUcl;
             }
             else if (step.VdcAct == 1)
             {
-                result.VoltageTestPassed = result.VoltageMeasured >= step.VdcLcl && result.VoltageMeasured <= step.VdcUcl;
+                result.VoltageLcl = step.VdcLcl;
+                result.VoltageUcl = step.VdcUcl;
             }
 
-            // Current test
+            // Store current limits
             if (step.IAct == 1)
             {
-                result.CurrentTestPassed = result.CurrentMeasured >= step.ILcl && result.CurrentMeasured <= step.IUcl;
+                result.CurrentLcl = step.ILcl;
+                result.CurrentUcl = step.IUcl;
             }
 
-            // Power test
+            // Store power limits
             if (step.PAct == 1)
             {
-                result.PowerTestPassed = result.PowerMeasured >= step.PLcl && result.PowerMeasured <= step.PUcl;
+                result.PowerLcl = step.PLcl;
+                result.PowerUcl = step.PUcl;
             }
 
-            // Power Factor test
+            // Store power factor limits
             if (step.PFAct == 1)
             {
-                result.PowerFactorTestPassed = result.PowerFactorMeasured >= step.PFLcl && result.PowerFactorMeasured <= step.PFUcl;
+                result.PowerFactorLcl = step.PFLcl;
+                result.PowerFactorUcl = step.PFUcl;
             }
 
-            // THD test
+            // Store THD limits
             if (step.THDAct == 1)
             {
-                result.ThdTestPassed = result.ThdMeasured >= step.THDLIC && result.ThdMeasured <= step.THDLSC;
+                result.ThdLcl = step.THDLIC;
+                result.ThdUcl = step.THDLSC;
             }
 
-            // Frequency test
+            // Store frequency limits
             if (step.FrqAct == 1)
             {
-                result.FrequencyTestPassed = result.FrequencyMeasured >= step.FrqLcl && result.FrequencyMeasured <= step.FrqUcl;
+                result.FrequencyLcl = step.FrqLcl;
+                result.FrequencyUcl = step.FrqUcl;
             }
 
-            // Intensity test
+            // Store intensity limits
             if (step.IntAct == 1)
             {
-                result.IntensityTestPassed = result.IntensityMeasured >= step.IntLIC && result.IntensityMeasured <= step.IntLSC;
+                result.IntensityLcl = step.IntLIC;
+                result.IntensityUcl = step.IntLSC;
             }
 
-            // Color test - checking if chromaticity point is within polygon boundary
+            // Color test - store polygon vertices and calculate pass/fail
             if (step.ColorAct == 1)
             {
-                // Create polygon vertices from step coordinates (X1-X6, Y1-Y6)
-                var vertices = new List<MathUtils.Point2D>();
+                // Store polygon vertices from step coordinates (X1-X6, Y1-Y6)
+                var xVertices = new List<double>();
+                var yVertices = new List<double>();
                 
                 // Add vertices if they have valid (non-zero) coordinates
-                if (step.X1 != 0 || step.Y1 != 0) vertices.Add(new MathUtils.Point2D(step.X1, step.Y1));
-                if (step.X2 != 0 || step.Y2 != 0) vertices.Add(new MathUtils.Point2D(step.X2, step.Y2));
-                if (step.X3 != 0 || step.Y3 != 0) vertices.Add(new MathUtils.Point2D(step.X3, step.Y3));
-                if (step.X4 != 0 || step.Y4 != 0) vertices.Add(new MathUtils.Point2D(step.X4, step.Y4));
-                if (step.X5 != 0 || step.Y5 != 0) vertices.Add(new MathUtils.Point2D(step.X5, step.Y5));
-                if (step.X6 != 0 || step.Y6 != 0) vertices.Add(new MathUtils.Point2D(step.X6, step.Y6));
+                if (step.X1 != 0 || step.Y1 != 0) { xVertices.Add(step.X1); yVertices.Add(step.Y1); }
+                if (step.X2 != 0 || step.Y2 != 0) { xVertices.Add(step.X2); yVertices.Add(step.Y2); }
+                if (step.X3 != 0 || step.Y3 != 0) { xVertices.Add(step.X3); yVertices.Add(step.Y3); }
+                if (step.X4 != 0 || step.Y4 != 0) { xVertices.Add(step.X4); yVertices.Add(step.Y4); }
+                if (step.X5 != 0 || step.Y5 != 0) { xVertices.Add(step.X5); yVertices.Add(step.Y5); }
+                if (step.X6 != 0 || step.Y6 != 0) { xVertices.Add(step.X6); yVertices.Add(step.Y6); }
                 
-                // Test if chromaticity point is inside the polygon (need at least 3 vertices)
-                if (vertices.Count >= 3)
+                result.ColorPolygonX = xVertices.ToArray();
+                result.ColorPolygonY = yVertices.ToArray();
+                
+                // Calculate color test result
+                if (xVertices.Count >= 3)
                 {
+                    var vertices = new MathUtils.Point2D[xVertices.Count];
+                    for (int i = 0; i < xVertices.Count; i++)
+                    {
+                        vertices[i] = new MathUtils.Point2D(xVertices[i], yVertices[i]);
+                    }
+                    
                     result.ColorTestPassed = MathUtils.IsChromaticityPointInPolygon(
                         result.CcxMeasured, 
                         result.CcyMeasured, 
-                        vertices.ToArray());
+                        vertices);
                 }
-                else
+                else if (xVertices.Count >= 2)
                 {
-                    // Fallback to old rectangular boundary check if less than 3 vertices
+                    // Fallback to rectangular boundary check if less than 3 vertices
                     result.ColorTestPassed = result.CcxMeasured >= step.X1 && result.CcxMeasured <= step.X2 &&
                                             result.CcyMeasured >= step.Y1 && result.CcyMeasured <= step.Y2;
                 }
+                else
+                {
+                    result.ColorTestPassed = true; // No limits defined, assume pass
+                }
             }
-
-            // Overall test result
-            result.OverallTestPassed = result.VoltageTestPassed && result.CurrentTestPassed && 
-                                     result.PowerTestPassed && result.PowerFactorTestPassed &&
-                                     result.ThdTestPassed && result.FrequencyTestPassed &&
-                                     result.IntensityTestPassed && result.ColorTestPassed;
+            
+            // Note: OverallTestPassed is now calculated dynamically in the getter
         }
 
         private void UpdateTestParameterDisplay(TestSequenceStep step, TestMeasurementResult result)

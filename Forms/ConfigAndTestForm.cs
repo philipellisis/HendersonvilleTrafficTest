@@ -40,6 +40,12 @@ namespace HendersonvilleTrafficTest.Forms
             testForm.ShowDialog(this);
         }
 
+        private void btnTestDcPowerSupply_Click(object sender, EventArgs e)
+        {
+            using var testForm = new DcPowerSupplyTestForm();
+            testForm.ShowDialog(this);
+        }
+
         private void btnTestSpectrometer_Click(object sender, EventArgs e)
         {
             using var testForm = new SpectrometerTestForm();
