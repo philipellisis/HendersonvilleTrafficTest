@@ -234,8 +234,9 @@ namespace HendersonvilleTrafficTest.Forms
 
         private bool IsNumericType(Type type)
         {
-            return type == typeof(int) || type == typeof(double) || type == typeof(float) ||
-                   type == typeof(decimal) || type == typeof(long) || type == typeof(short);
+            return type == typeof(int) || type == typeof(uint) || type == typeof(double) || type == typeof(float) ||
+                   type == typeof(decimal) || type == typeof(long) || type == typeof(ulong) || type == typeof(short) ||
+                   type == typeof(ushort) || type == typeof(byte) || type == typeof(sbyte);
         }
 
         private bool IsFloatingPointType(Type type)

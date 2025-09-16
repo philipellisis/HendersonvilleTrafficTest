@@ -180,8 +180,8 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
             }
 
             var config = ConfigurationManager.Current.Equipment;
-            uint minIntegrationTime = config.SpectrometerMinIntegrationTimeMicros;
-            uint maxIntegrationTime = config.SpectrometerMaxIntegrationTimeMicros;
+            uint minIntegrationTime = config.SpectrometerMinIntegrationTimeMs * 1000; // Convert ms to microseconds
+            uint maxIntegrationTime = config.SpectrometerMaxIntegrationTimeMs * 1000; // Convert ms to microseconds
             
             // Start with minimum integration time
             uint currentIntegrationTime = minIntegrationTime;
@@ -263,6 +263,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
             await Task.Run(() =>
             {
                 int errorCode = 0;
+                
                 _ocean.setIntegrationTimeMicros(_deviceId, ref errorCode, integrationTimeMicros);
                 
                 if (errorCode > 0 && errorCode < 10001)

@@ -64,7 +64,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
                 await Task.Delay(200);
 
                 // Configure measurement format to binary for faster data transfer
-                await _communication.SendCommandAsync("CHANnel:MEASurement:FORMat BIN");
+                await _communication.SendCommandAsync("CHANnel:MEASurement:FORMat ASCii");
                 await Task.Delay(200);
 
                 // Configure display functions - Page 1 can display all 6 parameters
