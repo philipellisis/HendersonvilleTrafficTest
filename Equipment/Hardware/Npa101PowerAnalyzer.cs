@@ -53,19 +53,42 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
                     return false;
                 }
 
-                // Reset device to known state
-                //await _communication.SendCommandAsync("*RST");
-                //await Task.Delay(1000); // Allow time for reset
+                LogInfo($"Device identified: {idResponse}");
 
                 // Clear status
                 await _communication.SendCommandAsync("*CLS");
-                
+                await Task.Delay(200);
 
                 // Set device to remote mode for SCPI control
                 await _communication.SendCommandAsync("SYST:REM");
+                await Task.Delay(200);
+
+                // Configure measurement format to binary for faster data transfer
+                await _communication.SendCommandAsync("CHANnel:MEASurement:FORMat BIN");
+                await Task.Delay(200);
+
+                // Configure display functions - Page 1 can display all 6 parameters
+                await _communication.SendCommandAsync("VIEW:NUMeric:PAGE1:CELL1:FUNCtion URMS");
+                await Task.Delay(100);
+                await _communication.SendCommandAsync("VIEW:NUMeric:PAGE1:CELL2:FUNCtion IRMS");
+                await Task.Delay(100);
+                await _communication.SendCommandAsync("VIEW:NUMeric:PAGE1:CELL3:FUNCtion P");
+                await Task.Delay(100);
+                await _communication.SendCommandAsync("VIEW:NUMeric:PAGE1:CELL4:FUNCtion FU");
+                await Task.Delay(100);
+                await _communication.SendCommandAsync("VIEW:NUMeric:PAGE1:CELL5:FUNCtion UTHD");
+                await Task.Delay(100);
+                await _communication.SendCommandAsync("VIEW:NUMeric:PAGE1:CELL6:FUNCtion LAMBDA");
+                await Task.Delay(100);
+
+                // Configure channel measurement functions to match display
+                await _communication.SendCommandAsync("CHAN:MEAS:FUNCtions URMS,IRMS,P,FU,UTHD,LAMBDA");
+                await Task.Delay(200);
+
+                // Set default mode
                 await SetModeAsync(PowerMode.DC);
 
-                LogInfo("NPA101 Power Analyzer initialized successfully");
+                LogInfo("NPA101 Power Analyzer initialized successfully with extended measurements");
                 return true;
             }
             catch (Exception ex)
@@ -120,19 +143,21 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
                 LogInfo($"Raw measurement response: {response}");
 
                 // Parse the comma-separated response
-                // Format: voltage,current,power,frequency,... (we only need first 4 values)
+                // Format: URMS,IRMS,P,FU,UTHD,LAMBDA (all 6 configured values)
                 var values = response.Trim().Split(',');
-                if (values.Length < 4)
+                if (values.Length < 6)
                 {
-                    throw new InvalidOperationException($"Invalid measurement response format: {response}");
+                    throw new InvalidOperationException($"Invalid measurement response format: expected 6 values, got {values.Length}: {response}");
                 }
 
-                var voltage = ParseMeasurementValue(values[0], "voltage");
-                var current = ParseMeasurementValue(values[1], "current");
-                var power = ParseMeasurementValue(values[2], "power");
-                var frequency = ParseMeasurementValue(values[3], "frequency");
+                var voltage = ParseMeasurementValue(values[0], "URMS");     // RMS Voltage
+                var current = ParseMeasurementValue(values[1], "IRMS");     // RMS Current
+                var power = ParseMeasurementValue(values[2], "P");          // Real Power
+                var frequency = ParseMeasurementValue(values[3], "FU");     // Frequency
+                var thd = ParseMeasurementValue(values[4], "UTHD");         // Voltage THD
+                var powerFactor = ParseMeasurementValue(values[5], "LAMBDA"); // Power Factor
 
-                return new ElectricalMeasurement(voltage, current, power, frequency);
+                return new ElectricalMeasurement(voltage, current, power, frequency, thd, powerFactor);
             }
             catch (Exception ex)
             {

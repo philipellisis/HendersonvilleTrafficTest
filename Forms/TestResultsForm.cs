@@ -585,8 +585,8 @@ namespace HendersonvilleTrafficTest.Forms
             result.VoltageMeasured = measurement.Voltage;
             result.CurrentMeasured = measurement.Current;
             result.PowerMeasured = measurement.Power;
-            //result.PowerFactorMeasured = measurement.PowerFactor;
-            //result.ThdMeasured = measurement.Thd;
+            result.PowerFactorMeasured = measurement.PowerFactor;
+            result.ThdMeasured = measurement.THD;
             result.FrequencyMeasured = measurement.Frequency;
 
             // Take temperature measurement
