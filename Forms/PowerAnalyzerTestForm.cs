@@ -65,12 +65,16 @@ namespace HendersonvilleTrafficTest.Forms
             txtCurrent.Text = "-- A";
             txtPower.Text = "-- W";
             txtFrequency.Text = "-- Hz";
+            txtTHD.Text = "-- %";
+            txtPowerFactor.Text = "-- PF";
             
             // Reset text colors
             txtVoltage.ForeColor = Color.Black;
             txtCurrent.ForeColor = Color.Black;
             txtPower.ForeColor = Color.Black;
             txtFrequency.ForeColor = Color.Black;
+            txtTHD.ForeColor = Color.Black;
+            txtPowerFactor.ForeColor = Color.Black;
         }
 
         private async void btnConnect_Click(object sender, EventArgs e)
@@ -181,6 +185,12 @@ namespace HendersonvilleTrafficTest.Forms
             
             txtFrequency.Text = $"{measurements.Frequency:F2} Hz";
             txtFrequency.ForeColor = Color.Black;
+            
+            txtTHD.Text = $"{measurements.THD:F2} %";
+            txtTHD.ForeColor = Color.Black;
+            
+            txtPowerFactor.Text = $"{measurements.PowerFactor:F3} PF";
+            txtPowerFactor.ForeColor = Color.Black;
         }
 
         private void ShowMeasurementError()
@@ -196,6 +206,12 @@ namespace HendersonvilleTrafficTest.Forms
             
             txtFrequency.Text = "ERROR";
             txtFrequency.ForeColor = Color.Red;
+            
+            txtTHD.Text = "ERROR";
+            txtTHD.ForeColor = Color.Red;
+            
+            txtPowerFactor.Text = "ERROR";
+            txtPowerFactor.ForeColor = Color.Red;
         }
 
         private async void btnGetDeviceInfo_Click(object sender, EventArgs e)
