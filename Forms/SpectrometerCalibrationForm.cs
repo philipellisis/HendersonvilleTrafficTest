@@ -136,6 +136,10 @@ namespace HendersonvilleTrafficTest.Forms
         {
             var config = ConfigurationManager.Current.Calibration;
             
+            // Configure system for DC mode
+            UpdateStatus("Configuring system for DC mode...");
+            await EquipmentHelpers.SetDC();
+            
             // Step 1: Ramp up voltage
             _currentStep = (int)CalibrationStep.RampingUp;
             UpdateStatus("Ramping up voltage...");

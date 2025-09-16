@@ -179,11 +179,19 @@ namespace HendersonvilleTrafficTest.Forms
         {
             if (colorSample.IsAC)
             {
+                UpdateStatus("Configuring system for AC mode...");
+                await EquipmentHelpers.SetAC();
+                
+                UpdateStatus($"Setting AC voltage to {colorSample.TestVoltage}V...");
                 await _acPowerSupply.SetVoltsAsync(colorSample.TestVoltage);
                 await _acPowerSupply.PowerOnAsync();
             }
             else
             {
+                UpdateStatus("Configuring system for DC mode...");
+                await EquipmentHelpers.SetDC();
+                
+                UpdateStatus($"Setting DC voltage to {colorSample.TestVoltage}V...");
                 await _dcPowerSupply.SetVoltsAsync(colorSample.TestVoltage);
                 await _dcPowerSupply.PowerOnAsync();
             }

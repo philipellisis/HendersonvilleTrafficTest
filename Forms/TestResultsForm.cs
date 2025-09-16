@@ -553,6 +553,9 @@ namespace HendersonvilleTrafficTest.Forms
             if (step.VacAct == 1)
             {
                 // AC Power Supply
+                UpdateTestStatus("Configuring system for AC mode...");
+                await EquipmentHelpers.SetAC();
+                
                 UpdateTestStatus($"Setting AC voltage to {step.VacSet}V...");
                 result.IsAcTest = true;
                 result.VoltageSet = step.VacSet;
@@ -567,6 +570,9 @@ namespace HendersonvilleTrafficTest.Forms
             else if (step.VdcAct == 1)
             {
                 // DC Power Supply
+                UpdateTestStatus("Configuring system for DC mode...");
+                await EquipmentHelpers.SetDC();
+                
                 UpdateTestStatus($"Setting DC voltage to {step.VdcSet}V...");
                 result.IsAcTest = false;
                 result.VoltageSet = step.VdcSet;
