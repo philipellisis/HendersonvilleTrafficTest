@@ -77,7 +77,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
                 await SetVoltsAsync(0.0); // Set voltage to 0
                 await Task.Delay(200);
 
-                await SetAmpsAsync(0.0); // Set current to 0
+                await SetAmpsAsync(5.0); // Set current to 5
                 await Task.Delay(200);
 
                 LogInfo("ITECH IT6922A DC Power Supply initialized successfully");

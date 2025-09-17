@@ -5,6 +5,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
     public class StellarNetBlueWaveSpectrometer : ISpectrometer
     {
         public bool IsConnected { get; private set; } = false;
+        public uint CurrentIntegrationTimeMicros { get; private set; } = 200000;
 
         public Task InitializeAsync()
         {
@@ -27,6 +28,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
         public Task SetIntegrationTimeAsync(uint integrationTimeMicros)
         {
             // TODO: Send USB command to set integration time
+            CurrentIntegrationTimeMicros = integrationTimeMicros;
             throw new NotImplementedException("Set integration time command not implemented");
         }
     }

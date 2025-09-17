@@ -6,10 +6,12 @@ namespace HendersonvilleTrafficTest.Equipment.Simulation
     {
         private readonly Random _random = new();
         private const uint integrationTime = 1000;
+        private uint _currentIntegrationTimeMicros = integrationTime;
         private const double MinWavelength = 380.0;
         private const double MaxWavelength = 780.0;
         
         public bool IsConnected { get; private set; } = false;
+        public uint CurrentIntegrationTimeMicros => _currentIntegrationTimeMicros;
 
         public Task InitializeAsync()
         {
@@ -49,6 +51,7 @@ namespace HendersonvilleTrafficTest.Equipment.Simulation
 
         public Task SetIntegrationTimeAsync(uint integrationTimeMicros)
         {
+            _currentIntegrationTimeMicros = integrationTimeMicros;
             return Task.CompletedTask;
         }
 

@@ -14,5 +14,6 @@ namespace HendersonvilleTrafficTest.Equipment.Interfaces
         Task<uint> AutoRangeAsync();
         Task SetIntegrationTimeAsync(uint integrationTimeMicros);
         bool IsConnected { get; }
+        uint CurrentIntegrationTimeMicros { get; }
     }
 }

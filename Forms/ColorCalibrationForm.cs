@@ -109,7 +109,7 @@ namespace HendersonvilleTrafficTest.Forms
                 // Step 8: Process spectrum data
                 UpdateStatus("Processing spectrum data...");
                 var normalizedSpectrum = MathUtils.NormalizeSpectrumReading(spectrumReading, darkCurrentReading);
-                var calibratedSpectrum = MathUtils.ApplyCalibrationFactors(normalizedSpectrum, integrationTime);
+                var calibratedSpectrum = MathUtils.ApplyCalibrationFactors(normalizedSpectrum, _spectrometer.CurrentIntegrationTimeMicros);
                 UpdateProgress(85);
 
                 // Step 9: Calculate color values

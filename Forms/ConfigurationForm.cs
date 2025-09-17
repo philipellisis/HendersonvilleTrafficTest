@@ -196,29 +196,45 @@ namespace HendersonvilleTrafficTest.Forms
                     for (int i = 0; i < Math.Min(textLines.Length, array.Length); i++)
                     {
                         var line = textLines[i].Trim();
+                        string valueText;
                         
-                        // Extract value after the index prefix [###]
+                        // Check if line has index prefix format [###]
                         var bracketEnd = line.IndexOf(']');
                         if (bracketEnd >= 0 && bracketEnd < line.Length - 1)
                         {
-                            var valueText = line.Substring(bracketEnd + 1).Trim();
-                            
-                            try
+                            // Extract value after the index prefix [###]
+                            valueText = line.Substring(bracketEnd + 1).Trim();
+                        }
+                        else
+                        {
+                            // Plain value format - use the entire line as the value
+                            valueText = line;
+                        }
+                        
+                        try
+                        {
+                            if (!string.IsNullOrWhiteSpace(valueText))
                             {
                                 var convertedValue = Convert.ChangeType(valueText, elementType);
                                 newArray.SetValue(convertedValue, i);
                             }
-                            catch
+                            else
                             {
-                                // If conversion fails, keep original value
+                                // Empty line, keep original value
                                 newArray.SetValue(array.GetValue(i), i);
                             }
                         }
-                        else
+                        catch
                         {
-                            // No proper format, keep original value
+                            // If conversion fails, keep original value
                             newArray.SetValue(array.GetValue(i), i);
                         }
+                    }
+
+                    // If there are remaining array elements not covered by text lines, preserve original values
+                    for (int i = textLines.Length; i < array.Length; i++)
+                    {
+                        newArray.SetValue(array.GetValue(i), i);
                     }
 
                     _selectedProperty.SetValue(newArray);

@@ -92,11 +92,9 @@ namespace HendersonvilleTrafficTest.Shared
             }
 
             double[] calibratedIntensities = new double[normalizedReading.Intensities.Length];
-            double integrationTimeSeconds = integrationTimeMicros / 1_000_000.0; // Convert microseconds to seconds
-
             for (int idx = 0; idx < normalizedReading.Intensities.Length; idx++)
             {
-                calibratedIntensities[idx] = normalizedReading.Intensities[idx] * (calibrationFactors[idx] / integrationTimeSeconds);
+                calibratedIntensities[idx] = normalizedReading.Intensities[idx] * (calibrationFactors[idx] / integrationTimeMicros);
             }
 
             return new SpectrumReading

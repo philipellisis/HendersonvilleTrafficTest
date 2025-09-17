@@ -32,7 +32,7 @@ namespace HendersonvilleTrafficTest.Forms
                 {
                     UpdateConnectionUI(true);
                     lblWavelengthRange.Text = $"Range: 380-780 nm";
-                    await CaptureSpectrum();
+                    await CaptureEnhancedMeasurement();
                 }
                 else
                 {
@@ -102,7 +102,7 @@ namespace HendersonvilleTrafficTest.Forms
                 if (_spectrometer.IsConnected)
                 {
                     lblWavelengthRange.Text = $"Range: 380 - 780 nm";
-                    await CaptureSpectrum();
+                    await CaptureEnhancedMeasurement();
                 }
                 else
                 {
@@ -120,7 +120,7 @@ namespace HendersonvilleTrafficTest.Forms
 
         private async void btnCapture_Click(object sender, EventArgs e)
         {
-            await CaptureSpectrum();
+            await CaptureEnhancedMeasurement();
         }
 
         private async void btnAutoRange_Click(object sender, EventArgs e)
@@ -197,7 +197,7 @@ namespace HendersonvilleTrafficTest.Forms
                 // Step 3: Process spectrum data (normalize without dark current)
                 btnCapture.Text = "Processing data...";
                 var normalizedSpectrum = MathUtils.NormalizeSpectrumReading(spectrumReading);
-                var calibratedSpectrum = MathUtils.ApplyCalibrationFactors(normalizedSpectrum, integrationTime);
+                var calibratedSpectrum = MathUtils.ApplyCalibrationFactors(normalizedSpectrum, _spectrometer.CurrentIntegrationTimeMicros);
 
                 // Update display with the calibrated spectrum
                 _lastReading = calibratedSpectrum;
@@ -447,7 +447,7 @@ namespace HendersonvilleTrafficTest.Forms
         {
             if (_spectrometer?.IsConnected == true && !btnCapture.Text.Contains("Capturing"))
             {
-                await CaptureSpectrum();
+                await CaptureEnhancedMeasurement();
             }
         }
 

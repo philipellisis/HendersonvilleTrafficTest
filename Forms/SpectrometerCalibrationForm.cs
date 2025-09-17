@@ -278,7 +278,7 @@ namespace HendersonvilleTrafficTest.Forms
             {
                 if (normalizedLight.Intensities[i] > 0)
                 {
-                    calibrationFactors[i] = standardSpectrum[i] / normalizedLight.Intensities[i];
+                    calibrationFactors[i] = standardSpectrum[i] / normalizedLight.Intensities[i] * _spectrometer.CurrentIntegrationTimeMicros;
                 }
                 else
                 {

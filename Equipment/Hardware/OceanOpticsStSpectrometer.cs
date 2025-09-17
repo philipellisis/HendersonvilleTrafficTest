@@ -17,6 +17,7 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
         private uint _currentIntegrationTimeMicros = integrationTime;
 
         public bool IsConnected { get; private set; } = false;
+        public uint CurrentIntegrationTimeMicros => _currentIntegrationTimeMicros;
 
         public async Task InitializeAsync()
         {
@@ -260,18 +261,21 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
                 throw new InvalidOperationException("Spectrometer not initialized or connected");
             }
 
+            // Round to nearest millisecond (1000 microseconds) to avoid precision errors
+            uint roundedIntegrationTime = (uint)(Math.Round(integrationTimeMicros / 1000.0) * 1000);
+
             await Task.Run(() =>
             {
                 int errorCode = 0;
                 
-                _ocean.setIntegrationTimeMicros(_deviceId, ref errorCode, integrationTimeMicros);
+                _ocean.setIntegrationTimeMicros(_deviceId, ref errorCode, roundedIntegrationTime);
                 
                 if (errorCode > 0 && errorCode < 10001)
                 {
                     throw new InvalidOperationException($"Could not set integration time. Error code: {errorCode}");
                 }
                 
-                _currentIntegrationTimeMicros = integrationTimeMicros;
+                _currentIntegrationTimeMicros = roundedIntegrationTime;
             });
         }
 
