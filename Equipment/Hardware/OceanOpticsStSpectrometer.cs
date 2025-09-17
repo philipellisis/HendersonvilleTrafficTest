@@ -4,6 +4,9 @@ using System;
 using System.Threading.Tasks;
 using HendersonvilleTrafficTest.Shared;
 using HendersonvilleTrafficTest.Configuration;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace HendersonvilleTrafficTest.Equipment.Hardware
 {
@@ -136,7 +139,10 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
                         Intensities = averagedSpectrum ?? Array.Empty<double>(),
                         Timestamp = DateTime.Now
                     };
-                    return MathUtils.NormalizeSpectrumReading(reading);
+                    
+                    // Apply dark current correction if configured
+                    var correctedReading = MathUtils.ApplyDarkCurrentCorrection(reading, _currentIntegrationTimeMicros);
+                    return MathUtils.NormalizeSpectrumReading(correctedReading);
                 }
                 catch (Exception)
                 {
@@ -278,6 +284,122 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
                 _currentIntegrationTimeMicros = roundedIntegrationTime;
             });
         }
+
+        public async Task CalibrateDarkCurrentAsync(IProgress<string> progress, int maxIntegrationTimeSeconds, double waitBeforeDarkSeconds, CancellationToken cancellationToken)
+        {
+            if (!IsConnected || _ocean == null || _deviceId == -1)
+            {
+                throw new InvalidOperationException("Spectrometer not initialized or connected");
+            }
+
+            var darkScans = new List<DarkScan>();
+            
+            // Wait for warmup period
+            progress?.Report($"Waiting for warmup, {waitBeforeDarkSeconds} seconds remaining");
+            var startTime = DateTime.Now;
+            while ((DateTime.Now - startTime).TotalSeconds < waitBeforeDarkSeconds)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                var remaining = waitBeforeDarkSeconds - (DateTime.Now - startTime).TotalSeconds;
+                progress?.Report($"Waiting for warmup, {remaining:F1} seconds remaining");
+                await Task.Delay(100, cancellationToken);
+            }
+
+            // Define integration times (in microseconds) similar to VB implementation
+            var integrationTimes = new List<uint>
+            {
+                1000, 2000, 4000, 8000, 16000, 32000, 64000, 96000, 128000, 256000, 384000, 512000, 640000, 768000, 896000, 1024000, 1152000, 1280000, 1408000, 1536000, 1664000, 1792000, 1920000, 2048000, 2176000, 2304000, 2432000, 2560000, 2688000, 2816000, 2944000, 3072000, 3328000, 3584000, 3840000, 4096000, 4352000, 4608000, 4864000, 5120000, 5376000, 5632000, 5888000, 6144000, 6400000, 6656000, 7168000, 7680000, 8192000, 8704000, 9216000, 9728000, 10000000
+            };
+
+            // Filter to only include times up to max integration time
+            var filteredTimes = integrationTimes.Where(t => t <= maxIntegrationTimeSeconds * 1000000u).ToList();
+            
+            // Add additional 1-second increments up to max time
+            for (int i = 11; i <= maxIntegrationTimeSeconds; i++)
+            {
+                filteredTimes.Add((uint)(i * 1000000));
+            }
+
+            int scanCount = 0;
+            foreach (var integrationTimeMicros in filteredTimes)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                
+                progress?.Report($"Calibrating Dark Current, Scan {scanCount + 1} of {filteredTimes.Count}");
+                
+                // Set integration time
+                await SetIntegrationTimeAsync(integrationTimeMicros);
+                
+                // Calculate number of scans to average (minimum 10, but ensure at least 1 second total time)
+                int numberScans = Math.Max(10, (int)(1000000 / integrationTimeMicros));
+                // But don't exceed 30 seconds total measurement time
+                numberScans = Math.Min(numberScans, (int)(30000000 / integrationTimeMicros));
+                numberScans = Math.Max(1, numberScans); // Ensure at least 1 scan
+
+                // Take multiple dark readings and average them
+                var darkSpectrum = new double[_wavelengths.Length];
+                for (int i = 0; i < numberScans; i++)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    var spectrum = await GetRawSpectrumAsync();
+                    for (int j = 0; j < spectrum.Length && j < darkSpectrum.Length; j++)
+                    {
+                        darkSpectrum[j] += spectrum[j];
+                    }
+                }
+
+                // Average the readings
+                for (int j = 0; j < darkSpectrum.Length; j++)
+                {
+                    darkSpectrum[j] /= numberScans;
+                }
+
+                // Apply smoothing (average over +/- 10 points)
+                var smoothedSpectrum = new double[darkSpectrum.Length];
+                for (int j = 0; j < darkSpectrum.Length; j++)
+                {
+                    double sum = 0;
+                    int count = 0;
+                    for (int k = Math.Max(0, j - 10); k <= Math.Min(darkSpectrum.Length - 1, j + 10); k++)
+                    {
+                        sum += darkSpectrum[k];
+                        count++;
+                    }
+                    smoothedSpectrum[j] = sum / count;
+                }
+
+                darkScans.Add(new DarkScan(smoothedSpectrum, integrationTimeMicros));
+                scanCount++;
+            }
+
+            // Convert dark scans to string format and save to configuration
+            var darkCurrentData = ConvertDarkScansToString(darkScans);
+            ConfigurationManager.Current.Equipment.DarkCurrentCalibrationData = darkCurrentData;
+            ConfigurationManager.SaveConfiguration();
+
+            progress?.Report("Dark current calibration completed and saved");
+        }
+
+        private string ConvertDarkScansToString(List<DarkScan> darkScans)
+        {
+            var sb = new StringBuilder();
+            
+            foreach (var darkScan in darkScans)
+            {
+                if (sb.Length > 0)
+                    sb.AppendLine();
+                    
+                sb.Append(darkScan.IntegrationTimeMicros.ToString());
+                
+                foreach (var intensity in darkScan.Intensity)
+                {
+                    sb.Append($" {intensity:E}");
+                }
+            }
+            
+            return sb.ToString();
+        }
+
 
         public void Dispose()
         {

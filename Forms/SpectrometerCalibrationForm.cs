@@ -167,17 +167,28 @@ namespace HendersonvilleTrafficTest.Forms
             await _powerSupply!.SetVoltsAsync(0);
             await _powerSupply.PowerOffAsync();
             
-            // Step 6: Wait for lamp to cool down
-            _currentStep = (int)CalibrationStep.WaitingForDark;
-            var cooldownSeconds = ConfigurationManager.Current.Calibration.CalibrationLampCooldownSeconds;
-            UpdateStatus($"Waiting for lamp to cool down ({cooldownSeconds} seconds)...");
-            await WaitWithTimer(cooldownSeconds, cancellationToken);
+            var equipmentConfig = ConfigurationManager.Current.Equipment;
             
-            // Step 7: Take dark reading
-            _currentStep = (int)CalibrationStep.TakingDarkReading;
-            UpdateStatus("Taking dark current reading...");
-            _darkReading = await _spectrometer!.GetSpectrumReadingAsync();
-            LogMessage("Dark current reading completed.");
+            if (!equipmentConfig.UseCalibratedDarkCurrent)
+            {
+                // Only take dark current measurement if not using calibrated dark current
+                // Step 6: Wait for lamp to cool down
+                _currentStep = (int)CalibrationStep.WaitingForDark;
+                var cooldownSeconds = ConfigurationManager.Current.Calibration.CalibrationLampCooldownSeconds;
+                UpdateStatus($"Waiting for lamp to cool down ({cooldownSeconds} seconds)...");
+                await WaitWithTimer(cooldownSeconds, cancellationToken);
+                
+                // Step 7: Take dark reading
+                _currentStep = (int)CalibrationStep.TakingDarkReading;
+                UpdateStatus("Taking dark current reading...");
+                _darkReading = await _spectrometer!.GetSpectrumReadingAsync();
+                LogMessage("Dark current reading completed.");
+            }
+            else
+            {
+                LogMessage("Skipping dark current measurement (using calibrated dark current).");
+                _darkReading = null; // Ensure it's null when not needed
+            }
             
             // Step 8: Calculate calibration factors
             _currentStep = (int)CalibrationStep.CalculatingFactors;
@@ -263,13 +274,32 @@ namespace HendersonvilleTrafficTest.Forms
 
         private void CalculateCalibrationFactors()
         {
-            if (_lightReading == null || _darkReading == null)
+            if (_lightReading == null)
             {
-                throw new InvalidOperationException("Light and dark readings are required for calibration.");
+                throw new InvalidOperationException("Light reading is required for calibration.");
             }
 
-            // Normalize readings
-            var normalizedLight = MathUtils.NormalizeSpectrumReading(_lightReading, _darkReading);
+            SpectrumReading normalizedLight;
+            var config = ConfigurationManager.Current.Equipment;
+            
+            if (config.UseCalibratedDarkCurrent)
+            {
+                // Use calibrated dark current correction (already applied in GetSpectrumReadingAsync)
+                normalizedLight = MathUtils.NormalizeSpectrumReading(_lightReading);
+                LogMessage("Using calibrated dark current correction for calibration.");
+            }
+            else
+            {
+                // Use real-time dark current measurement (legacy method)
+                if (_darkReading == null)
+                {
+                    throw new InvalidOperationException("Dark reading is required when not using calibrated dark current.");
+                }
+                
+                normalizedLight = MathUtils.NormalizeSpectrumReading(_lightReading, _darkReading);
+                LogMessage("Using real-time dark current correction for calibration.");
+            }
+            
             var standardSpectrum = ConfigurationManager.Current.Calibration.StandardLampSpectrum;
             
             // Calculate calibration factors: factor = standard / measured
@@ -278,7 +308,7 @@ namespace HendersonvilleTrafficTest.Forms
             {
                 if (normalizedLight.Intensities[i] > 0)
                 {
-                    calibrationFactors[i] = standardSpectrum[i] / normalizedLight.Intensities[i] * _spectrometer.CurrentIntegrationTimeMicros;
+                    calibrationFactors[i] = standardSpectrum[i] / normalizedLight.Intensities[i] * _spectrometer!.CurrentIntegrationTimeMicros;
                 }
                 else
                 {

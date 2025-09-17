@@ -122,6 +122,14 @@ namespace HendersonvilleTrafficTest.Configuration
         [XmlElement("WaitForDarkCurrentSeconds")]
         [Description("Wait time in seconds before measuring dark current")]
         public double WaitForDarkCurrentSeconds { get; set; } = 2.0;
+
+        [XmlElement("UseCalibratedDarkCurrent")]
+        [Description("Use calibrated dark current data instead of real-time dark measurement")]
+        public bool UseCalibratedDarkCurrent { get; set; } = false;
+
+        [XmlElement("DarkCurrentCalibrationData")]
+        [Description("Serialized dark current calibration data")]
+        public string DarkCurrentCalibrationData { get; set; } = "";
     }
 
     [Serializable]

@@ -604,20 +604,32 @@ namespace HendersonvilleTrafficTest.Forms
             UpdateTestStatus("Taking spectrum measurement...");
             var integrationTime = await _spectrometer.AutoRangeAsync();
             var spectrumReading = await _spectrometer.GetSpectrumReadingAsync();
-
-            // Power off for dark current measurement
             await PowerOffLamp(step);
+            SpectrumReading normalizedSpectrum;
+            var config = ConfigurationManager.Current.Equipment;
             
-            var waitTimeSeconds = ConfigurationManager.Current.Equipment.WaitForDarkCurrentSeconds;
-            UpdateTestStatus($"Waiting for dark current stabilization ({waitTimeSeconds:F1} seconds)...");
-            await Task.Delay((int)(waitTimeSeconds * 1000));
+            if (config.UseCalibratedDarkCurrent)
+            {
+                // Use calibrated dark current correction (already applied in GetSpectrumReadingAsync)
+                UpdateTestStatus("Processing spectrum data with calibrated dark current...");
+                normalizedSpectrum = MathUtils.NormalizeSpectrumReading(spectrumReading);
+            }
+            else
+            {
+                // Use real-time dark current measurement (legacy method)
+                
+                
+                var waitTimeSeconds = config.WaitForDarkCurrentSeconds;
+                UpdateTestStatus($"Waiting for dark current stabilization ({waitTimeSeconds:F1} seconds)...");
+                await Task.Delay((int)(waitTimeSeconds * 1000));
 
-            UpdateTestStatus("Taking dark current measurement...");
-            var darkCurrentReading = await _spectrometer.GetSpectrumReadingAsync();
+                UpdateTestStatus("Taking dark current measurement...");
+                var darkCurrentReading = await _spectrometer.GetSpectrumReadingAsync();
 
-            // Process spectrum data
-            UpdateTestStatus("Processing spectrum data...");
-            var normalizedSpectrum = MathUtils.NormalizeSpectrumReading(spectrumReading, darkCurrentReading);
+                UpdateTestStatus("Processing spectrum data with real-time dark current...");
+                normalizedSpectrum = MathUtils.NormalizeSpectrumReading(spectrumReading, darkCurrentReading);
+            }
+            
             var calibratedSpectrum = MathUtils.ApplyCalibrationFactors(normalizedSpectrum, _spectrometer.CurrentIntegrationTimeMicros);
 
             // Calculate color values

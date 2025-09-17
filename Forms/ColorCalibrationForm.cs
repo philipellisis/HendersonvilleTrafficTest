@@ -86,29 +86,47 @@ namespace HendersonvilleTrafficTest.Forms
                 var spectrumReading = await _spectrometer.GetSpectrumReadingAsync();
                 UpdateProgress(50);
 
+                SpectrumReading normalizedSpectrum;
+                var config = ConfigurationManager.Current.Equipment;
+
                 // Step 5: Power off lamp
                 UpdateStatus("Powering off lamp...");
                 await PowerOffLamp(colorSample);
                 UpdateProgress(60);
 
-                // Step 6: Wait for dark current stabilization and take dark current measurement
-                var waitTimeSeconds = ConfigurationManager.Current.Equipment.WaitForDarkCurrentSeconds;
-                UpdateStatus($"Waiting for dark current stabilization ({waitTimeSeconds:F1} seconds)...");
-                await Task.Delay((int)(waitTimeSeconds * 1000));
-                UpdateProgress(70);
+                if (config.UseCalibratedDarkCurrent)
+                {
+                    // Use calibrated dark current correction (already applied in GetSpectrumReadingAsync)
+                    UpdateStatus("Processing spectrum data with calibrated dark current...");
+                    normalizedSpectrum = MathUtils.NormalizeSpectrumReading(spectrumReading);
+                    UpdateProgress(70);
+                }
+                else
+                {
+                    // Use real-time dark current measurement (legacy method)
 
-                UpdateStatus("Taking dark current measurement...");
-                var darkCurrentReading = await _spectrometer.GetSpectrumReadingAsync();
-                UpdateProgress(75);
+
+                    // Step 6: Wait for dark current stabilization and take dark current measurement
+                    var waitTimeSeconds = config.WaitForDarkCurrentSeconds;
+                    UpdateStatus($"Waiting for dark current stabilization ({waitTimeSeconds:F1} seconds)...");
+                    await Task.Delay((int)(waitTimeSeconds * 1000));
+                    UpdateProgress(65);
+
+                    UpdateStatus("Taking dark current measurement...");
+                    var darkCurrentReading = await _spectrometer.GetSpectrumReadingAsync();
+                    UpdateProgress(70);
+
+                    UpdateStatus("Processing spectrum data with real-time dark current...");
+                    normalizedSpectrum = MathUtils.NormalizeSpectrumReading(spectrumReading, darkCurrentReading);
+                }
 
                 // Step 7: Take temperature measurement
                 UpdateStatus("Taking temperature measurement...");
                 var temperatureMeasured = await _temperatureSensor.GetTemperatureAsync();
                 UpdateProgress(80);
 
-                // Step 8: Process spectrum data
-                UpdateStatus("Processing spectrum data...");
-                var normalizedSpectrum = MathUtils.NormalizeSpectrumReading(spectrumReading, darkCurrentReading);
+                // Step 8: Apply calibration factors
+                UpdateStatus("Applying calibration factors...");
                 var calibratedSpectrum = MathUtils.ApplyCalibrationFactors(normalizedSpectrum, _spectrometer.CurrentIntegrationTimeMicros);
                 UpdateProgress(85);
 

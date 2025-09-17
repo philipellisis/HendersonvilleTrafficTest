@@ -55,6 +55,23 @@ namespace HendersonvilleTrafficTest.Equipment.Simulation
             return Task.CompletedTask;
         }
 
+        public async Task CalibrateDarkCurrentAsync(IProgress<string> progress, int maxIntegrationTimeSeconds, double waitBeforeDarkSeconds, CancellationToken cancellationToken)
+        {
+            // Simulate dark current calibration
+            progress?.Report($"Simulating warmup for {waitBeforeDarkSeconds} seconds");
+            await Task.Delay(TimeSpan.FromSeconds(Math.Min(waitBeforeDarkSeconds, 2)), cancellationToken);
+            
+            // Simulate calibration process
+            for (int i = 1; i <= 10; i++)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                progress?.Report($"Simulating calibration scan {i} of 10");
+                await Task.Delay(200, cancellationToken);
+            }
+            
+            progress?.Report("Simulated dark current calibration completed");
+        }
+
         private double GenerateRealisticSpectrum(double wavelength)
         {
             var red = Math.Exp(-Math.Pow((wavelength - 650) / 50, 2)) * 0.8;

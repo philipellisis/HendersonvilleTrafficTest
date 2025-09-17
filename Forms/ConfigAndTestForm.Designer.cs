@@ -22,6 +22,7 @@ namespace HendersonvilleTrafficTest.Forms
         private GroupBox grpCalibration;
         private Button btnSpectrometerCalibration;
         private Button btnColorCalibration;
+        private Button btnCalibrateDarkCurrent;
 
         protected override void Dispose(bool disposing)
         {
@@ -47,6 +48,7 @@ namespace HendersonvilleTrafficTest.Forms
             this.grpCalibration = new System.Windows.Forms.GroupBox();
             this.btnSpectrometerCalibration = new System.Windows.Forms.Button();
             this.btnColorCalibration = new System.Windows.Forms.Button();
+            this.btnCalibrateDarkCurrent = new System.Windows.Forms.Button();
             this.grpConfiguration.SuspendLayout();
             this.grpEquipmentTesting.SuspendLayout();
             this.grpCalibration.SuspendLayout();
@@ -170,12 +172,13 @@ namespace HendersonvilleTrafficTest.Forms
             // 
             // grpCalibration
             // 
+            this.grpCalibration.Controls.Add(this.btnCalibrateDarkCurrent);
             this.grpCalibration.Controls.Add(this.btnColorCalibration);
             this.grpCalibration.Controls.Add(this.btnSpectrometerCalibration);
             this.grpCalibration.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.grpCalibration.Location = new System.Drawing.Point(30, 250);
             this.grpCalibration.Name = "grpCalibration";
-            this.grpCalibration.Size = new System.Drawing.Size(300, 200);
+            this.grpCalibration.Size = new System.Drawing.Size(300, 270);
             this.grpCalibration.TabIndex = 2;
             this.grpCalibration.TabStop = false;
             this.grpCalibration.Text = "Calibration";
@@ -201,6 +204,17 @@ namespace HendersonvilleTrafficTest.Forms
             this.btnColorCalibration.Text = "Color Calibration";
             this.btnColorCalibration.UseVisualStyleBackColor = true;
             this.btnColorCalibration.Click += new System.EventHandler(this.btnColorCalibration_Click);
+            // 
+            // btnCalibrateDarkCurrent
+            // 
+            this.btnCalibrateDarkCurrent.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnCalibrateDarkCurrent.Location = new System.Drawing.Point(30, 190);
+            this.btnCalibrateDarkCurrent.Name = "btnCalibrateDarkCurrent";
+            this.btnCalibrateDarkCurrent.Size = new System.Drawing.Size(240, 60);
+            this.btnCalibrateDarkCurrent.TabIndex = 2;
+            this.btnCalibrateDarkCurrent.Text = "Calibrate Dark Current";
+            this.btnCalibrateDarkCurrent.UseVisualStyleBackColor = true;
+            this.btnCalibrateDarkCurrent.Click += new System.EventHandler(this.btnCalibrateDarkCurrent_Click);
             // 
             // ConfigAndTestForm
             // 

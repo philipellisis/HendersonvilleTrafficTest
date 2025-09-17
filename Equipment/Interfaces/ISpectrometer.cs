@@ -13,6 +13,7 @@ namespace HendersonvilleTrafficTest.Equipment.Interfaces
         Task<SpectrumReading> GetSpectrumReadingAsync(double? maxReadTimeSeconds = null);
         Task<uint> AutoRangeAsync();
         Task SetIntegrationTimeAsync(uint integrationTimeMicros);
+        Task CalibrateDarkCurrentAsync(IProgress<string> progress, int maxIntegrationTimeSeconds, double waitBeforeDarkSeconds, CancellationToken cancellationToken);
         bool IsConnected { get; }
         uint CurrentIntegrationTimeMicros { get; }
     }

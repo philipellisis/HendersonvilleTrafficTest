@@ -31,5 +31,11 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
             CurrentIntegrationTimeMicros = integrationTimeMicros;
             throw new NotImplementedException("Set integration time command not implemented");
         }
+
+        public Task CalibrateDarkCurrentAsync(IProgress<string> progress, int maxIntegrationTimeSeconds, double waitBeforeDarkSeconds, CancellationToken cancellationToken)
+        {
+            // TODO: Implement dark current calibration for StellarNet
+            throw new NotImplementedException("Dark current calibration not implemented");
+        }
     }
 }

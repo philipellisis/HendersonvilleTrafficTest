@@ -1,5 +1,9 @@
 using HendersonvilleTrafficTest.Equipment.Interfaces;
 using HendersonvilleTrafficTest.Configuration;
+using System.Collections.Generic;
+using System.Linq;
+using System;
+using System.Text;
 
 namespace HendersonvilleTrafficTest.Shared
 {
@@ -159,6 +163,171 @@ namespace HendersonvilleTrafficTest.Shared
         {
             var testPoint = new Point2D(chromaticityX, chromaticityY);
             return IsPointInPolygon(testPoint, polygonVertices);
+        }
+
+        /// <summary>
+        /// Applies dark current correction to a spectrum reading based on configuration settings
+        /// </summary>
+        /// <param name="reading">The spectrum reading to correct</param>
+        /// <param name="integrationTimeMicros">Integration time in microseconds for dark current lookup</param>
+        /// <returns>Corrected spectrum reading or original if no dark current correction configured</returns>
+        public static SpectrumReading ApplyDarkCurrentCorrection(SpectrumReading reading, uint integrationTimeMicros)
+        {
+            var darkCurrent = GetDarkCurrentForIntegrationTime(integrationTimeMicros);
+            
+            if (darkCurrent == null || darkCurrent.Length == 0)
+            {
+                return reading; // No dark current correction available
+            }
+
+            var correctedIntensities = new double[reading.Intensities.Length];
+            for (int i = 0; i < reading.Intensities.Length; i++)
+            {
+                if (i < darkCurrent.Length)
+                {
+                    correctedIntensities[i] = Math.Max(0, reading.Intensities[i] - darkCurrent[i]);
+                }
+                else
+                {
+                    correctedIntensities[i] = reading.Intensities[i];
+                }
+            }
+
+            return new SpectrumReading
+            {
+                Wavelengths = reading.Wavelengths,
+                Intensities = correctedIntensities,
+                Timestamp = reading.Timestamp
+            };
+        }
+
+        /// <summary>
+        /// Gets dark current data for a specific integration time, using interpolation if necessary
+        /// </summary>
+        /// <param name="integrationTimeMicros">Integration time in microseconds</param>
+        /// <returns>Array of dark current values or null if no dark current data available</returns>
+        public static double[] GetDarkCurrentForIntegrationTime(uint integrationTimeMicros)
+        {
+            var config = ConfigurationManager.Current.Equipment;
+            
+            if (!config.UseCalibratedDarkCurrent || string.IsNullOrEmpty(config.DarkCurrentCalibrationData))
+            {
+                return null; // Dark current correction disabled or no data
+            }
+
+            var darkScans = ParseDarkScansFromString(config.DarkCurrentCalibrationData);
+            
+            if (darkScans.Count == 0)
+            {
+                return null;
+            }
+
+            // Find the appropriate dark scans for interpolation
+            DarkScan lowerScan = null;
+            DarkScan upperScan = null;
+            
+            foreach (var scan in darkScans)
+            {
+                if (scan.IntegrationTimeMicros <= integrationTimeMicros)
+                {
+                    if (lowerScan == null || scan.IntegrationTimeMicros > lowerScan.IntegrationTimeMicros)
+                    {
+                        lowerScan = scan;
+                    }
+                }
+                
+                if (scan.IntegrationTimeMicros >= integrationTimeMicros)
+                {
+                    if (upperScan == null || scan.IntegrationTimeMicros < upperScan.IntegrationTimeMicros)
+                    {
+                        upperScan = scan;
+                    }
+                }
+            }
+
+            if (lowerScan == null && upperScan == null)
+            {
+                return null;
+            }
+
+            // Use the first scan to determine array size
+            var firstScan = lowerScan ?? upperScan;
+            var darkCurrent = new double[firstScan.Intensity.Length];
+            
+            if (lowerScan != null && upperScan != null && lowerScan.IntegrationTimeMicros != upperScan.IntegrationTimeMicros)
+            {
+                // Interpolate between two scans
+                for (int i = 0; i < Math.Min(darkCurrent.Length, Math.Min(lowerScan.Intensity.Length, upperScan.Intensity.Length)); i++)
+                {
+                    darkCurrent[i] = Interpolate(lowerScan.Intensity[i], upperScan.Intensity[i], 
+                                               integrationTimeMicros, lowerScan.IntegrationTimeMicros, upperScan.IntegrationTimeMicros);
+                }
+            }
+            else if (lowerScan != null)
+            {
+                // Use exact match or closest lower scan
+                Array.Copy(lowerScan.Intensity, darkCurrent, Math.Min(darkCurrent.Length, lowerScan.Intensity.Length));
+            }
+            else if (upperScan != null)
+            {
+                // Use closest upper scan
+                Array.Copy(upperScan.Intensity, darkCurrent, Math.Min(darkCurrent.Length, upperScan.Intensity.Length));
+            }
+            
+            return darkCurrent;
+        }
+
+        /// <summary>
+        /// Parses dark scan data from string format
+        /// </summary>
+        /// <param name="darkScansData">Serialized dark scan data</param>
+        /// <returns>List of DarkScan objects</returns>
+        public static List<DarkScan> ParseDarkScansFromString(string darkScansData)
+        {
+            var darkScans = new List<DarkScan>();
+            
+            if (string.IsNullOrEmpty(darkScansData))
+                return darkScans;
+
+            try
+            {
+                var lines = darkScansData.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                
+                foreach (var line in lines)
+                {
+                    var parts = line.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                    
+                    if (parts.Length >= 2) // Need at least integration time + 1 intensity value
+                    {
+                        if (uint.TryParse(parts[0], out uint integrationTime))
+                        {
+                            var intensities = new double[parts.Length - 1];
+                            bool validLine = true;
+                            
+                            for (int i = 1; i < parts.Length; i++)
+                            {
+                                if (!double.TryParse(parts[i], out intensities[i - 1]))
+                                {
+                                    validLine = false;
+                                    break;
+                                }
+                            }
+                            
+                            if (validLine)
+                            {
+                                darkScans.Add(new DarkScan(intensities, integrationTime));
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error but don't throw - return empty list to fall back to no dark correction
+                System.Diagnostics.Debug.WriteLine($"Error parsing dark scan data: {ex.Message}");
+            }
+            
+            return darkScans;
         }
     }
 }
