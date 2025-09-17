@@ -27,7 +27,8 @@ namespace HendersonvilleTrafficTest.Services
         {
             lock (_lock)
             {
-                var currentMode = ConfigurationManager.Current.Equipment.AcPowerSupplyMode;
+                var equipment = ConfigurationManager.Current.Equipment;
+                var currentMode = equipment.GlobalSimulationMode ? EquipmentMode.Simulation : equipment.AcPowerSupplyMode;
                 
                 // If mode changed or no instance exists, create new one
                 if (_acPowerSupplyInstance == null || _lastAcPowerSupplyMode != currentMode)
@@ -51,7 +52,8 @@ namespace HendersonvilleTrafficTest.Services
         {
             lock (_lock)
             {
-                var currentMode = ConfigurationManager.Current.Equipment.DcPowerSupplyMode;
+                var equipment = ConfigurationManager.Current.Equipment;
+                var currentMode = equipment.GlobalSimulationMode ? EquipmentMode.Simulation : equipment.DcPowerSupplyMode;
                 
                 // If mode changed or no instance exists, create new one
                 if (_dcPowerSupplyInstance == null || _lastDcPowerSupplyMode != currentMode)
@@ -75,7 +77,8 @@ namespace HendersonvilleTrafficTest.Services
         {
             lock (_lock)
             {
-                var currentMode = ConfigurationManager.Current.Equipment.PowerAnalyzerMode;
+                var equipment = ConfigurationManager.Current.Equipment;
+                var currentMode = equipment.GlobalSimulationMode ? EquipmentMode.Simulation : equipment.PowerAnalyzerMode;
                 
                 // If mode changed or no instance exists, create new one
                 if (_powerAnalyzerInstance == null || _lastPowerAnalyzerMode != currentMode)
@@ -99,7 +102,8 @@ namespace HendersonvilleTrafficTest.Services
         {
             lock (_lock)
             {
-                var currentType = ConfigurationManager.Current.Equipment.SpectrometerType;
+                var equipment = ConfigurationManager.Current.Equipment;
+                var currentType = equipment.GlobalSimulationMode ? Configuration.SpectrometerType.Simulation : equipment.SpectrometerType;
                 
                 // If type changed or no instance exists, create new one
                 if (_spectrometerInstance == null || _lastSpectrometerType != currentType)
@@ -127,7 +131,8 @@ namespace HendersonvilleTrafficTest.Services
         {
             lock (_lock)
             {
-                var currentMode = ConfigurationManager.Current.Equipment.TemperatureSensorMode;
+                var equipment = ConfigurationManager.Current.Equipment;
+                var currentMode = equipment.GlobalSimulationMode ? EquipmentMode.Simulation : equipment.TemperatureSensorMode;
                 
                 // If mode changed or no instance exists, create new one
                 if (_temperatureSensorInstance == null || _lastTemperatureSensorMode != currentMode)
@@ -151,7 +156,8 @@ namespace HendersonvilleTrafficTest.Services
         {
             lock (_lock)
             {
-                var currentMode = ConfigurationManager.Current.Equipment.RelayControllerMode;
+                var equipment = ConfigurationManager.Current.Equipment;
+                var currentMode = equipment.GlobalSimulationMode ? EquipmentMode.Simulation : equipment.RelayControllerMode;
                 
                 // If mode changed or no instance exists, create new one
                 if (_relayControllerInstance == null || _lastRelayControllerMode != currentMode)

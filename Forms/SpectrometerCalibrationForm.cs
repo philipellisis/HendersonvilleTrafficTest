@@ -10,6 +10,7 @@ namespace HendersonvilleTrafficTest.Forms
     {
         private readonly EquipmentFactory _equipmentFactory;
         private IDcPowerSupply? _powerSupply;
+        private IAcPowerSupply? _acPowerSupply;
         private ISpectrometer? _spectrometer;
         private IPowerAnalyzer? _powerAnalyzer;
         private System.Windows.Forms.Timer? _calibrationTimer;
@@ -123,8 +124,10 @@ namespace HendersonvilleTrafficTest.Forms
             _powerSupply = _equipmentFactory.CreateDcPowerSupply();
             _spectrometer = _equipmentFactory.CreateSpectrometer();
             _powerAnalyzer= _equipmentFactory.CreatePowerAnalyzer();
+            _acPowerSupply = _equipmentFactory.CreateAcPowerSupply();
             
             await _powerSupply.InitializeAsync();
+            await _acPowerSupply.InitializeAsync();
             await _spectrometer.InitializeAsync();
             await _powerAnalyzer.InitializeAsync();
             await _powerAnalyzer.SetModeAsync(PowerMode.DC);

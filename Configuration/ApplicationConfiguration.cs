@@ -35,6 +35,10 @@ namespace HendersonvilleTrafficTest.Configuration
     [Serializable]
     public class EquipmentSettings
     {
+        [XmlElement("GlobalSimulationMode")]
+        [Description("Enable simulation mode for ALL equipment (overrides individual equipment modes)")]
+        public bool GlobalSimulationMode { get; set; } = true;
+
         [XmlElement("AcPowerSupplyMode")]
         [Description("AC Power Supply Mode (Simulation or Hardware)")]
         public EquipmentMode AcPowerSupplyMode { get; set; } = EquipmentMode.Simulation;
