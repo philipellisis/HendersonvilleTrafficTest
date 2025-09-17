@@ -62,6 +62,8 @@ namespace HendersonvilleTrafficTest.Forms
             btnCapture.Enabled = connected;
             btnAutoRange.Enabled = connected;
             chkAutoCapture.Enabled = connected;
+            txtIntegrationTime.Enabled = connected;
+            btnSetIntegrationTime.Enabled = connected;
             btnSaveSpectrum.Enabled = connected && _lastReading != null;
             
             if (!connected)
@@ -489,6 +491,46 @@ namespace HendersonvilleTrafficTest.Forms
             for (int i = 0; i < reading.Wavelengths.Length; i++)
             {
                 writer.WriteLine($"{reading.Wavelengths[i]:F2},{reading.Intensities[i]:F2}");
+            }
+        }
+
+        private async void btnSetIntegrationTime_Click(object sender, EventArgs e)
+        {
+            if (!_spectrometer.IsConnected)
+            {
+                MessageBox.Show("Spectrometer not connected", "Error", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            if (!uint.TryParse(txtIntegrationTime.Text, out uint integrationTimeMs))
+            {
+                MessageBox.Show("Please enter a valid integration time in milliseconds", "Invalid Input", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            try
+            {
+                btnSetIntegrationTime.Enabled = false;
+                btnSetIntegrationTime.Text = "Setting...";
+                
+                // Convert milliseconds to microseconds for the API
+                uint integrationTimeMicros = integrationTimeMs * 1000;
+                await _spectrometer.SetIntegrationTimeAsync(integrationTimeMicros);
+                
+                MessageBox.Show($"Integration time set to {integrationTimeMs} ms", "Success", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to set integration time: {ex.Message}", "Error", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                btnSetIntegrationTime.Enabled = true;
+                btnSetIntegrationTime.Text = "Set";
             }
         }
 

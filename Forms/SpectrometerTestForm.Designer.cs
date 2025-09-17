@@ -21,6 +21,9 @@ namespace HendersonvilleTrafficTest.Forms
         private TextBox txtSpectrumData;
         private Button btnClose;
         private System.Windows.Forms.Timer autoTimer;
+        private Label lblIntegrationTime;
+        private TextBox txtIntegrationTime;
+        private Button btnSetIntegrationTime;
 
         private void InitializeComponent()
         {
@@ -42,6 +45,9 @@ namespace HendersonvilleTrafficTest.Forms
             this.txtSpectrumData = new TextBox();
             this.btnClose = new Button();
             this.autoTimer = new System.Windows.Forms.Timer();
+            this.lblIntegrationTime = new Label();
+            this.txtIntegrationTime = new TextBox();
+            this.btnSetIntegrationTime = new Button();
             ((System.ComponentModel.ISupportInitialize)(this.picSpectrum)).BeginInit();
             this.grpSpectrumControls.SuspendLayout();
             this.grpSpectrumData.SuspendLayout();
@@ -96,6 +102,9 @@ namespace HendersonvilleTrafficTest.Forms
             // 
             // grpSpectrumControls
             // 
+            this.grpSpectrumControls.Controls.Add(this.btnSetIntegrationTime);
+            this.grpSpectrumControls.Controls.Add(this.txtIntegrationTime);
+            this.grpSpectrumControls.Controls.Add(this.lblIntegrationTime);
             this.grpSpectrumControls.Controls.Add(this.chkAutoCapture);
             this.grpSpectrumControls.Controls.Add(this.btnSaveSpectrum);
             this.grpSpectrumControls.Controls.Add(this.btnAutoRange);
@@ -104,7 +113,7 @@ namespace HendersonvilleTrafficTest.Forms
             this.grpSpectrumControls.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
             this.grpSpectrumControls.Location = new Point(12, 450);
             this.grpSpectrumControls.Name = "grpSpectrumControls";
-            this.grpSpectrumControls.Size = new Size(760, 70);
+            this.grpSpectrumControls.Size = new Size(760, 100);
             this.grpSpectrumControls.TabIndex = 4;
             this.grpSpectrumControls.TabStop = false;
             this.grpSpectrumControls.Text = "Controls";
@@ -167,7 +176,7 @@ namespace HendersonvilleTrafficTest.Forms
             this.chkAutoCapture.AutoSize = true;
             this.chkAutoCapture.Enabled = false;
             this.chkAutoCapture.Font = new Font("Segoe UI", 9F);
-            this.chkAutoCapture.Location = new Point(510, 35);
+            this.chkAutoCapture.Location = new Point(510, 30);
             this.chkAutoCapture.Name = "chkAutoCapture";
             this.chkAutoCapture.Size = new Size(180, 19);
             this.chkAutoCapture.TabIndex = 4;
@@ -184,7 +193,7 @@ namespace HendersonvilleTrafficTest.Forms
             this.grpSpectrumData.Controls.Add(this.lblPeakIntensity);
             this.grpSpectrumData.Controls.Add(this.lblPeakWavelength);
             this.grpSpectrumData.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            this.grpSpectrumData.Location = new Point(12, 530);
+            this.grpSpectrumData.Location = new Point(12, 560);
             this.grpSpectrumData.Name = "grpSpectrumData";
             this.grpSpectrumData.Size = new Size(760, 140);
             this.grpSpectrumData.TabIndex = 5;
@@ -256,7 +265,7 @@ namespace HendersonvilleTrafficTest.Forms
             // btnClose
             // 
             this.btnClose.Font = new Font("Segoe UI", 9F);
-            this.btnClose.Location = new Point(697, 680);
+            this.btnClose.Location = new Point(697, 710);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new Size(75, 30);
             this.btnClose.TabIndex = 6;
@@ -271,11 +280,46 @@ namespace HendersonvilleTrafficTest.Forms
             this.autoTimer.Tick += new EventHandler(this.autoTimer_Tick);
 
             // 
+            // lblIntegrationTime
+            // 
+            this.lblIntegrationTime.AutoSize = true;
+            this.lblIntegrationTime.Font = new Font("Segoe UI", 9F);
+            this.lblIntegrationTime.Location = new Point(15, 70);
+            this.lblIntegrationTime.Name = "lblIntegrationTime";
+            this.lblIntegrationTime.Size = new Size(100, 15);
+            this.lblIntegrationTime.TabIndex = 5;
+            this.lblIntegrationTime.Text = "Integration Time (ms):";
+
+            // 
+            // txtIntegrationTime
+            // 
+            this.txtIntegrationTime.Enabled = false;
+            this.txtIntegrationTime.Font = new Font("Segoe UI", 9F);
+            this.txtIntegrationTime.Location = new Point(130, 67);
+            this.txtIntegrationTime.Name = "txtIntegrationTime";
+            this.txtIntegrationTime.Size = new Size(80, 23);
+            this.txtIntegrationTime.TabIndex = 6;
+            this.txtIntegrationTime.Text = "200";
+
+            // 
+            // btnSetIntegrationTime
+            // 
+            this.btnSetIntegrationTime.Enabled = false;
+            this.btnSetIntegrationTime.Font = new Font("Segoe UI", 9F);
+            this.btnSetIntegrationTime.Location = new Point(220, 65);
+            this.btnSetIntegrationTime.Name = "btnSetIntegrationTime";
+            this.btnSetIntegrationTime.Size = new Size(50, 27);
+            this.btnSetIntegrationTime.TabIndex = 7;
+            this.btnSetIntegrationTime.Text = "Set";
+            this.btnSetIntegrationTime.UseVisualStyleBackColor = true;
+            this.btnSetIntegrationTime.Click += new EventHandler(this.btnSetIntegrationTime_Click);
+
+            // 
             // SpectrometerTestForm
             // 
             this.AutoScaleDimensions = new SizeF(7F, 15F);
             this.AutoScaleMode = AutoScaleMode.Font;
-            this.ClientSize = new Size(784, 722);
+            this.ClientSize = new Size(784, 752);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.grpSpectrumData);
             this.Controls.Add(this.grpSpectrumControls);
