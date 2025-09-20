@@ -291,7 +291,7 @@ namespace HendersonvilleTrafficTest.Shared
 
             try
             {
-                var lines = darkScansData.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                var lines = darkScansData.Split(new[] { "\n" }, StringSplitOptions.RemoveEmptyEntries);
                 
                 foreach (var line in lines)
                 {

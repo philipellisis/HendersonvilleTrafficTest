@@ -44,7 +44,7 @@ namespace HendersonvilleTrafficTest.Equipment.Simulation
 
         public Task<double> GetAmpsAsync()
         {
-            var noise = (_random.NextDouble() - 0.5) * 0.01;
+            var noise = (_random.NextDouble() - 0.1) * 0.01;
             return Task.FromResult(_amps + noise);
         }
 

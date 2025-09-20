@@ -767,15 +767,15 @@ namespace HendersonvilleTrafficTest.Forms
                     }
                     
                     result.ColorTestPassed = MathUtils.IsChromaticityPointInPolygon(
-                        result.CcxMeasured, 
-                        result.CcyMeasured, 
+                        result.CcxAdjusted, 
+                        result.CcyAdjusted, 
                         vertices);
                 }
                 else if (xVertices.Count >= 2)
                 {
                     // Fallback to rectangular boundary check if less than 3 vertices
-                    result.ColorTestPassed = result.CcxMeasured >= step.X1 && result.CcxMeasured <= step.X2 &&
-                                            result.CcyMeasured >= step.Y1 && result.CcyMeasured <= step.Y2;
+                    result.ColorTestPassed = result.CcxAdjusted >= step.X1 && result.CcxAdjusted <= step.X2 &&
+                                            result.CcyAdjusted >= step.Y1 && result.CcyAdjusted <= step.Y2;
                 }
                 else
                 {

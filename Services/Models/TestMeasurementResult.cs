@@ -108,8 +108,8 @@ namespace HendersonvilleTrafficTest.Services.Models
         { 
             get 
             { 
-                return (!IntensityLcl.HasValue || IntensityMeasured >= IntensityLcl.Value) && 
-                       (!IntensityUcl.HasValue || IntensityMeasured <= IntensityUcl.Value); 
+                return (!IntensityLcl.HasValue || Ecl >= IntensityLcl.Value) && 
+                       (!IntensityUcl.HasValue || Ecl <= IntensityUcl.Value); 
             } 
         }
         
