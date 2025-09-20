@@ -9,6 +9,9 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
 {
     public class Npa101PowerAnalyzer : EquipmentCommunicationBase, IPowerAnalyzer
     {
+        private static bool _isInitialized = false;
+        private static readonly object _initLock = new object();
+
         public Npa101PowerAnalyzer() : base("NPA101 Power Analyzer", CreateSerialSettings())
         {
         }
@@ -34,10 +37,23 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
 
         public new async Task InitializeAsync()
         {
+            lock (_initLock)
+            {
+                if (_isInitialized)
+                {
+                    return; // Already initialized, skip
+                }
+            }
+
             var success = await base.InitializeAsync();
             if (!success)
             {
                 throw new InvalidOperationException("Failed to initialize NPA101 Power Analyzer");
+            }
+
+            lock (_initLock)
+            {
+                _isInitialized = true;
             }
         }
 

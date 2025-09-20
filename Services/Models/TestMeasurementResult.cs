@@ -128,5 +128,39 @@ namespace HendersonvilleTrafficTest.Services.Models
         // Test Configuration
         public bool IsAcTest { get; set; }
         public int RelayUsed { get; set; }
+        
+        // Calibration Parameters (from TestSequenceStep)
+        public double EclCalib { get; set; }
+        public double At { get; set; }
+        public double Bt { get; set; }
+        public double Ax { get; set; }
+        public double Bx { get; set; }
+        public double Ay { get; set; }
+        public double By { get; set; }
+        
+        // Calculated ECL and Adjusted Color Values (getters)
+        public double Ecl
+        {
+            get
+            {
+                return IntensityMeasured * EclCalib * (TemperatureMeasured * At + Bt);
+            }
+        }
+        
+        public double CcxAdjusted
+        {
+            get
+            {
+                return CcxMeasured - (TemperatureMeasured * Ax + Bx);
+            }
+        }
+        
+        public double CcyAdjusted
+        {
+            get
+            {
+                return CcyMeasured - (TemperatureMeasured * Ay + By);
+            }
+        }
     }
 }

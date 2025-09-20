@@ -8,6 +8,9 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
 {
     public class ItechIT6922ADcPowerSupply : EquipmentCommunicationBase, IDcPowerSupply
     {
+        private static bool _isInitialized = false;
+        private static readonly object _initLock = new object();
+
         public ItechIT6922ADcPowerSupply() : base("ITECH IT6922A DC Power Supply", CreateSerialSettings())
         {
         }
@@ -33,10 +36,23 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
 
         public new async Task InitializeAsync()
         {
+            lock (_initLock)
+            {
+                if (_isInitialized)
+                {
+                    return; // Already initialized, skip
+                }
+            }
+
             var success = await base.InitializeAsync();
             if (!success)
             {
                 throw new InvalidOperationException("Failed to initialize ITECH IT6922A DC Power Supply");
+            }
+
+            lock (_initLock)
+            {
+                _isInitialized = true;
             }
         }
 

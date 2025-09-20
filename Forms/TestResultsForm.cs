@@ -642,6 +642,33 @@ namespace HendersonvilleTrafficTest.Forms
             result.CcxMeasured = colorData.CcX;
             result.CcyMeasured = colorData.CcY;
             result.Luminance = colorData.Luminance;
+            
+            // Populate calibration parameters from step
+            result.At = step.At;
+            result.Bt = step.Bt;
+            result.Ax = step.Ax;
+            result.Bx = step.Bx;
+            result.Ay = step.Ay;
+            result.By = step.By;
+            
+            // Get EclCalib from configuration based on IntCalib color
+            result.EclCalib = GetEclCalibForColor(step.IntCalib);
+        }
+
+        private double GetEclCalibForColor(string colorName)
+        {
+            var tower = ConfigurationManager.Current.Tower;
+            
+            return colorName?.ToUpper() switch
+            {
+                "BLUE" => tower.BlueColorSample.EclCalib,
+                "GREEN" => tower.GreenColorSample.EclCalib,
+                "YELLOW" => tower.YellowColorSample.EclCalib,
+                "ORANGE" => tower.OrangeColorSample.EclCalib,
+                "RED" => tower.RedColorSample.EclCalib,
+                "WHITE" => tower.WhiteColorSample.EclCalib,
+                _ => 1.0 // Default if color not found
+            };
         }
 
         private async Task PowerOffLamp(TestSequenceStep step)

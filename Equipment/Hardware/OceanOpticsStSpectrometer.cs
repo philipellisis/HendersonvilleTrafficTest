@@ -12,6 +12,9 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
 {
     public class OceanOpticsStSpectrometer : ISpectrometer
     {
+        private static bool _isInitialized = false;
+        private static readonly object _initLock = new object();
+        
         private const uint integrationTime = 1000;
         private OceanDirect? _ocean;
         private int _deviceId = -1;
@@ -24,6 +27,14 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
 
         public async Task InitializeAsync()
         {
+            lock (_initLock)
+            {
+                if (_isInitialized)
+                {
+                    return; // Already initialized, skip
+                }
+            }
+
             await Task.Run(() =>
             {
                 try
@@ -68,6 +79,11 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
                     _currentIntegrationTimeMicros = integrationTime;
 
                     IsConnected = true;
+                    
+                    lock (_initLock)
+                    {
+                        _isInitialized = true;
+                    }
                 }
                 catch (Exception)
                 {

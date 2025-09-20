@@ -8,6 +8,9 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
 {
     public class ItechIT7321AcPowerSupply : EquipmentCommunicationBase, IAcPowerSupply
     {
+        private static bool _isInitialized = false;
+        private static readonly object _initLock = new object();
+
         public ItechIT7321AcPowerSupply() : base("ITECH IT7321 AC Power Supply", CreateSerialSettings())
         {
         }
@@ -33,10 +36,23 @@ namespace HendersonvilleTrafficTest.Equipment.Hardware
 
         public new async Task InitializeAsync()
         {
+            lock (_initLock)
+            {
+                if (_isInitialized)
+                {
+                    return; // Already initialized, skip
+                }
+            }
+
             var success = await base.InitializeAsync();
             if (!success)
             {
                 throw new InvalidOperationException("Failed to initialize ITECH IT7321 AC Power Supply");
+            }
+
+            lock (_initLock)
+            {
+                _isInitialized = true;
             }
         }
 

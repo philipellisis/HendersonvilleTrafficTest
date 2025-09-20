@@ -4,6 +4,9 @@ namespace HendersonvilleTrafficTest.Equipment.Simulation
 {
     public class SimulatedDcPowerSupply : IDcPowerSupply
     {
+        private static bool _isInitialized = false;
+        private static readonly object _initLock = new object();
+        
         private double _volts = 0.0;
         private double _amps = 0.0;
         private bool _isPoweredOn = false;
@@ -13,7 +16,17 @@ namespace HendersonvilleTrafficTest.Equipment.Simulation
 
         public Task InitializeAsync()
         {
-            IsConnected = true;
+            lock (_initLock)
+            {
+                if (_isInitialized)
+                {
+                    return Task.CompletedTask; // Already initialized, skip
+                }
+                
+                IsConnected = true;
+                _isInitialized = true;
+            }
+            
             return Task.CompletedTask;
         }
 

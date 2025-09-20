@@ -4,6 +4,9 @@ namespace HendersonvilleTrafficTest.Equipment.Simulation
 {
     public class SimulatedPowerAnalyzer : IPowerAnalyzer
     {
+        private static bool _isInitialized = false;
+        private static readonly object _initLock = new object();
+        
         private PowerMode _mode = PowerMode.AC;
         private readonly Random _random = new();
 
@@ -11,7 +14,17 @@ namespace HendersonvilleTrafficTest.Equipment.Simulation
 
         public Task InitializeAsync()
         {
-            IsConnected = true;
+            lock (_initLock)
+            {
+                if (_isInitialized)
+                {
+                    return Task.CompletedTask; // Already initialized, skip
+                }
+                
+                IsConnected = true;
+                _isInitialized = true;
+            }
+            
             return Task.CompletedTask;
         }
 
