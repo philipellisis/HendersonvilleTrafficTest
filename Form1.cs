@@ -1,5 +1,6 @@
 using HendersonvilleTrafficTest.Configuration;
 using HendersonvilleTrafficTest.Forms;
+using HendersonvilleTrafficTest.Services;
 
 namespace HendersonvilleTrafficTest
 {
@@ -10,6 +11,7 @@ namespace HendersonvilleTrafficTest
         public Form1()
         {
             InitializeComponent();
+            InitializeEquipmentAsync();
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -116,6 +118,118 @@ namespace HendersonvilleTrafficTest
 
             using var configAndTestForm = new ConfigAndTestForm();
             configAndTestForm.ShowDialog(this);
+        }
+
+        private async void InitializeEquipmentAsync()
+        {
+            try
+            {
+                var statusMessage = "Equipment Initialization Status:\n\n";
+                var factory = new EquipmentFactory();
+                var equipment = ConfigurationManager.Current.Equipment;
+
+                // Initialize AC Power Supply
+                try
+                {
+                    var acPowerSupply = factory.CreateAcPowerSupply();
+                    await acPowerSupply.InitializeAsync();
+                    var mode = equipment.GlobalSimulationMode ? "Simulation" : equipment.AcPowerSupplyMode.ToString();
+                    statusMessage += $"✓ AC Power Supply: Connected ({mode})\n";
+                }
+                catch (Exception ex)
+                {
+                    var mode = equipment.GlobalSimulationMode ? "Simulation" : equipment.AcPowerSupplyMode.ToString();
+                    statusMessage += $"✗ AC Power Supply: Failed ({mode}) - {ex.Message}\n";
+                }
+
+                // Initialize DC Power Supply
+                try
+                {
+                    var dcPowerSupply = factory.CreateDcPowerSupply();
+                    await dcPowerSupply.InitializeAsync();
+                    var mode = equipment.GlobalSimulationMode ? "Simulation" : equipment.DcPowerSupplyMode.ToString();
+                    statusMessage += $"✓ DC Power Supply: Connected ({mode})\n";
+                }
+                catch (Exception ex)
+                {
+                    var mode = equipment.GlobalSimulationMode ? "Simulation" : equipment.DcPowerSupplyMode.ToString();
+                    statusMessage += $"✗ DC Power Supply: Failed ({mode}) - {ex.Message}\n";
+                }
+
+                // Initialize Power Analyzer
+                try
+                {
+                    var powerAnalyzer = factory.CreatePowerAnalyzer();
+                    await powerAnalyzer.InitializeAsync();
+                    var mode = equipment.GlobalSimulationMode ? "Simulation" : equipment.PowerAnalyzerMode.ToString();
+                    statusMessage += $"✓ Power Analyzer: Connected ({mode})\n";
+                }
+                catch (Exception ex)
+                {
+                    var mode = equipment.GlobalSimulationMode ? "Simulation" : equipment.PowerAnalyzerMode.ToString();
+                    statusMessage += $"✗ Power Analyzer: Failed ({mode}) - {ex.Message}\n";
+                }
+
+                // Initialize Spectrometer
+                try
+                {
+                    var spectrometer = factory.CreateSpectrometer();
+                    await spectrometer.InitializeAsync();
+                    var mode = equipment.GlobalSimulationMode ? "Simulation" : equipment.SpectrometerType.ToString();
+                    statusMessage += $"✓ Spectrometer: Connected ({mode})\n";
+                }
+                catch (Exception ex)
+                {
+                    var mode = equipment.GlobalSimulationMode ? "Simulation" : equipment.SpectrometerType.ToString();
+                    statusMessage += $"✗ Spectrometer: Failed ({mode}) - {ex.Message}\n";
+                }
+
+                // Initialize Temperature Sensor
+                try
+                {
+                    var temperatureSensor = factory.CreateTemperatureSensor();
+                    await temperatureSensor.InitializeAsync();
+                    var mode = equipment.GlobalSimulationMode ? "Simulation" : equipment.TemperatureSensorMode.ToString();
+                    statusMessage += $"✓ Temperature Sensor: Connected ({mode})\n";
+                }
+                catch (Exception ex)
+                {
+                    var mode = equipment.GlobalSimulationMode ? "Simulation" : equipment.TemperatureSensorMode.ToString();
+                    statusMessage += $"✗ Temperature Sensor: Failed ({mode}) - {ex.Message}\n";
+                }
+
+                // Initialize Relay Controller
+                try
+                {
+                    var relayController = factory.CreateRelayController();
+                    await relayController.InitializeAsync();
+                    var mode = equipment.GlobalSimulationMode ? "Simulation" : equipment.RelayControllerMode.ToString();
+                    statusMessage += $"✓ Relay Controller: Connected ({mode})\n";
+                }
+                catch (Exception ex)
+                {
+                    var mode = equipment.GlobalSimulationMode ? "Simulation" : equipment.RelayControllerMode.ToString();
+                    statusMessage += $"✗ Relay Controller: Failed ({mode}) - {ex.Message}\n";
+                }
+
+                // Show overall status
+                if (equipment.GlobalSimulationMode)
+                {
+                    statusMessage += "\n🔄 Global Simulation Mode: ENABLED\n";
+                    statusMessage += "All equipment is running in simulation mode.";
+                }
+                else
+                {
+                    statusMessage += "\n🔧 Hardware Mode: Individual equipment modes apply";
+                }
+
+                MessageBox.Show(statusMessage, "Equipment Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Equipment initialization error: {ex.Message}", "Initialization Error", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
